@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Doc Samba - Ubuntu 24.04</title>
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        /* Petit ajout CSS spécifique pour centrer l'image proprement */
+        .diagram-container {
+            text-align: center;
+            margin: 2rem 0;
+            padding: 1rem;
+            background-color: var(--secondary);
+            border-radius: 8px;
+            border: 1px solid #334155;
+        }
+        .diagram-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+        }
+        .diagram-caption {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: #94a3b8;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">SysAdmin_Portal</div>
+        <nav>
+            <ul>
+                <li><a href="../index.html">Accueil</a></li>
+                <li><a href="memo.html">Mémo</a></li>
+                <li><a href="laravel.html">Laravel</a></li>
+                <li><a href="#" style="color:var(--accent)">Samba</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Fiche Mémo : Partage Samba (Ubuntu 24.04)</h1>
+        
+        <section>
+            <h2>Partie 1 : Création partage pour un utilisateur</h2>
+
+            <h3>Étape 1 : Installer Samba</h3>
+            <p>Installation des paquets nécessaires :</p>
+            <pre>
+sudo apt update
+sudo apt install samba -y
+</pre>
+
+            <h3>Étape 2 : Créer le dossier à partager</h3>
+            <p>Création du dossier, attribution des droits et autorisation de traversée du dossier personnel :</p>
+            <pre>
+# Création du dossier
+mkdir -p ~/documents_partages
+
+# Attribution des droits à l'utilisateur courant
+sudo chown $USER:$USER ~/documents_partages
+
+# Autorisation d'accès au dossier personnel (traversée)
+sudo chmod 755 /home/votre_nom_utilisateur
+</pre>
+
+            <h3>Étape 3 : Configurer Samba</h3>
+            <p>Ajouter ce bloc à la fin du fichier <code>/etc/samba/smb.conf</code> :</p>
+            <pre>
+[Documents]
+comment = Partage Documents Ubuntu
+path = /home/votre_nom_utilisateur/documents_partages
+read only = no
+browsable = yes
+valid users = votre_nom_utilisateur
+create mask = 0755
+directory mask = 0755
+</pre>
+
+            <h3>Étape 4 : Définir un mot de passe Samba</h3>
+            <p>Ce mot de passe est indépendant du mot de passe système :</p>
+            <pre>sudo smbpasswd -a $USER</pre>
+
+            <h3>Étape 5 : Redémarrer le service</h3>
+            <pre>sudo systemctl restart smbd</pre>
+        </section>
+
+        <hr style="border-color: var(--secondary); margin: 3rem 0;">
+
+        <section>
+            <h2>Partie 2 : Ajout de plusieurs utilisateurs au partage</h2>
+
+            <h3>Étape 1 : Ajout d’un autre utilisateur</h3>
+            <p>Création de l'utilisateur système et de son mot de passe Samba :</p>
+            <pre>
+# Création de l'utilisateur système
+sudo adduser deuxieme_utilisateur
+
+# Création de son mot de passe Samba
+sudo smbpasswd -a deuxieme_utilisateur
+</pre>
+
+            <h3>Étape 2 : Mettre à jour la configuration</h3>
+            <p>Dans <code>/etc/samba/smb.conf</code>, modifiez la ligne <code>valid users</code> :</p>
+            <pre>
+[Documents]
+comment = Partage Documents Ubuntu
+path = /home/votre_nom_utilisateur/documents_partages
+read only = no
+browsable = yes
+# On ajoute le deuxième utilisateur à la suite avec un espace
+valid users = votre_nom_utilisateur deuxieme_utilisateur
+create mask = 0755
+directory mask = 0755
+</pre>
+
+            <h3>Étape 3 : Redémarrer le service</h3>
+            <pre>sudo systemctl restart smbd</pre>
+        </section>
+
+        <hr style="border-color: var(--secondary); margin: 3rem 0;">
+
+        <section>
+            <h2>Partie 3 : Création d’un second partage</h2>
+
+            <h3>Étape 1 : Création du dossier</h3>
+            <pre>
+mkdir -p ~/nom_repertoire
+sudo chown $USER:$USER ~/nom_repertoire
+</pre>
+
+            <h3>Étape 2 : Configurer Samba</h3>
+            <p>Ajoutez un nouveau bloc. <strong>Attention :</strong> le nom entre crochets doit être unique.</p>
+            <pre>
+[Nouveau_Partage]
+comment = Autre Partage
+path = /home/votre_nom_utilisateur/nom_repertoire
+read only = no
+browsable = yes
+valid users = votre_nom_utilisateur
+create mask = 0755
+directory mask = 0755
+</pre>
+
+            <h3>Étape 3 : Redémarrer le service</h3>
+            <pre>sudo systemctl restart smbd</pre>
+        </section>
+
+        <hr style="border-color: var(--secondary); margin: 3rem 0;">
+
+        <section>
+            <h2>Schéma de fonctionnement détaillé</h2>
+            <p>Flux d’authentification et d’autorisation :</p>
+            
+            <div class="diagram-container">
+                <img src="../images/samba.png" alt="Architecture Samba">
+                <div class="diagram-caption">Architecture Samba & Permissions</div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p><a href="../index.html">← Retour à l'accueil</a></p>
+    </footer>
+</body>
+</html>
