@@ -1,1 +1,233 @@
-de
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TP1 : Installation OpenStack | Nicolas</title>
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">Nicolas<span>.infra</span></div>
+        <nav>
+            <ul>
+                <li><a href="../index.html">Accueil</a></li>
+                <li><a href="projets.html">Projets</a></li>
+                <li><a href="mailto:tonemail@example.com" class="btn btn-primary" style="padding: 0.5rem 1rem;">Me Contacter</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero" style="min-height: 40vh; align-items: flex-start; text-align: left;">
+            <span class="hero-tag">Cloud Computing • IaaS</span>
+            <h1>Installation & Vérification <br><span style="color:var(--accent)">OpenStack via DevStack</span></h1>
+            <p style="max-width: 800px;">
+                Guide complet pour déployer une infrastructure IaaS sur Ubuntu 24.04. 
+                Maîtrisez les services essentiels : Keystone, Nova, Neutron, Glance, Cinder et Swift.
+            </p>
+            
+            <div class="btn-group">
+                <a href="../documents/TP1 _ Installation dOpenStack-2.pdf" class="btn btn-primary" target="_blank">
+                    <i class="fas fa-file-pdf"></i> Voir le sujet (PDF)
+                </a>
+            </div>
+        </section>
+
+        <section>
+            <h2><i class="fas fa-bullseye"></i> Objectifs & Architecture</h2>
+            <div class="grid">
+                <article class="card">
+                    <h3>Objectif Principal</h3>
+                    <p>Installer une plateforme OpenStack complète (IaaS) sur Ubuntu 24.04 via l'outil officiel <strong>DevStack</strong>.</p>
+                </article>
+                <article class="card">
+                    <h3>Services Déployés</h3>
+                    <ul style="list-style: none; color: var(--text-muted);">
+                        <li><i class="fas fa-key" style="color:var(--accent); width: 20px;"></i> <strong>Keystone</strong> : Identité</li>
+                        <li><i class="fas fa-server" style="color:var(--accent); width: 20px;"></i> <strong>Nova</strong> : Compute</li>
+                        <li><i class="fas fa-network-wired" style="color:var(--accent); width: 20px;"></i> <strong>Neutron</strong> : Réseau</li>
+                        <li><i class="fas fa-compact-disc" style="color:var(--accent); width: 20px;"></i> <strong>Glance</strong> : Images</li>
+                        <li><i class="fas fa-hdd" style="color:var(--accent); width: 20px;"></i> <strong>Cinder</strong> : Stockage Bloc</li>
+                        <li><i class="fas fa-box" style="color:var(--accent); width: 20px;"></i> <strong>Swift</strong> : Stockage Objet</li>
+                    </ul>
+                </article>
+            </div>
+        </section>
+
+        <section>
+            <h2><i class="fas fa-tools"></i> Pré-requis Matériels</h2>
+            <div class="grid">
+                <article class="card" style="border-color: #facc15;">
+                    <h3 style="color: #facc15;">Configuration Minimale</h3>
+                    <p>Pour test basique</p>
+                    <ul style="list-style: none; font-family: 'JetBrains Mono', monospace;">
+                        <li>RAM : 8 Go</li>
+                        <li>CPU : 2 vCPU</li>
+                        <li>Disk : 60 Go</li>
+                    </ul>
+                </article>
+
+                <article class="card" style="border-color: var(--code-text);">
+                    <h3 style="color: var(--code-text);">Configuration Recommandée</h3>
+                    <p>Pour expérience optimale</p>
+                    <ul style="list-style: none; font-family: 'JetBrains Mono', monospace;">
+                        <li>RAM : 16–32 Go</li>
+                        <li>CPU : 4–6 vCPU</li>
+                        <li>Disk : 90+ Go</li>
+                    </ul>
+                </article>
+
+                <article class="card" style="background-color: rgba(56, 189, 248, 0.1); border-color: var(--accent);">
+                    <h3 style="color: var(--accent);">Config du TP (VMware)</h3>
+                    <ul style="list-style: none; font-family: 'JetBrains Mono', monospace;">
+                        <li>OS : Ubuntu 24.04 Desktop</li>
+                        <li>RAM : 32 Go</li>
+                        <li>CPU : 6 Processeurs</li>
+                        <li>Disk : 95 Go</li>
+                        <li>Réseau : Mode NAT</li>
+                    </ul>
+                </article>
+            </div>
+        </section>
+
+        <section>
+            <h2>1. Préparation du Système</h2>
+            <p><strong>Note de sécurité :</strong> OpenStack ne doit jamais être exécuté en root. Nous créons un utilisateur dédié <code>stack</code>.</p>
+            
+            <pre>
+# 1. Mise à jour du système
+sudo apt update && sudo apt upgrade -y
+
+# 2. Création de l'utilisateur stack (dossier home dans /opt/stack)
+sudo useradd -s /bin/bash -d /opt/stack -m stack
+
+# 3. Configuration des droits sudo sans mot de passe
+echo "stack ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/stack
+
+# 4. Connexion à l'utilisateur stack
+sudo su - stack
+</pre>
+        </section>
+
+        <section>
+            <h2>2. Installation de DevStack</h2>
+            
+            <h3>A. Téléchargement</h3>
+            <pre>
+git clone https://opendev.org/openstack/devstack
+cd devstack
+</pre>
+
+            <h3>B. Configuration (local.conf)</h3>
+            <p>Création du fichier de configuration essentiel : <code>nano local.conf</code></p>
+            <pre>
+[[local|localrc]]
+ADMIN_PASSWORD=secret
+DATABASE_PASSWORD=$ADMIN_PASSWORD
+RABBIT_PASSWORD=$ADMIN_PASSWORD
+SERVICE_PASSWORD=$ADMIN_PASSWORD
+
+# Activation de Swift (Object Storage)
+enable_service s-account s-container s-object s-proxy
+</pre>
+
+            <h3>C. Lancement du déploiement</h3>
+            <p><em>Durée estimée : 15 à 30 minutes.</em></p>
+            <pre>./stack.sh</pre>
+        </section>
+
+        <section>
+            <h2>3. Accès & Dashboard Horizon</h2>
+            <div class="card" style="border-left: 4px solid var(--code-text);">
+                <h3><i class="fas fa-check-circle" style="color: var(--code-text);"></i> Installation Terminée</h3>
+                <p>Une fois le script terminé, vous pouvez accéder au tableau de bord :</p>
+                <div style="background-color: var(--bg-body); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                    <strong>URL :</strong> <a href="http://192.168.80.128/dashboard" target="_blank" style="color:var(--accent);">http://192.168.80.128/dashboard</a> (IP à adapter)<br>
+                    <strong>Utilisateur :</strong> admin<br>
+                    <strong>Mot de passe :</strong> secret
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>4. Configuration CLI & Vérification</h2>
+            <p>Pour utiliser les commandes en terminal, il faut charger les variables d'environnement (authentification).</p>
+            
+            <pre>
+# Chargement des variables admin
+source openrc admin admin
+
+# Vérification du chargement
+env | grep OS_
+</pre>
+
+            <h3>Tests des services</h3>
+            <pre>
+# 1. Identité (Keystone)
+openstack token issue
+
+# 2. Compute (Nova)
+openstack compute service list
+
+# 3. Réseau (Neutron)
+openstack network agent list
+
+# 4. Images (Glance)
+openstack image list
+
+# 5. Stockage Bloc (Cinder)
+openstack volume service list
+
+# 6. Stockage Objet (Swift)
+openstack object store account show
+</pre>
+        </section>
+
+        <section>
+            <h2><i class="fas fa-cogs"></i> Gestion & Maintenance</h2>
+            <div class="grid">
+                <article class="card">
+                    <h3>Commandes Utiles</h3>
+                    <pre style="margin-bottom: 0;">
+# Arrêter OpenStack proprement
+./unstack.sh
+
+# Nettoyer l'environnement (Reset total)
+./clean.sh
+
+# Redémarrer
+./stack.sh
+</pre>
+                </article>
+                <article class="card">
+                    <h3>Vérification Apache</h3>
+                    <p>Horizon tourne sous Apache2. Vérifiez son état en cas de problème d'accès web.</p>
+                    <pre style="margin-bottom: 0;">sudo systemctl status apache2</pre>
+                </article>
+            </div>
+        </section>
+
+        <section style="background-color: var(--bg-card); padding: 2rem; border-radius: 12px; border: 1px solid var(--accent); margin-top: 4rem;">
+            <h3><i class="fas fa-graduation-cap"></i> Compétences Acquises</h3>
+            <p>Ce TP a permis de valider :</p>
+            <ul style="list-style: none; color: var(--text-muted);">
+                <li><i class="fas fa-check" style="color: var(--code-text); margin-right: 10px;"></i> Déploiement automatisé d'une infrastructure IaaS.</li>
+                <li><i class="fas fa-check" style="color: var(--code-text); margin-right: 10px;"></i> Compréhension de l'architecture modulaire OpenStack.</li>
+                <li><i class="fas fa-check" style="color: var(--code-text); margin-right: 10px;"></i> Administration via CLI et Dashboard Horizon.</li>
+            </ul>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Nicolas. TP OpenStack - Mastère Cloud.</p>
+        <div style="margin-top: 10px;">
+            <a href="projets.html" style="color: var(--accent);">← Retour aux projets</a>
+        </div>
+    </footer>
+
+</body>
+</html>
