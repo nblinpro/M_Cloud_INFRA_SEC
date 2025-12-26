@@ -135,54 +135,40 @@ code {
 
 /* --- Menu Déroulant (Dropdown) --- */
 
-/* Le parent doit être en relatif pour que l'enfant se positionne par rapport à lui */
 .dropdown {
-    position: relative;
-    padding-bottom: 10px; /* Petite zone tampon pour ne pas perdre le focus souris */
+    position: relative; /* Important pour que le sous-menu s'accroche ici */
 }
 
-/* Style du menu caché */
 .dropdown-menu {
-    display: none;              /* Caché par défaut */
-    position: absolute;         /* Sort du flux normal */
-    top: 100%;                  /* Se place juste en dessous du parent */
+    display: none;       /* CACHÉ par défaut */
+    position: absolute;  /* FLOTTANT (ne pousse pas les autres éléments) */
+    top: 100%;
     left: 0;
     background-color: var(--secondary);
-    min-width: 200px;           /* Largeur minimale */
+    min-width: 200px;
     border: 1px solid var(--border);
-    border-top: 2px solid var(--accent); /* Petite touche esthétique */
     box-shadow: 0 8px 16px rgba(0,0,0,0.3);
-    border-radius: 0 0 8px 8px;
-    z-index: 1000;              /* Passe au-dessus du reste */
+    z-index: 1000;
     
-    /* On réinitialise le style flex du menu principal pour le mettre en colonne */
-    flex-direction: column;
-    gap: 0;
-    padding: 0.5rem 0;
+    /* Pour les mettre en colonne verticale */
+    flex-direction: column; 
+    padding: 0;
 }
 
 /* Affichage au survol */
 .dropdown:hover .dropdown-menu {
-    display: flex; /* ou block */
+    display: flex;
 }
 
-/* Style des liens dans le dropdown */
+/* Style des liens du sous-menu */
 .dropdown-menu li {
     width: 100%;
 }
 
 .dropdown-menu a {
     display: block;
-    padding: 0.8rem 1.5rem;
-    color: var(--text-muted);
-    transition: all 0.2s;
-    font-size: 0.9rem;
-}
-
-.dropdown-menu a:hover {
-    background-color: rgba(56, 189, 248, 0.1); /* Légère teinte cyan au survol */
-    color: var(--accent);
-    padding-left: 2rem; /* Petit effet de glissement vers la droite */
+    padding: 10px 15px;
+    white-space: nowrap; /* Empêche le texte de passer à la ligne */
 }
 
 
