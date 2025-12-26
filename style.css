@@ -133,46 +133,6 @@ code {
     font-family: inherit;
 }
 
-/* --- Menu Déroulant (Dropdown) --- */
-
-.dropdown {
-    position: relative; /* Important pour que le sous-menu s'accroche ici */
-}
-
-.dropdown-menu {
-    display: none;       /* CACHÉ par défaut */
-    position: absolute;  /* FLOTTANT (ne pousse pas les autres éléments) */
-    top: 100%;
-    left: 0;
-    background-color: var(--secondary);
-    min-width: 200px;
-    border: 1px solid var(--border);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
-    z-index: 1000;
-    
-    /* Pour les mettre en colonne verticale */
-    flex-direction: column; 
-    padding: 0;
-}
-
-/* Affichage au survol */
-.dropdown:hover .dropdown-menu {
-    display: flex;
-}
-
-/* Style des liens du sous-menu */
-.dropdown-menu li {
-    width: 100%;
-}
-
-.dropdown-menu a {
-    display: block;
-    padding: 10px 15px;
-    white-space: nowrap; /* Empêche le texte de passer à la ligne */
-}
-
-
-
 /* Footer */
 footer {
     text-align: center;
