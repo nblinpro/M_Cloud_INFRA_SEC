@@ -170,26 +170,66 @@ source openrc admin admin
 env | grep OS_
 </pre>
 
-            <h3>Tests des services</h3>
-            <pre>
+            <h3>Tests des services & Résultats</h3>
+
+<div style="margin-bottom: 3rem;">
+    <pre style="margin-bottom: 1rem;">
 # 1. Identité (Keystone)
-openstack token issue
+openstack token issue</pre>
+    <img src="../images/token_openstack.png" 
+         alt="Résultat de la commande openstack token issue" 
+         style="max-width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--border); box-shadow: 0 4px 6px rgba(0,0,0,0.2);">
+</div>
 
+
+<div style="margin-bottom: 3rem;">
+    <pre style="margin-bottom: 1rem;">
 # 2. Compute (Nova)
-openstack compute service list
+openstack compute service list</pre>
+    <img src="../images/compute_openstack.png" 
+         alt="Résultat de la commande compute service list" 
+         style="max-width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--border); box-shadow: 0 4px 6px rgba(0,0,0,0.2);">
+</div>
 
+
+<div style="margin-bottom: 3rem;">
+    <pre style="margin-bottom: 1rem;">
 # 3. Réseau (Neutron)
-openstack network agent list
+openstack network agent list</pre>
+    <img src="../images/network_openstack.png" 
+         alt="Résultat de la commande network agent list" 
+         style="max-width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--border); box-shadow: 0 4px 6px rgba(0,0,0,0.2);">
+</div>
 
+
+<div style="margin-bottom: 3rem;">
+    <pre style="margin-bottom: 1rem;">
 # 4. Images (Glance)
-openstack image list
+openstack image list</pre>
+    <img src="../images/image_openstack.png" 
+         alt="Résultat de la commande image list" 
+         style="max-width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--border); box-shadow: 0 4px 6px rgba(0,0,0,0.2);">
+</div>
 
+
+<div style="margin-bottom: 3rem;">
+    <pre style="margin-bottom: 1rem;">
 # 5. Stockage Bloc (Cinder)
-openstack volume service list
+openstack volume service list</pre>
+    <img src="../images/volume_openstack.png" 
+         alt="Résultat de la commande volume service list" 
+         style="max-width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--border); box-shadow: 0 4px 6px rgba(0,0,0,0.2);">
+</div>
 
+
+<div style="margin-bottom: 3rem;">
+    <pre style="margin-bottom: 1rem;">
 # 6. Stockage Objet (Swift)
-openstack object store account show
-</pre>
+openstack object store account show</pre>
+    <img src="../images/object_openstack.png" 
+         alt="Résultat de la commande object store account show" 
+         style="max-width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--border); box-shadow: 0 4px 6px rgba(0,0,0,0.2);">
+</div>
         </section>
 
         <section>
