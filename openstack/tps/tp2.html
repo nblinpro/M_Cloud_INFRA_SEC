@@ -1,1 +1,263 @@
-dezd
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TP2 : Découverte Nova | Nicolas</title>
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">Nicolas<span>.infra</span></div>
+        <nav>
+            <ul>
+                <li><a href="https://nblinpro.github.io/portfolio/index.html">Accueil</a></li>
+                <li><a href="https://nblinpro.github.io/portfolio/pages/parcours.html">Parcours</a></li>
+                <li><a href="../openstack.html">Projets Openstack</a></li>
+                <li><a href="mailto:nicolas.blin.pro1@gmail.com" class="btn btn-primary" style="padding: 0.5rem 1rem;">Me Contacter</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero" style="min-height: 40vh; align-items: flex-start; text-align: left;">
+            <span class="hero-tag">OpenStack • Compute</span>
+            <h1>Découverte complète de <br><span style="color:var(--accent)">Nova (Compute)</span></h1>
+            <p style="max-width: 800px;">
+                Maîtrisez le moteur de calcul d'OpenStack. Création d'instances, gestion des réseaux, flavors personnalisés et monitoring des ressources.
+            </p>
+        </section>
+
+        <section>
+            <h2><i class="fas fa-bullseye"></i> Objectifs Pédagogiques</h2>
+            <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                <article class="card" style="text-align: center;">
+                    <i class="fas fa-server fa-2x" style="color:var(--accent); margin-bottom: 1rem;"></i>
+                    <h3 style="font-size: 1.1rem;">Service Nova</h3>
+                    <p style="font-size: 0.9rem; margin-bottom:0;">Comprendre l'architecture Compute.</p>
+                </article>
+                <article class="card" style="text-align: center;">
+                    <i class="fas fa-microchip fa-2x" style="color:var(--accent); margin-bottom: 1rem;"></i>
+                    <h3 style="font-size: 1.1rem;">Instances</h3>
+                    <p style="font-size: 0.9rem; margin-bottom:0;">Création & Gestion des VMs.</p>
+                </article>
+                <article class="card" style="text-align: center;">
+                    <i class="fas fa-network-wired fa-2x" style="color:var(--accent); margin-bottom: 1rem;"></i>
+                    <h3 style="font-size: 1.1rem;">Réseau</h3>
+                    <p style="font-size: 0.9rem; margin-bottom:0;">Réseaux privés & Publics.</p>
+                </article>
+                <article class="card" style="text-align: center;">
+                    <i class="fas fa-sliders-h fa-2x" style="color:var(--accent); margin-bottom: 1rem;"></i>
+                    <h3 style="font-size: 1.1rem;">Flavors</h3>
+                    <p style="font-size: 0.9rem; margin-bottom:0;">Profils de ressources sur mesure.</p>
+                </article>
+                <article class="card" style="text-align: center;">
+                    <i class="fas fa-camera fa-2x" style="color:var(--accent); margin-bottom: 1rem;"></i>
+                    <h3 style="font-size: 1.1rem;">Snapshots</h3>
+                    <p style="font-size: 0.9rem; margin-bottom:0;">Sauvegarde d'images disques.</p>
+                </article>
+                <article class="card" style="text-align: center;">
+                    <i class="fas fa-chart-line fa-2x" style="color:var(--accent); margin-bottom: 1rem;"></i>
+                    <h3 style="font-size: 1.1rem;">Monitoring</h3>
+                    <p style="font-size: 0.9rem; margin-bottom:0;">Surveillance des hyperviseurs.</p>
+                </article>
+            </div>
+        </section>
+
+        <hr style="border-color: var(--border); margin: 3rem 0;">
+
+        <section>
+            <h2>1. Découverte et vérification</h2>
+            <p>Nova est le cœur du calcul. Vérifions d'abord que les services sont opérationnels (état <strong>up</strong>).</p>
+            
+            <div class="grid">
+                <div>
+                    <h3>Lister les services Nova</h3>
+                    <pre>openstack compute service list</pre>
+                </div>
+                <div>
+                    <h3>Vérifier l'hyperviseur</h3>
+                    <pre>openstack hypervisor list</pre>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>2. Création des Flavors</h2>
+            <p>Les flavors définissent le gabarit matériel (CPU/RAM/Disque) des instances.</p>
+            
+            <div class="grid" style="margin-bottom: 2rem;">
+                <article class="card" style="border-top: 4px solid #4ade80;">
+                    <h3>💡 Flavor Léger</h3>
+                    <ul style="list-style: none; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem;">
+                        <li>vCPU : 1</li>
+                        <li>RAM  : 512 MB</li>
+                        <li>Disk : 5 GB</li>
+                    </ul>
+                </article>
+                <article class="card" style="border-top: 4px solid #38bdf8;">
+                    <h3>⚙️ Flavor Standard</h3>
+                    <ul style="list-style: none; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem;">
+                        <li>vCPU : 2</li>
+                        <li>RAM  : 4096 MB</li>
+                        <li>Disk : 20 GB</li>
+                    </ul>
+                </article>
+                <article class="card" style="border-top: 4px solid #f472b6;">
+                    <h3>🚀 Flavor IA</h3>
+                    <ul style="list-style: none; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem;">
+                        <li>vCPU : 8</li>
+                        <li>RAM  : 16 GB</li>
+                        <li>Disk : 50 GB</li>
+                    </ul>
+                </article>
+            </div>
+
+            <p><strong>Commandes de création :</strong></p>
+            <pre>
+openstack flavor create --vcpus 1 --ram 512 --disk 5 flavor_leger
+openstack flavor create --vcpus 2 --ram 4096 --disk 20 flavor_standard
+openstack flavor create --vcpus 8 --ram 16384 --disk 50 flavor_ia
+</pre>
+        </section>
+
+        <section>
+            <h2>3. Configuration Réseau</h2>
+            <p>Création d'un réseau privé, de son sous-réseau et connexion au routeur vers l'extérieur.</p>
+            
+            <pre>
+# 1. Création du réseau
+openstack network create private_tp2
+
+# 2. Configuration du sous-réseau (192.168.100.0/24)
+openstack subnet create --network private_tp2 \
+  --subnet-range 192.168.100.0/24 \
+  --gateway 192.168.100.1 \
+  --dns-nameserver 8.8.8.8 \
+  my-private-subnet
+
+# 3. Création et configuration du routeur
+openstack router create router_tp2
+openstack router set router_tp2 --external-gateway public
+
+# 4. Connexion du sous-réseau au routeur
+openstack router add subnet router_tp2 my-private-subnet
+</pre>
+        </section>
+
+        <section>
+            <h2>4. Accès & Sécurité</h2>
+            
+            <div class="grid">
+                <div>
+                    <h3>Clés SSH</h3>
+                    <p>Génération locale et import dans OpenStack.</p>
+                    <pre>
+# Génération locale
+ssh-keygen -f my-key
+
+# Import dans OpenStack
+openstack keypair create --public-key my-key.pub my-key
+</pre>
+                </div>
+                <div>
+                    <h3>Groupe de Sécurité</h3>
+                    <p>Création du groupe et ouverture des ports (ICMP, SSH, HTTP).</p>
+                    <pre>
+# Création du groupe
+openstack security group create my-secgroup
+
+# Règles (Ping, SSH, HTTP)
+openstack security group rule create --proto icmp my-secgroup
+openstack security group rule create --proto tcp --dst-port 22 my-secgroup
+openstack security group rule create --proto tcp --dst-port 80 my-secgroup
+</pre>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>5. Déploiement Instance Cirros</h2>
+            <p>Déploiement de la VM, attribution d'une IP flottante (publique) et test de connexion.</p>
+
+            <h3>A. Lister les images & Créer l'instance</h3>
+            <pre>
+openstack image list
+
+# Création de l'instance
+openstack server create --flavor flavor_standard \
+  --image cirros-0.6.3-x86_64-disk \
+  --nic net-id=$(openstack network show private_tp2 -f value -c id) \
+  --security-group my-secgroup \
+  --key-name my-key \
+  vm-test1
+</pre>
+
+            <h3>B. Allocation IP Flottante & Connexion</h3>
+            <pre>
+# Création de l'IP publique
+openstack floating ip create public
+
+# Association à la VM (Remplacez 172.24.4.193 par votre IP obtenue)
+openstack server add floating ip vm-test1 172.24.4.193
+
+# Connexion SSH et Test Ping
+sudo chmod 600 my-key
+ssh -i my-key cirros@172.24.4.193
+
+# Une fois dans la VM :
+ping 8.8.8.8
+</pre>
+            <div class="card" style="border-left: 4px solid var(--code-text); margin-top: 1rem; background-color: rgba(34, 197, 94, 0.1);">
+                <i class="fas fa-check-circle" style="color: var(--code-text);"></i> 
+                <strong>Succès :</strong> Si le ping répond, votre instance est correctement connectée à Internet !
+            </div>
+        </section>
+
+        <section>
+            <h2>6. Snapshot & Monitoring</h2>
+            
+            <h3>📸 Création d'un Snapshot</h3>
+            <p>Sauvegarde de l'état actuel de la VM pour créer une image réutilisable.</p>
+            <pre>
+openstack server image create --name snapshot_vmtest1 vm-test1
+
+# Vérification
+openstack image list
+</pre>
+
+            <h3>📊 Monitoring & Stats</h3>
+            <pre>
+# Détails complets de l'instance
+openstack server show vm-test1
+
+# Statistiques globales de l'hyperviseur
+openstack hypervisor stats show
+</pre>
+        </section>
+
+        <section style="background-color: var(--bg-card); padding: 2rem; border-radius: 12px; border: 1px solid var(--accent); margin-top: 4rem;">
+            <h3><i class="fas fa-graduation-cap"></i> Félicitations !</h3>
+            <p>Vous avez complété ce travail pratique sur Nova. Vous maîtrisez maintenant :</p>
+            <ul style="list-style: none; color: var(--text-muted); display: flex; flex-wrap: wrap; gap: 1rem;">
+                <li><i class="fas fa-check" style="color: var(--code-text);"></i> Création d'instances</li>
+                <li><i class="fas fa-check" style="color: var(--code-text);"></i> Configuration réseau</li>
+                <li><i class="fas fa-check" style="color: var(--code-text);"></i> Gestion de la sécurité</li>
+                <li><i class="fas fa-check" style="color: var(--code-text);"></i> Snapshots</li>
+                <li><i class="fas fa-check" style="color: var(--code-text);"></i> Monitoring</li>
+            </ul>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Nicolas. TP Nova - Mastère Cloud.</p>
+        <div style="margin-top: 10px;">
+            <a href="projets.html" style="color: var(--accent);">← Retour aux projets</a>
+        </div>
+    </footer>
+
+</body>
+</html>
