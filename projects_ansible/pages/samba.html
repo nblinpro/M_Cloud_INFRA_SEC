@@ -76,7 +76,7 @@ srv_samba ansible_host=192.168.80.175 ansible_user=innosys
             <p>Création du coffre-fort : <code>ansible-vault create group_vars/samba/vault.yml</code></p>
             <pre>
 # vault.yml
-vault_samba_pass_eric: "eric"
+vault_samba_pass_test: "test"
 vault_samba_pass_admin: "innosys"
 </pre>
 
@@ -99,7 +99,7 @@ sudo chmod 600 group_vars/samba/vault.yml
 ---
 samba_share_path: "/srv/partage_commun"
 samba_group_name: "partageurs"
-samba_user_eric: "eric"
+samba_user_test: "test"
 # Par défaut, l'admin samba sera l'utilisateur avec lequel Ansible se connecte
 samba_admin_user: "innosys"
 </pre>
@@ -127,9 +127,9 @@ samba_admin_user: "innosys"
     name: "{{ samba_group_name }}"
     state: present
 
-- name: Créer l'utilisateur Eric (sans login)
+- name: Créer l'utilisateur test (sans login)
   ansible.builtin.user:
-    name: "{{ samba_user_eric }}"
+    name: "{{ samba_user_test }}"
     shell: /usr/sbin/nologin
     create_home: no
     groups: "{{ samba_group_name }}"
@@ -152,11 +152,11 @@ samba_admin_user: "innosys"
     mode: '2770'
 
 # Configuration des mots de passe Samba via smbpasswd
-- name: Définir le mot de passe Samba pour Eric
+- name: Définir le mot de passe Samba pour test
   ansible.builtin.shell: >
-    (echo '{{ vault_samba_pass_eric }}'; echo '{{ vault_samba_pass_eric }}') | smbpasswd -s -a {{ samba_user_eric }}
-  register: smb_eric_result
-  changed_when: "'Added user' in smb_eric_result.stdout"
+    (echo '{{ vault_samba_pass_test }}'; echo '{{ vault_samba_pass_test }}') | smbpasswd -s -a {{ samba_user_test }}
+  register: smb_test_result
+  changed_when: "'Added user' in smb_test_result.stdout"
   no_log: true
 
 - name: Définir le mot de passe Samba pour l'Admin
@@ -173,7 +173,7 @@ samba_admin_user: "innosys"
     marker: "# {mark} ANSIBLE MANAGED BLOCK - PARTAGE COMMUN"
     block: |
       [DossierCommun]
-          comment = Partage pour Eric et moi
+          comment = Partage pour test et moi
           path = {{ samba_share_path }}
           browsable = yes
           read only = no
