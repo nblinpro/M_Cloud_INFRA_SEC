@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Déploiement Laravel - Ansible</title>
+    <title>Déploiement Samba - Ansible</title>
     <link rel="stylesheet" href="../../style.css">
 </head>
 <body>
@@ -20,25 +20,25 @@
     </header>
 
     <main>
-        <h1>Déploiement Automatisé Laravel via Ansible</h1>
-        <p>Documentation technique du projet d'automatisation incluant la gestion de configuration, le déploiement sécurisé (Vault) et l'optimisation serveur.</p>
+        <h1>Déploiement Serveur de Fichiers Samba via Ansible</h1>
+        <p>Documentation technique du projet d'automatisation pour la mise en place d'un serveur de fichiers sécurisé, incluant la gestion des utilisateurs, des groupes et des accès réseaux.</p>
 
         <section>
             <h2>1. Arborescence du projet</h2>
             <pre>
 mon_projet_ansible/
 ├── group_vars
-│   └── samba
-│      └── vault.yml
+│   └── samba
+│       └── vault.yml
 ├── hosts.ini
 ├── roles
-│   └── samba
-│       ├── defaults
-│       │   └── main.yml
-│       ├── handlers
-│       │   └── main.yml
-│       └── tasks
-│           └── main.yml
+│   └── samba
+│       ├── defaults
+│       │   └── main.yml
+│       ├── handlers
+│       │   └── main.yml
+│       └── tasks
+│           └── main.yml
 └── samba.yml
 </pre>
         </section>
@@ -50,32 +50,20 @@ mon_projet_ansible/
 
             <h3>Fichier d'inventaire (hosts.ini)</h3>
             <pre>
-[web]
-weblaravel ansible_host=192.168.80.167 ansible_user=innosys
-
-[db]
-bddlaravel ansible_host=192.168.80.168 ansible_user=innosys
+[samba]
+srv_samba ansible_host=192.168.80.175 ansible_user=innosys
 </pre>
 
-            <h3>Playbook Principal (site.yml)</h3>
+            <h3>Playbook Principal (samba.yml)</h3>
             <pre>
 ---
-- name: Déploiement Base de Données
-  hosts: db
+- name: Configuration du Serveur de Fichiers (Samba)
+  hosts: samba
   become: yes
+  vars_files:
+    - group_vars/samba/vault.yml
   roles:
-    - database
-
-- name: Déploiement Serveur Web
-  hosts: web
-  become: yes
-  roles:
-    - php
-    - apache
-    - composer
-    - laravel
-    - selinux
-    - firewall
+    - samba
 </pre>
         </section>
 
@@ -84,338 +72,138 @@ bddlaravel ansible_host=192.168.80.168 ansible_user=innosys
         <section>
             <h2>3. Variables & Sécurité (Vault)</h2>
 
-            <h3>Configuration DB (group_vars/db/)</h3>
-            <p>Création du coffre-fort : <code>sudo ansible-vault create group_vars/db/vault.yml</code></p>
+            <h3>Configuration Secrète (group_vars/samba/)</h3>
+            <p>Création du coffre-fort : <code>ansible-vault create group_vars/samba/vault.yml</code></p>
             <pre>
 # vault.yml
-mysql_root_password: "RootPass123!"
-laravel_db: "laravel_db"
-laravel_user: "laravel_user"
-laravel_password: "LaravelPass123!"
-</pre>
-
-            <h3>Configuration Web (group_vars/web/)</h3>
-            <p>Création du coffre-fort : <code>sudo ansible-vault create group_vars/web/vault.yml</code></p>
-            <pre>
-# vault.yml
-db_password: "LaravelPass123!"
-db_name: "laravel_db"
-db_user: "laravel_user"
-
-# vars.yml
-app_path: /var/www/laravel
-db_host: 192.168.80.168
-db_port: 3306
+vault_samba_pass_eric: "eric"
+vault_samba_pass_admin: "innosys"
 </pre>
 
             <h3>Sécurisation des permissions</h3>
             <pre>
 sudo chown -R nicolas:nicolas group_vars
-
-# Sécurisation dossier DB
-sudo chmod 700 group_vars/db
-sudo chmod 600 group_vars/db/vault.yml
-
-# Sécurisation dossier Web
-sudo chmod 700 group_vars/web
-sudo chmod 600 group_vars/web/vault.yml
+sudo chmod 700 group_vars/samba
+sudo chmod 600 group_vars/samba/vault.yml
 </pre>
         </section>
 
         <hr style="border-color: var(--secondary); margin: 3rem 0;">
 
         <section>
-            <h2>Role : Database</h2>
+            <h2>4. Role : Samba</h2>
+            <p>Ce rôle gère l'installation, la création des utilisateurs et la configuration du partage.</p>
 
-            <p><strong>Fichier :</strong> <code>roles/database/defaults/main.yml</code></p>
+            <h3>Variables par défaut (defaults/main.yml)</h3>
             <pre>
 ---
-web_server_ip: "192.168.80.167"
+samba_share_path: "/srv/partage_commun"
+samba_group_name: "partageurs"
+samba_user_eric: "eric"
+# Par défaut, l'admin samba sera l'utilisateur avec lequel Ansible se connecte
+samba_admin_user: "innosys"
 </pre>
 
-            <p><strong>Fichier :</strong> <code>roles/database/tasks/main.yml</code></p>
+            <h3>Gestionnaire de service (handlers/main.yml)</h3>
             <pre>
 ---
-- name: Installer MySQL server, client et PyMySQL
-  dnf:
-    name:
-      - mysql-server
-      - mysql
-      - python3-PyMySQL
-    state: present
-
-- name: Activer et démarrer MySQL
-  systemd:
-    name: mysqld
-    state: started
-    enabled: yes
-
-- name: Définir le mot de passe root MySQL
-  mysql_user:
-    login_user: root
-    login_password: ""
-    user: root
-    password: "{{ mysql_root_password }}"
-    host_all: yes
-    check_implicit_admin: yes
-  ignore_errors: yes
-
-- name: Supprimer les utilisateurs anonymes
-  mysql_user:
-    login_user: root
-    login_password: "{{ mysql_root_password }}"
-    name: ''
-    host_all: yes
-    state: absent
-
-- name: Supprimer la base de test
-  mysql_db:
-    login_user: root
-    login_password: "{{ mysql_root_password }}"
-    name: test
-    state: absent
-
-- name: Créer la base Laravel
-  mysql_db:
-    login_user: root
-    login_password: "{{ mysql_root_password }}"
-    name: "{{ laravel_db }}"
-    state: present
-    encoding: utf8mb4
-    collation: utf8mb4_unicode_ci
-
-- name: Créer l'utilisateur Laravel (Autorisé depuis le serveur Web)
-  mysql_user:
-    login_user: root
-    login_password: "{{ mysql_root_password }}"
-    name: "{{ laravel_user }}"
-    password: "{{ laravel_password }}"
-    host: "{{ web_server_ip }}"
-    priv: "{{ laravel_db }}.*:ALL"
-    state: present
-
-- name: Ouvrir le port MySQL (Firewall)
-  firewalld:
-    port: 3306/tcp
-    permanent: yes
-    state: enabled
-
-- name: Recharger firewalld
-  systemd:
-    name: firewalld
-    state: restarted
-</pre>
-        </section>
-
-        <hr style="border-color: var(--border); margin: 3rem 0;">
-
-        <section>
-            <h2>Role : PHP</h2>
-            <p><strong>Fichier :</strong> <code>roles/php/tasks/main.yml</code></p>
-            <pre>
----
-- name: Installer dnf-plugins-core
-  dnf:
-    name: dnf-plugins-core
-    state: present
-
-- name: Installer EPEL Release
-  dnf:
-    name:
-      https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
-    state: present
-    disable_gpg_check: yes
-
-- name: Activer repo REMI et module PHP 8.3
-  shell: |
-    dnf install -y https://rpms.remirepo.net/enterprise/remi-release-9.rpm
-    dnf module reset php -y
-    dnf module enable php:remi-8.3 -y
-  args:
-    creates: /etc/yum.repos.d/remi.repo
-
-- name: Installer PHP et extensions
-  dnf:
-    name:
-      - php
-      - php-cli
-      - php-common
-      - php-fpm
-      - php-mysqlnd
-      - php-xml
-      - php-json
-      - php-zip
-      - php-gd
-      - php-mbstring
-      - php-curl
-      - php-opcache
-      - git
-      - unzip
-      - curl
-    state: present
-</pre>
-        </section>
-
-        <hr style="border-color: var(--border); margin: 3rem 0;">
-
-        <section>
-            <h2>Role : Apache</h2>
-
-            <p><strong>Fichier :</strong> <code>roles/apache/tasks/main.yml</code></p>
-            <pre>
----
-- name: Installer Apache
-  dnf:
-    name: httpd
-    state: present
-
-- name: Démarrer Apache
-  systemd:
-    name: httpd
-    enabled: yes
-    state: started
-
-- name: Déployer VirtualHost Laravel
-  template:
-    src: laravel.conf.j2
-    dest: /etc/httpd/conf.d/laravel.conf
-  notify: Restart Apache
-</pre>
-
-            <p><strong>Fichier :</strong> <code>roles/apache/handlers/main.yml</code></p>
-            <pre>
----
-- name: Restart Apache
-  systemd:
-    name: httpd
+- name: Restart Samba
+  ansible.builtin.service:
+    name: smbd
     state: restarted
 </pre>
 
-            <p><strong>Fichier :</strong> <code>roles/apache/templates/laravel.conf.j2</code></p>
-            <pre>
-&lt;VirtualHost *:80&gt;
-    DocumentRoot {{ app_path }}/public
-
-    &lt;Directory {{ app_path }}/public&gt;
-        AllowOverride All
-        Require all granted
-    &lt;/Directory&gt;
-
-    ErrorLog /var/log/httpd/laravel_error.log
-    CustomLog /var/log/httpd/laravel_access.log combined
-&lt;/VirtualHost&gt;
-</pre>
-        </section>
-
-        <hr style="border-color: var(--border); margin: 3rem 0;">
-
-        <section>
-            <h2>Role : Composer</h2>
-            <p><strong>Fichier :</strong> <code>roles/composer/tasks/main.yml</code></p>
+            <h3>Tâches principales (tasks/main.yml)</h3>
             <pre>
 ---
-- name: Télécharger Composer
-  get_url:
-    url: https://getcomposer.org/download/latest-stable/composer.phar
-    dest: /usr/local/bin/composer
-    mode: "0755"
-</pre>
-        </section>
+- name: Installer Samba
+  ansible.builtin.apt:
+    name: samba
+    state: present
+    update_cache: yes
 
-        <hr style="border-color: var(--border); margin: 3rem 0;">
+- name: Créer le groupe de partage "{{ samba_group_name }}"
+  ansible.builtin.group:
+    name: "{{ samba_group_name }}"
+    state: present
 
-        <section>
-            <h2>Role : Laravel</h2>
-            <p><strong>Fichier :</strong> <code>roles/laravel/tasks/main.yml</code></p>
-            <pre>
----
-- name: Créer dossier application
-  file:
-    path: "{{ app_path }}"
+- name: Créer l'utilisateur Eric (sans login)
+  ansible.builtin.user:
+    name: "{{ samba_user_eric }}"
+    shell: /usr/sbin/nologin
+    create_home: no
+    groups: "{{ samba_group_name }}"
+    append: yes
+    state: present
+
+- name: Ajouter l'admin "{{ samba_admin_user }}" au groupe "{{ samba_group_name }}"
+  ansible.builtin.user:
+    name: "{{ samba_admin_user }}"
+    groups: "{{ samba_group_name }}"
+    append: yes
+
+- name: Configurer le dossier partagé (Permissions 2770)
+  ansible.builtin.file:
+    path: "{{ samba_share_path }}"
     state: directory
-    mode: "0755"
+    owner: root
+    group: "{{ samba_group_name }}"
+    # 2770 = setgid (2) + rwx user (7) + rwx group (7) + no permission others (0)
+    mode: '2770'
 
-- name: Installer Laravel
-  command: /usr/local/bin/composer create-project laravel/laravel .
-  args:
-    chdir: "{{ app_path }}"
-    creates: "{{ app_path }}/artisan"
+# Configuration des mots de passe Samba via smbpasswd
+- name: Définir le mot de passe Samba pour Eric
+  ansible.builtin.shell: >
+    (echo '{{ vault_samba_pass_eric }}'; echo '{{ vault_samba_pass_eric }}') | smbpasswd -s -a {{ samba_user_eric }}
+  register: smb_eric_result
+  changed_when: "'Added user' in smb_eric_result.stdout"
+  no_log: true
 
-- name: Permissions Apache
-  file:
-    path: "{{ app_path }}"
-    recurse: yes
-    owner: apache
-    group: apache
+- name: Définir le mot de passe Samba pour l'Admin
+  ansible.builtin.shell: >
+    (echo '{{ vault_samba_pass_admin }}'; echo '{{ vault_samba_pass_admin }}') | smbpasswd -s -a {{ samba_admin_user }}
+  register: smb_admin_result
+  changed_when: "'Added user' in smb_admin_result.stdout"
+  no_log: true
 
-- name: Droits écriture storage/cache
-  file:
-    path: "{{ item }}"
-    recurse: yes
-    mode: "0775"
-  loop:
-    - "{{ app_path }}/storage"
-    - "{{ app_path }}/bootstrap/cache"
+# Ajout de la configuration dans smb.conf
+- name: Configurer le partage dans /etc/samba/smb.conf
+  ansible.builtin.blockinfile:
+    path: /etc/samba/smb.conf
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - PARTAGE COMMUN"
+    block: |
+      [DossierCommun]
+          comment = Partage pour Eric et moi
+          path = {{ samba_share_path }}
+          browsable = yes
+          read only = no
+          guest ok = no
+          valid users = @{{ samba_group_name }}
+          create mask = 0660
+          directory mask = 0770
+          force group = {{ samba_group_name }}
+  notify: Restart Samba
 
-- name: Générer clé Laravel
-  command: sudo -u apache php artisan key:generate
-  args:
-    chdir: "{{ app_path }}"
-
-- name: Configurer .env
-  lineinfile:
-    path: "{{ app_path }}/.env"
-    regexp: "{{ item.regexp }}"
-    line: "{{ item.line }}"
-  loop:
-    - { regexp: '^DB_CONNECTION=', line: 'DB_CONNECTION=mysql' }
-    - { regexp: '^DB_HOST=',       line: 'DB_HOST={{ db_host }}' }
-    - { regexp: '^DB_PORT=',       line: 'DB_PORT={{ db_port }}' }
-    - { regexp: '^DB_DATABASE=',   line: 'DB_DATABASE={{ db_name }}' }
-    - { regexp: '^DB_USERNAME=',   line: 'DB_USERNAME={{ db_user }}' }
-    - { regexp: '^DB_PASSWORD=',   line: 'DB_PASSWORD={{ db_password }}' }
-
-- name: Exécuter migrations
-  command: sudo -u apache php artisan migrate --force
-  args:
-    chdir: "{{ app_path }}"
+- name: Afficher les informations de connexion au partage
+  ansible.builtin.debug:
+    msg:
+      - "=================================================================="
+      - "✅ Installation terminée avec succès !"
+      - "📂 Nom du partage : DossierCommun"
+      - "------------------------------------------------------------------"
+      # Note les 4 antislashes au début et les 2 au milieu
+      - "🖥️  Windows (Lecteur Réseau) : \\\\{{ ansible_host }}\\\\DossierCommun"
+      - "🐧 Linux / Mac (Samba)      : smb://{{ ansible_host }}/DossierCommun"
+      - "💾 WinSCP (Protocole SFTP)  : sftp://{{ ansible_host }}/srv/partage_commun"
+      - "=================================================================="
 </pre>
         </section>
 
-        <hr style="border-color: var(--border); margin: 3rem 0;">
-
-        <section>
-            <h2>Rôles : Sécurité (SELinux & Firewall)</h2>
-
-            <p><strong>Fichier :</strong> <code>roles/selinux/tasks/main.yml</code></p>
-            <pre>
----
-- name: Autoriser connexion réseau Apache
-  command: setsebool -P httpd_can_network_connect on
-
-- name: Appliquer contexte SELinux
-  command: chcon -R -t httpd_sys_rw_content_t {{ item }}
-  loop:
-    - "{{ app_path }}/storage"
-    - "{{ app_path }}/bootstrap/cache"
-    - "{{ app_path }}/.env"
-</pre>
-
-            <p><strong>Fichier :</strong> <code>roles/firewall/tasks/main.yml</code></p>
-            <pre>
----
-- name: Ouvrir ports HTTP/HTTPS
-  firewalld:
-    port: "{{ item }}/tcp"
-    permanent: yes
-    state: enabled
-  loop: [80, 443]
-</pre>
+        <section style="background-color: var(--secondary); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--accent); margin-top: 3rem;">
+            <h3>Conclusion</h3>
+            <p>Ce projet démontre la mise en place d'un serveur de fichiers collaboratif. Il gère automatiquement les permissions complexes (SetGID 2770), sécurise les mots de passe via Ansible Vault et fournit les instructions de connexion pour les environnements Windows, Linux et WinSCP.</p>
         </section>
-<section style="background-color: var(--secondary); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--accent); margin-top: 3rem;">
-    <h3>Conclusion</h3>
-    <p>Ce projet démontre la mise en place complète d’un déploiement Laravel automatisé via Ansible, incluant la base de données, le serveur web, la sécurité SELinux et le firewall.</p>
-</section>
+
     </main>
 
     <footer>
