@@ -51,7 +51,7 @@ mon_projet_ansible/
             <h3>Fichier d'inventaire (hosts.ini)</h3>
             <pre>
 [samba]
-srv_samba ansible_host=192.168.80.175 ansible_user=innosys
+srv_samba ansible_host=192.168.80.175 ansible_user=user
 </pre>
 
             <h3>Playbook Principal (samba.yml)</h3>
@@ -77,7 +77,7 @@ srv_samba ansible_host=192.168.80.175 ansible_user=innosys
             <pre>
 # vault.yml
 vault_samba_pass_test: "test"
-vault_samba_pass_admin: "innosys"
+vault_samba_pass_admin: "user"
 </pre>
 
             <h3>Sécurisation des permissions</h3>
@@ -101,7 +101,7 @@ samba_share_path: "/srv/partage_commun"
 samba_group_name: "partageurs"
 samba_user_test: "test"
 # Par défaut, l'admin samba sera l'utilisateur avec lequel Ansible se connecte
-samba_admin_user: "innosys"
+samba_admin_user: "user"
 </pre>
 
             <h3>Gestionnaire de service (handlers/main.yml)</h3>
