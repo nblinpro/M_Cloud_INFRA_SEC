@@ -2,30 +2,8 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Doc Samba - Ubuntu 24.04</title>
+    <title>Déploiement Laravel - Ansible</title>
     <link rel="stylesheet" href="../../style.css">
-    <style>
-        /* Petit ajout CSS spécifique pour centrer l'image proprement */
-        .diagram-container {
-            text-align: center;
-            margin: 2rem 0;
-            padding: 1rem;
-            background-color: var(--secondary);
-            border-radius: 8px;
-            border: 1px solid #334155;
-        }
-        .diagram-container img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 4px;
-        }
-        .diagram-caption {
-            margin-top: 0.5rem;
-            font-size: 0.9rem;
-            color: #94a3b8;
-            font-style: italic;
-        }
-    </style>
 </head>
 <body>
 
@@ -42,125 +20,402 @@
     </header>
 
     <main>
-        <h1>Fiche Mémo : Partage Samba (Ubuntu 24.04)</h1>
-        
+        <h1>Déploiement Automatisé Laravel via Ansible</h1>
+        <p>Documentation technique du projet d'automatisation incluant la gestion de configuration, le déploiement sécurisé (Vault) et l'optimisation serveur.</p>
+
         <section>
-            <h2>Partie 1 : Création partage pour un utilisateur</h2>
-
-            <h3>Étape 1 : Installer Samba</h3>
-            <p>Installation des paquets nécessaires :</p>
+            <h2>1. Arborescence du projet</h2>
             <pre>
-sudo apt update
-sudo apt install samba -y
+mon_projet_ansible/
+├── group_vars
+│   └── samba
+│      └── vault.yml
+├── hosts.ini
+├── roles
+│   └── samba
+│       ├── defaults
+│       │   └── main.yml
+│       ├── handlers
+│       │   └── main.yml
+│       └── tasks
+│           └── main.yml
+└── samba.yml
 </pre>
-
-            <h3>Étape 2 : Créer le dossier à partager</h3>
-            <p>Création du dossier, attribution des droits et autorisation de traversée du dossier personnel :</p>
-            <pre>
-# Création du dossier
-mkdir -p ~/documents_partages
-
-# Attribution des droits à l'utilisateur courant
-sudo chown $USER:$USER ~/documents_partages
-
-# Autorisation d'accès au dossier personnel (traversée)
-sudo chmod 755 /home/votre_nom_utilisateur
-</pre>
-
-            <h3>Étape 3 : Configurer Samba</h3>
-            <p>Ajouter ce bloc à la fin du fichier <code>/etc/samba/smb.conf</code> :</p>
-            <pre>
-[Documents]
-comment = Partage Documents Ubuntu
-path = /home/votre_nom_utilisateur/documents_partages
-read only = no
-browsable = yes
-valid users = votre_nom_utilisateur
-create mask = 0755
-directory mask = 0755
-</pre>
-
-            <h3>Étape 4 : Définir un mot de passe Samba</h3>
-            <p>Ce mot de passe est indépendant du mot de passe système :</p>
-            <pre>sudo smbpasswd -a $USER</pre>
-
-            <h3>Étape 5 : Redémarrer le service</h3>
-            <pre>sudo systemctl restart smbd</pre>
         </section>
 
         <hr style="border-color: var(--secondary); margin: 3rem 0;">
 
         <section>
-            <h2>Partie 2 : Ajout de plusieurs utilisateurs au partage</h2>
+            <h2>2. Configuration Racine</h2>
 
-            <h3>Étape 1 : Ajout d’un autre utilisateur</h3>
-            <p>Création de l'utilisateur système et de son mot de passe Samba :</p>
+            <h3>Fichier d'inventaire (hosts.ini)</h3>
             <pre>
-# Création de l'utilisateur système
-sudo adduser deuxieme_utilisateur
+[web]
+weblaravel ansible_host=192.168.80.167 ansible_user=innosys
 
-# Création de son mot de passe Samba
-sudo smbpasswd -a deuxieme_utilisateur
+[db]
+bddlaravel ansible_host=192.168.80.168 ansible_user=innosys
 </pre>
 
-            <h3>Étape 2 : Mettre à jour la configuration</h3>
-            <p>Dans <code>/etc/samba/smb.conf</code>, modifiez la ligne <code>valid users</code> :</p>
+            <h3>Playbook Principal (site.yml)</h3>
             <pre>
-[Documents]
-comment = Partage Documents Ubuntu
-path = /home/votre_nom_utilisateur/documents_partages
-read only = no
-browsable = yes
-# On ajoute le deuxième utilisateur à la suite avec un espace
-valid users = votre_nom_utilisateur deuxieme_utilisateur
-create mask = 0755
-directory mask = 0755
-</pre>
+---
+- name: Déploiement Base de Données
+  hosts: db
+  become: yes
+  roles:
+    - database
 
-            <h3>Étape 3 : Redémarrer le service</h3>
-            <pre>sudo systemctl restart smbd</pre>
+- name: Déploiement Serveur Web
+  hosts: web
+  become: yes
+  roles:
+    - php
+    - apache
+    - composer
+    - laravel
+    - selinux
+    - firewall
+</pre>
         </section>
 
         <hr style="border-color: var(--secondary); margin: 3rem 0;">
 
         <section>
-            <h2>Partie 3 : Création d’un second partage</h2>
+            <h2>3. Variables & Sécurité (Vault)</h2>
 
-            <h3>Étape 1 : Création du dossier</h3>
+            <h3>Configuration DB (group_vars/db/)</h3>
+            <p>Création du coffre-fort : <code>sudo ansible-vault create group_vars/db/vault.yml</code></p>
             <pre>
-mkdir -p ~/nom_repertoire
-sudo chown $USER:$USER ~/nom_repertoire
+# vault.yml
+mysql_root_password: "RootPass123!"
+laravel_db: "laravel_db"
+laravel_user: "laravel_user"
+laravel_password: "LaravelPass123!"
 </pre>
 
-            <h3>Étape 2 : Configurer Samba</h3>
-            <p>Ajoutez un nouveau bloc. <strong>Attention :</strong> le nom entre crochets doit être unique.</p>
+            <h3>Configuration Web (group_vars/web/)</h3>
+            <p>Création du coffre-fort : <code>sudo ansible-vault create group_vars/web/vault.yml</code></p>
             <pre>
-[Nouveau_Partage]
-comment = Autre Partage
-path = /home/votre_nom_utilisateur/nom_repertoire
-read only = no
-browsable = yes
-valid users = votre_nom_utilisateur
-create mask = 0755
-directory mask = 0755
+# vault.yml
+db_password: "LaravelPass123!"
+db_name: "laravel_db"
+db_user: "laravel_user"
+
+# vars.yml
+app_path: /var/www/laravel
+db_host: 192.168.80.168
+db_port: 3306
 </pre>
 
-            <h3>Étape 3 : Redémarrer le service</h3>
-            <pre>sudo systemctl restart smbd</pre>
+            <h3>Sécurisation des permissions</h3>
+            <pre>
+sudo chown -R nicolas:nicolas group_vars
+
+# Sécurisation dossier DB
+sudo chmod 700 group_vars/db
+sudo chmod 600 group_vars/db/vault.yml
+
+# Sécurisation dossier Web
+sudo chmod 700 group_vars/web
+sudo chmod 600 group_vars/web/vault.yml
+</pre>
         </section>
 
         <hr style="border-color: var(--secondary); margin: 3rem 0;">
 
         <section>
-            <h2>Schéma de fonctionnement détaillé</h2>
-            <p>Flux d’authentification et d’autorisation :</p>
-            
-            <div class="diagram-container">
-                <img src="../images/samba.png" alt="Architecture Samba">
-                <div class="diagram-caption">Architecture Samba & Permissions</div>
-            </div>
+            <h2>Role : Database</h2>
+
+            <p><strong>Fichier :</strong> <code>roles/database/defaults/main.yml</code></p>
+            <pre>
+---
+web_server_ip: "192.168.80.167"
+</pre>
+
+            <p><strong>Fichier :</strong> <code>roles/database/tasks/main.yml</code></p>
+            <pre>
+---
+- name: Installer MySQL server, client et PyMySQL
+  dnf:
+    name:
+      - mysql-server
+      - mysql
+      - python3-PyMySQL
+    state: present
+
+- name: Activer et démarrer MySQL
+  systemd:
+    name: mysqld
+    state: started
+    enabled: yes
+
+- name: Définir le mot de passe root MySQL
+  mysql_user:
+    login_user: root
+    login_password: ""
+    user: root
+    password: "{{ mysql_root_password }}"
+    host_all: yes
+    check_implicit_admin: yes
+  ignore_errors: yes
+
+- name: Supprimer les utilisateurs anonymes
+  mysql_user:
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    name: ''
+    host_all: yes
+    state: absent
+
+- name: Supprimer la base de test
+  mysql_db:
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    name: test
+    state: absent
+
+- name: Créer la base Laravel
+  mysql_db:
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    name: "{{ laravel_db }}"
+    state: present
+    encoding: utf8mb4
+    collation: utf8mb4_unicode_ci
+
+- name: Créer l'utilisateur Laravel (Autorisé depuis le serveur Web)
+  mysql_user:
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    name: "{{ laravel_user }}"
+    password: "{{ laravel_password }}"
+    host: "{{ web_server_ip }}"
+    priv: "{{ laravel_db }}.*:ALL"
+    state: present
+
+- name: Ouvrir le port MySQL (Firewall)
+  firewalld:
+    port: 3306/tcp
+    permanent: yes
+    state: enabled
+
+- name: Recharger firewalld
+  systemd:
+    name: firewalld
+    state: restarted
+</pre>
         </section>
 
+        <hr style="border-color: var(--border); margin: 3rem 0;">
+
+        <section>
+            <h2>Role : PHP</h2>
+            <p><strong>Fichier :</strong> <code>roles/php/tasks/main.yml</code></p>
+            <pre>
+---
+- name: Installer dnf-plugins-core
+  dnf:
+    name: dnf-plugins-core
+    state: present
+
+- name: Installer EPEL Release
+  dnf:
+    name:
+      https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+    state: present
+    disable_gpg_check: yes
+
+- name: Activer repo REMI et module PHP 8.3
+  shell: |
+    dnf install -y https://rpms.remirepo.net/enterprise/remi-release-9.rpm
+    dnf module reset php -y
+    dnf module enable php:remi-8.3 -y
+  args:
+    creates: /etc/yum.repos.d/remi.repo
+
+- name: Installer PHP et extensions
+  dnf:
+    name:
+      - php
+      - php-cli
+      - php-common
+      - php-fpm
+      - php-mysqlnd
+      - php-xml
+      - php-json
+      - php-zip
+      - php-gd
+      - php-mbstring
+      - php-curl
+      - php-opcache
+      - git
+      - unzip
+      - curl
+    state: present
+</pre>
+        </section>
+
+        <hr style="border-color: var(--border); margin: 3rem 0;">
+
+        <section>
+            <h2>Role : Apache</h2>
+
+            <p><strong>Fichier :</strong> <code>roles/apache/tasks/main.yml</code></p>
+            <pre>
+---
+- name: Installer Apache
+  dnf:
+    name: httpd
+    state: present
+
+- name: Démarrer Apache
+  systemd:
+    name: httpd
+    enabled: yes
+    state: started
+
+- name: Déployer VirtualHost Laravel
+  template:
+    src: laravel.conf.j2
+    dest: /etc/httpd/conf.d/laravel.conf
+  notify: Restart Apache
+</pre>
+
+            <p><strong>Fichier :</strong> <code>roles/apache/handlers/main.yml</code></p>
+            <pre>
+---
+- name: Restart Apache
+  systemd:
+    name: httpd
+    state: restarted
+</pre>
+
+            <p><strong>Fichier :</strong> <code>roles/apache/templates/laravel.conf.j2</code></p>
+            <pre>
+&lt;VirtualHost *:80&gt;
+    DocumentRoot {{ app_path }}/public
+
+    &lt;Directory {{ app_path }}/public&gt;
+        AllowOverride All
+        Require all granted
+    &lt;/Directory&gt;
+
+    ErrorLog /var/log/httpd/laravel_error.log
+    CustomLog /var/log/httpd/laravel_access.log combined
+&lt;/VirtualHost&gt;
+</pre>
+        </section>
+
+        <hr style="border-color: var(--border); margin: 3rem 0;">
+
+        <section>
+            <h2>Role : Composer</h2>
+            <p><strong>Fichier :</strong> <code>roles/composer/tasks/main.yml</code></p>
+            <pre>
+---
+- name: Télécharger Composer
+  get_url:
+    url: https://getcomposer.org/download/latest-stable/composer.phar
+    dest: /usr/local/bin/composer
+    mode: "0755"
+</pre>
+        </section>
+
+        <hr style="border-color: var(--border); margin: 3rem 0;">
+
+        <section>
+            <h2>Role : Laravel</h2>
+            <p><strong>Fichier :</strong> <code>roles/laravel/tasks/main.yml</code></p>
+            <pre>
+---
+- name: Créer dossier application
+  file:
+    path: "{{ app_path }}"
+    state: directory
+    mode: "0755"
+
+- name: Installer Laravel
+  command: /usr/local/bin/composer create-project laravel/laravel .
+  args:
+    chdir: "{{ app_path }}"
+    creates: "{{ app_path }}/artisan"
+
+- name: Permissions Apache
+  file:
+    path: "{{ app_path }}"
+    recurse: yes
+    owner: apache
+    group: apache
+
+- name: Droits écriture storage/cache
+  file:
+    path: "{{ item }}"
+    recurse: yes
+    mode: "0775"
+  loop:
+    - "{{ app_path }}/storage"
+    - "{{ app_path }}/bootstrap/cache"
+
+- name: Générer clé Laravel
+  command: sudo -u apache php artisan key:generate
+  args:
+    chdir: "{{ app_path }}"
+
+- name: Configurer .env
+  lineinfile:
+    path: "{{ app_path }}/.env"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  loop:
+    - { regexp: '^DB_CONNECTION=', line: 'DB_CONNECTION=mysql' }
+    - { regexp: '^DB_HOST=',       line: 'DB_HOST={{ db_host }}' }
+    - { regexp: '^DB_PORT=',       line: 'DB_PORT={{ db_port }}' }
+    - { regexp: '^DB_DATABASE=',   line: 'DB_DATABASE={{ db_name }}' }
+    - { regexp: '^DB_USERNAME=',   line: 'DB_USERNAME={{ db_user }}' }
+    - { regexp: '^DB_PASSWORD=',   line: 'DB_PASSWORD={{ db_password }}' }
+
+- name: Exécuter migrations
+  command: sudo -u apache php artisan migrate --force
+  args:
+    chdir: "{{ app_path }}"
+</pre>
+        </section>
+
+        <hr style="border-color: var(--border); margin: 3rem 0;">
+
+        <section>
+            <h2>Rôles : Sécurité (SELinux & Firewall)</h2>
+
+            <p><strong>Fichier :</strong> <code>roles/selinux/tasks/main.yml</code></p>
+            <pre>
+---
+- name: Autoriser connexion réseau Apache
+  command: setsebool -P httpd_can_network_connect on
+
+- name: Appliquer contexte SELinux
+  command: chcon -R -t httpd_sys_rw_content_t {{ item }}
+  loop:
+    - "{{ app_path }}/storage"
+    - "{{ app_path }}/bootstrap/cache"
+    - "{{ app_path }}/.env"
+</pre>
+
+            <p><strong>Fichier :</strong> <code>roles/firewall/tasks/main.yml</code></p>
+            <pre>
+---
+- name: Ouvrir ports HTTP/HTTPS
+  firewalld:
+    port: "{{ item }}/tcp"
+    permanent: yes
+    state: enabled
+  loop: [80, 443]
+</pre>
+        </section>
+<section style="background-color: var(--secondary); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--accent); margin-top: 3rem;">
+    <h3>Conclusion</h3>
+    <p>Ce projet démontre la mise en place complète d’un déploiement Laravel automatisé via Ansible, incluant la base de données, le serveur web, la sécurité SELinux et le firewall.</p>
+</section>
     </main>
 
     <footer>
