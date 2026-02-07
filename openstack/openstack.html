@@ -3,52 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cloud & Infra | Portail</title>
+    <title>Cloud & Infra | Portail Technique</title>
     <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .hero p {
+            background: rgba(59, 130, 246, 0.1);
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            color: var(--accent);
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .card i {
+            font-size: 2rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+        .tag-small {
+            font-size: 0.7rem;
+            background: #334155;
+            color: #f8fafc;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-right: 5px;
+        }
+    </style>
 </head>
 <body>
 
     <header>
-        <div class="logo">SysAdmin_Portal</div>
+        <div class="logo">Nicolas<span>.cloud</span></div>
         <nav>
             <ul>
                 <li><a href="https://nblinpro.github.io/portfolio/index.html">Accueil</a></li>
                 <li><a href="https://nblinpro.github.io/portfolio/pages/parcours.html">Parcours</a></li>
                 <li><a href="https://nblinpro.github.io/portfolio/pages/projets.html">Projets</a></li>
-                <li><a href="mailto:nicolas.blin.pro1@gmail.com" class="btn btn-primary" style="padding: 0.5rem 1rem;">Me Contacter</a></li>
+                <li><a href="mailto:nicolas.blin.pro1@gmail.com" class="btn btn-primary" style="padding: 0.5rem 1rem;">Contact</a></li>
             </ul>
         </nav>
     </header>
 
     <main>
-        <section class="hero">
-            <h1>Architecture et Gestion des Infrastructures Cloud</h1>
-            <p>Openstack</p>
+        <section class="hero" style="text-align: center; padding: 4rem 1rem;">
+            <h1>Architecture & Cloud Computing</h1>
+            <p><i class="fa-solid fa-server"></i> Mastering OpenStack Ecosystem</p>
         </section>
 
-        <section class="grid">
+        <section class="grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; padding: 2rem;">
+            
             <article class="card">
-                <h3>Installation et Vérification d'une Plateforme OpenStack via DevStack</h3>
-                <p>Guide complet pour déployer une infrastructure IaaS sur Ubuntu 24.04.</p>
-                <a href="tps/tp1.html" class="btn">Voir la doc</a>
+                <div>
+                    <i class="fa-solid fa-terminal"></i>
+                    <h3>Déploiement via DevStack</h3>
+                    <div style="margin-bottom: 10px;">
+                        <span class="tag-small">Ubuntu 24.04</span>
+                        <span class="tag-small">IaaS</span>
+                    </div>
+                    <p>Guide complet pour installer et vérifier une plateforme OpenStack complète en environnement de test.</p>
+                </div>
+                <a href="tps/tp1.html" class="btn btn-outline" style="margin-top: 1.5rem;">Lire la doc <i class="fa-solid fa-book"></i></a>
             </article>
             
             <article class="card">
-                <h3>Découverte complète de Nova (Compute) – OpenStack</h3>
-                <p>Création d'instances, gestion des réseaux, flavors personnalisés et monitoring des ressources.</p>
-                <a href="tps/tp2.html" class="btn">Voir la doc</a>
+                <div>
+                    <i class="fa-solid fa-microchip"></i>
+                    <h3>Nova (Compute)</h3>
+                    <div style="margin-bottom: 10px;">
+                        <span class="tag-small">Instances</span>
+                        <span class="tag-small">Flavors</span>
+                    </div>
+                    <p>Gestion du cycle de vie des instances, configuration réseau et orchestration des ressources de calcul.</p>
+                </div>
+                <a href="tps/tp2.html" class="btn btn-outline" style="margin-top: 1.5rem;">Lire la doc <i class="fa-solid fa-book"></i></a>
             </article>
 
             <article class="card">
-                <h3>OpenStack Swift – Stockage Objet</h3>
-                <p>"'qt</p>
-                <a href="tps/tp3.html" class="btn">Voir la doc</a>
+                <div>
+                    <i class="fa-solid fa-database"></i>
+                    <h3>Swift (Stockage Objet)</h3>
+                    <div style="margin-bottom: 10px;">
+                        <span class="tag-small">Object Storage</span>
+                        <span class="tag-small">Scalability</span>
+                    </div>
+                    <p>Configuration du stockage distribué, gestion des containers et des objets via l'API OpenStack Swift.</p>
+                </div>
+                <a href="tps/tp3.html" class="btn btn-outline" style="margin-top: 1.5rem;">Lire la doc <i class="fa-solid fa-book"></i></a>
             </article>
+
         </section>
     </main>
 
-    <footer>
-        <p>© 2025 Nicolas. Tous droits réservés.</p>
+    <footer style="text-align: center; padding: 2rem; color: var(--text-muted); border-top: 1px solid #334155;">
+        <p>© 2025 Nicolas Blin — Expert Architecture S.I.</p>
     </footer>
 
 </body>
