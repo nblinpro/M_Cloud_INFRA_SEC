@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,10 +9,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* Style spécifique pour la doc technique */
-        main { max-width: 1100px; margin: auto; padding: 2rem; }
-        
-        .doc-section { margin-bottom: 4rem; scroll-margin-top: 100px; }
-        
+        main {
+            max-width: 1100px;
+            margin: auto;
+            padding: 2rem;
+        }
+
+        .doc-section {
+            margin-bottom: 4rem;
+            scroll-margin-top: 100px;
+        }
+
         .code-container {
             margin: 1.5rem 0;
             background: #0f172a;
@@ -19,7 +27,7 @@
             overflow: hidden;
             border: 1px solid #334155;
         }
-        
+
         .code-header {
             background: #1e293b;
             padding: 10px 16px;
@@ -41,14 +49,17 @@
             color: #e2e8f0;
         }
 
-        h2 { 
-            border-left: 4px solid var(--accent); 
-            padding-left: 15px; 
+        h2 {
+            border-left: 4px solid var(--accent);
+            padding-left: 15px;
             margin-top: 3rem;
             color: #f8fafc;
         }
-        
-        h3 { color: var(--accent); margin-top: 2rem; }
+
+        h3 {
+            color: var(--accent);
+            margin-top: 2rem;
+        }
 
         .btn-back {
             display: inline-flex;
@@ -58,7 +69,7 @@
             text-decoration: none;
             margin-bottom: 2rem;
         }
-        
+
         .conclusion-card {
             background-color: var(--secondary);
             padding: 2rem;
@@ -69,9 +80,13 @@
         }
 
         /* Coloration légère pour les commentaires YAML */
-        .comment { color: #64748b; font-style: italic; }
+        .comment {
+            color: #64748b;
+            font-style: italic;
+        }
     </style>
 </head>
+
 <body>
 
     <header>
@@ -91,7 +106,8 @@
 
         <section class="hero-doc">
             <h1>Déploiement Automatisé Laravel via Ansible</h1>
-            <p>Documentation technique du projet d'automatisation incluant la gestion de configuration, le déploiement sécurisé (Vault) et l'optimisation serveur.</p>
+            <p>Documentation technique du projet d'automatisation incluant la gestion de configuration, le déploiement
+                sécurisé (Vault) et l'optimisation serveur.</p>
         </section>
 
         <section id="arborescence" class="doc-section">
@@ -156,7 +172,7 @@ bddlaravel ansible_host=192.168.80.168 ansible_user=innosys</pre>
         <section id="security" class="doc-section">
             <h2>3. Variables & Sécurité (Vault)</h2>
             <p>Création des coffres-forts : <code>sudo ansible-vault create group_vars/db/vault.yml</code></p>
-            
+
             <div class="code-container">
                 <div class="code-header"><span>group_vars/db/vault.yml</span><i class="fas fa-lock"></i></div>
                 <pre>
@@ -222,8 +238,10 @@ sudo chmod 600 group_vars/db/vault.yml</pre>
 
         <div class="conclusion-card">
             <h3>Synthèse du Projet</h3>
-            <p>Cette infrastructure automatisée permet un déploiement <strong>idempotent</strong>. Chaque exécution garantit que le serveur est dans l'état souhaité, sans interruption de service.</p>
-            <a href="https://github.com/nblinpro/projet_ansible" class="btn btn-primary" style="margin-top: 15px;">Voir sur GitHub</a>
+            <p>Cette infrastructure automatisée permet un déploiement <strong>idempotent</strong>. Chaque exécution
+                garantit que le serveur est dans l'état souhaité, sans interruption de service.</p>
+            <a href="https://github.com/nblinpro/projet_ansible" class="btn btn-primary" style="margin-top: 15px;">Voir
+                sur GitHub</a>
         </div>
     </main>
 
@@ -232,4 +250,5 @@ sudo chmod 600 group_vars/db/vault.yml</pre>
     </footer>
 
 </body>
+
 </html>
