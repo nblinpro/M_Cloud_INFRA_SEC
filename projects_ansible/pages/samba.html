@@ -1,214 +1,111 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
-    <title>Déploiement Samba - Ansible</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Samba Automation | Nicolas Infra</title>
     <link rel="stylesheet" href="../../style.css">
-</head>
-<body>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        main {
+            max-width: 1000px;
+            margin: auto;
+            padding: 2rem;
+        }
 
-    <header>
-        <div class="logo">SysAdmin_Portal</div>
-        <nav>
-            <ul>
-                <li><a href="https://nblinpro.github.io/portfolio/index.html">Accueil</a></li>
-                <li><a href="https://nblinpro.github.io/portfolio/pages/parcours.html">Parcours</a></li>
-                <li><a href="../projets_ansible.html">Projets Ansible</a></li>
-                <li><a href="mailto:nicolas.blin.pro1@gmail.com" class="btn btn-primary" style="padding: 0.5rem 1rem;">Me Contacter</a></li>
-            </ul>
-        </nav>
-    </header>
+        .doc-section {
+            margin-bottom: 4rem;
+            scroll-margin-top: 100px;
+        }
 
-    <main>
-        <h1>Déploiement Serveur de Fichiers Samba via Ansible</h1>
-        <p>Documentation technique du projet d'automatisation pour la mise en place d'un serveur de fichiers sécurisé, incluant la gestion des utilisateurs, des groupes et des accès réseaux.</p>
+        .code-container {
+            margin: 1.5rem 0;
+            background: #0f172a;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #334155;
+        }
 
-        <section>
-            <h2>1. Arborescence du projet</h2>
-            <pre>
-mon_projet_ansible/
-├── group_vars
-│   └── samba
-│       └── vault.yml
-├── hosts.ini
-├── roles
-│   └── samba
-│       ├── defaults
-│       │   └── main.yml
-│       ├── handlers
-│       │   └── main.yml
-│       └── tasks
-│           └── main.yml
-└── samba.yml
-</pre>
-        </section>
+        .code-header {
+            background: #1e293b;
+            padding: 10px 16px;
+            font-size: 0.85rem;
+            color: var(--accent);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+        }
 
-        <hr style="border-color: var(--secondary); margin: 3rem 0;">
+        pre {
+            margin: 0;
+            padding: 1.5rem;
+            overflow-x: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #e2e8f0;
+        }
 
-        <section>
-            <h2>2. Configuration Racine</h2>
+        h2 {
+            border-left: 4px solid var(--accent);
+            padding-left: 15px;
+            margin-top: 3rem;
+            color: #f8fafc;
+        }
 
-            <h3>Fichier d'inventaire (hosts.ini)</h3>
-            <pre>
-[samba]
-srv_samba ansible_host=@IP_Machine ansible_user=user
-</pre>
+        .info-box {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid var(--accent);
+            padding: 1.5rem;
+            border-radius: 0 8px 8px 0;
+            margin: 2rem 0;
+        }
 
-            <h3>Playbook Principal (samba.yml)</h3>
-            <pre>
----
-- name: Configuration du Serveur de Fichiers (Samba)
-  hosts: samba
-  become: yes
-  vars_files:
-    - group_vars/samba/vault.yml
-  roles:
-    - samba
-</pre>
-        </section>
+        .terminal-info {
+            color: #f472b6;
+            font-family: monospace;
+        }
 
-        <hr style="border-color: var(--secondary); margin: 3rem 0;">
+        </pre></head><body><header><div class="logo">Nicolas<span>.infra</span></div><nav><ul><li><a href="https://nblinpro.github.io/portfolio/index.html">Accueil</a></li><li><a href="https://nblinpro.github.io/portfolio/pages/parcours.html">Parcours</a></li><li><a href="../projets_ansible.html">Projets</a></li><li><a href="mailto:nicolas.blin.pro1@gmail.com" class="btn btn-primary">Contact</a></li></ul></nav></header><main><section class="hero-doc"><h1><i class="fas fa-share-nodes"></i>Serveur de Fichiers Samba</h1><p>Automatisation d'un serveur de stockage collaboratif avec gestion fine des ACL, des groupes et sécurisation des accès Windows/Linux.</p>
+ </section><section class="doc-section"><h2>1. Architecture du Projet</h2><div class="code-container"><div class="code-header"><span>Tree structure</span><i class="fas fa-folder-tree"></i></div><pre>mon_projet_samba/ ├── group_vars/ │ └── samba/vault.yml <span style="color: #64748b"># Mots de passe chiffrés</span>├── hosts.ini <span style="color: #64748b"># Inventaire cible</span>├── roles/ │ └── samba/ │ ├── defaults/main.yml <span style="color: #64748b"># Chemins et noms de groupes</span>│ ├── handlers/main.yml <span style="color: #64748b"># Redémarrage du service smbd</span>│ └── tasks/main.yml <span style="color: #64748b"># Logique d'installation</span>
+ └── samba.yml <span style="color: #64748b"># Playbook racine</span></pre></div></section><section class="doc-section"><h2>2. Variables & Sécurité</h2><p>Utilisation d'<strong>Ansible Vault</strong> pour protéger les mots de passe des comptes Samba.</p>
+ <div class="code-container"><div class="code-header"><span>group_vars/samba/vault.yml</span><i class="fas fa-lock"></i></div><pre>vault_samba_pass_test: "test"
+        vault_samba_pass_admin: "mon_password_secu" </pre></div><p class="terminal-info">Command : ansible-vault encrypt group_vars/samba/vault.yml</p></section><section class="doc-section"><h2>3. Configuration du Rôle</h2><h3>Gestion des permissions (SetGID 2770)</h3><p>Le mode <code>2770</code>garantit que tout nouveau fichier créé dans le partage héritera du groupe propriétaire.</p><div class="code-container"><div class="code-header"><span>roles/samba/tasks/main.yml</span></div><pre>- name: Configurer le dossier partagé ansible.builtin.file: path: "{{ samba_share_path }}"
+        state: directory owner: root group: "{{ samba_group_name }}"
+        mode: '2770'
 
-        <section>
-            <h2>3. Variables & Sécurité (Vault)</h2>
+        - name: Définir le mot de passe Samba pour test ansible.builtin.shell:>(echo '{{ vault_samba_pass_test }}'; echo '{{ vault_samba_pass_test }}') | smbpasswd -s -a {
+                {
+                samba_user_test
+            }
+        }
 
-            <h3>Configuration Secrète (group_vars/samba/)</h3>
-            <p>Création du coffre-fort : <code>ansible-vault create group_vars/samba/vault.yml</code></p>
-            <pre>
-# vault.yml
-vault_samba_pass_test: "test"
-vault_samba_pass_admin: "user"
-</pre>
+        register: smb_test_result changed_when: "'Added user' in smb_test_result.stdout"
 
-            <h3>Sécurisation des permissions</h3>
-            <pre>
-sudo chown -R nicolas:nicolas group_vars
-sudo chmod 700 group_vars/samba
-sudo chmod 600 group_vars/samba/vault.yml
-</pre>
-        </section>
+        no_log: true</pre></div><h3>Configuration du Partage (smb.conf)</h3><div class="code-container"><pre>- name: Configurer le partage dans smb.conf ansible.builtin.blockinfile: path: /etc/samba/smb.conf block: | [DossierCommun] path= {
+                {
+                samba_share_path
+            }
+        }
 
-        <hr style="border-color: var(--secondary); margin: 3rem 0;">
+        browsable=yes read only=no valid users=@{{ samba_group_name }
+        }
 
-        <section>
-            <h2>4. Role : Samba</h2>
-            <p>Ce rôle gère l'installation, la création des utilisateurs et la configuration du partage.</p>
+        force group= {
+                {
+                samba_group_name
+            }
+        }
 
-            <h3>Variables par défaut (defaults/main.yml)</h3>
-            <pre>
----
-samba_share_path: "/srv/partage_commun"
-samba_group_name: "partageurs"
-samba_user_test: "test"
-# Par défaut, l'admin samba sera l'utilisateur avec lequel Ansible se connecte
-samba_admin_user: "user"
-</pre>
+        notify: Restart Samba</pre></div></section><section class="doc-section"><div class="info-box"><h3><i class="fas fa-terminal"></i>Récapitulatif de Connexion</h3><p>Une fois le playbook exécuté,
+        les accès sont disponibles via :</p><ul style="list-style: none; padding-left: 0; line-height: 2;"><li><i class="fab fa-windows"></i><strong>Windows :</strong><code>\\ {
+                {
+                ansible_host
+            }
+        }
 
-            <h3>Gestionnaire de service (handlers/main.yml)</h3>
-            <pre>
----
-- name: Restart Samba
-  ansible.builtin.service:
-    name: smbd
-    state: restarted
-</pre>
-
-            <h3>Tâches principales (tasks/main.yml)</h3>
-            <pre>
----
-- name: Installer Samba
-  ansible.builtin.apt:
-    name: samba
-    state: present
-    update_cache: yes
-
-- name: Créer le groupe de partage "{{ samba_group_name }}"
-  ansible.builtin.group:
-    name: "{{ samba_group_name }}"
-    state: present
-
-- name: Créer l'utilisateur test (sans login)
-  ansible.builtin.user:
-    name: "{{ samba_user_test }}"
-    shell: /usr/sbin/nologin
-    create_home: no
-    groups: "{{ samba_group_name }}"
-    append: yes
-    state: present
-
-- name: Ajouter l'admin "{{ samba_admin_user }}" au groupe "{{ samba_group_name }}"
-  ansible.builtin.user:
-    name: "{{ samba_admin_user }}"
-    groups: "{{ samba_group_name }}"
-    append: yes
-
-- name: Configurer le dossier partagé (Permissions 2770)
-  ansible.builtin.file:
-    path: "{{ samba_share_path }}"
-    state: directory
-    owner: root
-    group: "{{ samba_group_name }}"
-    # 2770 = setgid (2) + rwx user (7) + rwx group (7) + no permission others (0)
-    mode: '2770'
-
-# Configuration des mots de passe Samba via smbpasswd
-- name: Définir le mot de passe Samba pour test
-  ansible.builtin.shell: >
-    (echo '{{ vault_samba_pass_test }}'; echo '{{ vault_samba_pass_test }}') | smbpasswd -s -a {{ samba_user_test }}
-  register: smb_test_result
-  changed_when: "'Added user' in smb_test_result.stdout"
-  no_log: true
-
-- name: Définir le mot de passe Samba pour l'Admin
-  ansible.builtin.shell: >
-    (echo '{{ vault_samba_pass_admin }}'; echo '{{ vault_samba_pass_admin }}') | smbpasswd -s -a {{ samba_admin_user }}
-  register: smb_admin_result
-  changed_when: "'Added user' in smb_admin_result.stdout"
-  no_log: true
-
-# Ajout de la configuration dans smb.conf
-- name: Configurer le partage dans /etc/samba/smb.conf
-  ansible.builtin.blockinfile:
-    path: /etc/samba/smb.conf
-    marker: "# {mark} ANSIBLE MANAGED BLOCK - PARTAGE COMMUN"
-    block: |
-      [DossierCommun]
-          comment = Partage pour test et moi
-          path = {{ samba_share_path }}
-          browsable = yes
-          read only = no
-          guest ok = no
-          valid users = @{{ samba_group_name }}
-          create mask = 0660
-          directory mask = 0770
-          force group = {{ samba_group_name }}
-  notify: Restart Samba
-
-- name: Afficher les informations de connexion au partage
-  ansible.builtin.debug:
-    msg:
-      - "=================================================================="
-      - "✅ Installation terminée avec succès !"
-      - "📂 Nom du partage : DossierCommun"
-      - "------------------------------------------------------------------"
-      # Note les 4 antislashes au début et les 2 au milieu
-      - "🖥️  Windows (Lecteur Réseau) : \\\\{{ ansible_host }}\\\\DossierCommun"
-      - "🐧 Linux / Mac (Samba)      : smb://{{ ansible_host }}/DossierCommun"
-      - "💾 WinSCP (Protocole SFTP)  : sftp://{{ ansible_host }}/srv/partage_commun"
-      - "=================================================================="
-</pre>
-        </section>
-
-        <section style="background-color: var(--secondary); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--accent); margin-top: 3rem;">
-            <h3>Conclusion</h3>
-            <p>Ce projet démontre la mise en place d'un serveur de fichiers collaboratif. Il gère automatiquement les permissions complexes (SetGID 2770), sécurise les mots de passe via Ansible Vault et fournit les instructions de connexion pour les environnements Windows, Linux et WinSCP.</p>
-        </section>
-
-    </main>
-
-    <footer>
-        <p>© 2025 Nicolas. Tous droits réservés.</p>
-        <p><a href="../projets_ansible.html">← Retour à l'accueil</a></p>
-    </footer>
-</body>
-</html>
+        \DossierCommun</code></li><li><i class="fab fa-linux"></i><strong>Linux :</strong><code>smb: //{{ ansible_host }}/DossierCommun</code></li>
+        <li><i class="fas fa-file-transfer"></i><strong>WinSCP :</strong><code>sftp: //{{ ansible_host }}/srv/partage_commun</code></li>
+        </ul></div></section><section style="text-align: center; margin-top: 5rem;"><p>© 2025 Nicolas Blin — Portfolio Technique</p><a href="../projets_ansible.html" class="btn-back"><i class="fas fa-arrow-left"></i>Retour aux projets</a></section></main></body></html>
