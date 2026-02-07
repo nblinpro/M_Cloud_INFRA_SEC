@@ -4,17 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mémo Lab Ansible | Nicolas Infra</title>
+    <title>Fiche Mémo : Lab Ansible | Nicolas Infra</title>
     <link rel="stylesheet" href="../../style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* Optimisation pour la lecture technique */
         main {
-            max-width: 900px;
+            max-width: 950px;
             margin: auto;
             padding: 2rem;
         }
 
-        /* Badges de configuration rapide */
+        .doc-section {
+            margin-bottom: 4rem;
+        }
+
         .lab-info {
             display: flex;
             gap: 15px;
@@ -25,15 +29,56 @@
         .info-badge {
             background: #1e293b;
             border: 1px solid var(--accent);
-            padding: 8px 15px;
-            border-radius: 6px;
-            font-size: 0.85rem;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 0.9rem;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            color: #f8fafc;
         }
 
-        /* Amélioration du diagramme */
+        .code-container {
+            margin: 1.5rem 0;
+            background: #0f172a;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #334155;
+        }
+
+        .code-header {
+            background: #1e293b;
+            padding: 10px 16px;
+            font-size: 0.85rem;
+            color: var(--accent);
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #334155;
+            font-family: monospace;
+        }
+
+        pre {
+            margin: 0;
+            padding: 1.5rem;
+            overflow-x: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #e2e8f0;
+        }
+
+        h2 {
+            color: var(--accent);
+            border-bottom: 2px solid #334155;
+            padding-bottom: 10px;
+            margin-top: 3rem;
+        }
+
+        h3 {
+            margin-top: 2rem;
+            color: #f8fafc;
+        }
+
         .diagram-container {
             text-align: center;
             margin: 3rem 0;
@@ -41,45 +86,29 @@
             background-color: #0f172a;
             border-radius: 12px;
             border: 1px solid #334155;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
         .diagram-container img {
             max-width: 100%;
             height: auto;
             border-radius: 4px;
-            filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.2));
         }
 
         .diagram-caption {
             margin-top: 1rem;
             font-size: 0.9rem;
             color: #94a3b8;
-            letter-spacing: 1px;
-            text-transform: uppercase;
+            font-style: italic;
         }
 
-        .step-title {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            color: var(--accent);
-        }
-
-        pre {
-            background: #0f172a !important;
-            border: 1px solid #334155;
-            padding: 1.2rem;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            margin: 1rem 0;
-        }
-
-        code {
+        .highlight-file {
             color: #f472b6;
+            font-weight: bold;
         }
 
-        /* Rose pour les fichiers cités */
+        .comment {
+            color: #64748b;
+        }
     </style>
 </head>
 
@@ -89,94 +118,141 @@
         <div class="logo">Nicolas<span>.infra</span></div>
         <nav>
             <ul>
-                <li><a href="../../index.html">Accueil</a></li>
+                <li><a href="https://nblinpro.github.io/portfolio/index.html">Accueil</a></li>
+                <li><a href="https://nblinpro.github.io/portfolio/pages/parcours.html">Parcours</a></li>
                 <li><a href="../projets_ansible.html">Projets</a></li>
-                <li><a href="mailto:nicolas.blin.pro1@gmail.com" class="btn btn-primary">Contact</a></li>
+                <li><a href="mailto:nicolas.blin.pro1@gmail.com" class="btn btn-primary">Me Contacter</a></li>
             </ul>
         </nav>
     </header>
 
     <main>
         <section class="hero-small">
-            <h1>Fiche Mémo : Lab Ansible</h1>
-            <p>Mise en place d'un environnement hybride : Contrôleur Ubuntu & Cibles RHEL 9.</p>
+            <h1>Fiche Mémo : Lab Ansible (Ubuntu & RHEL9)</h1>
+            <p>Procédure complète de mise en place de l'environnement : Contrôleur Ubuntu et cibles RedHat Enterprise
+                Linux 9.</p>
         </section>
 
         <div class="lab-info">
-            <div class="info-badge"><i class="fab fa-ubuntu" style="color:#E95420"></i> Control: Ubuntu 22.04+</div>
-            <div class="info-badge"><i class="fab fa-redhat" style="color:#EE0000"></i> Cibles: RHEL 9.x</div>
-            <div class="info-badge"><i class="fas fa-network-wired"></i> Réseau: 192.168.80.0/24</div>
+            <div class="info-badge"><i class="fab fa-ubuntu"></i> <strong>Contrôleur :</strong> Ubuntu</div>
+            <div class="info-badge"><i class="fab fa-redhat"></i> <strong>Cibles :</strong> RHEL 9</div>
+            <div class="info-badge"><i class="fas fa-network-wired"></i> <strong>Réseau :</strong> 192.168.80.0/24</div>
         </div>
 
         <section class="doc-section">
-            <h2 class="step-title"><i class="fas fa-desktop"></i> 1. Préparation du Contrôleur</h2>
+            <h2>1. Préparation du Contrôleur (Ubuntu)</h2>
 
-            <h3>A. Configuration IP (Netplan)</h3>
-            <p>Édition du fichier <code>/etc/netplan/50-cloud-init.yaml</code> :</p>
-            <pre>
+            <h3>A. Configuration IP statique (Netplan)</h3>
+            <p>Éditer le fichier <code class="highlight-file">/etc/netplan/50-cloud-init.yaml</code> :</p>
+            <div class="code-container">
+                <pre>
 network:
   version: 2
   ethernets:
     ens33:
       dhcp4: false
-      addresses: [192.168.80.X/24]
+      addresses:
+        - 192.168.80.X/24 <span class="comment"># Remplacer X par votre IP</span>
       routes:
         - to: default
           via: 192.168.80.2
       nameservers:
-        addresses: [8.8.8.8, 1.1.1.1]</pre>
-            <pre>sudo netplan apply</pre>
+        addresses:
+          - 8.8.8.8
+          - 1.1.1.1</pre>
+            </div>
+            <p>Appliquer la configuration :</p>
+            <div class="code-container">
+                <pre>sudo netplan apply</pre>
+            </div>
 
-            <h3>B. Installation & SSH</h3>
-            <pre>
-sudo apt update && sudo apt install ansible -y
-ssh-keygen -t rsa -b 4096 <span style="color:#64748b"># Génère ~/.ssh/id_rsa</span></pre>
+            <h3>B. Installation Ansible</h3>
+            <div class="code-container">
+                <pre>
+sudo apt update
+sudo apt install ansible ansible-core -y</pre>
+            </div>
+
+            <h3>C. Génération clé SSH</h3>
+            <div class="code-container">
+                <pre>
+ssh-keygen -t rsa -b 4096
+<span class="comment"># Laisser les options par défaut (Entrée x3)
+# Fichier créé : ~/.ssh/id_rsa</span></pre>
+            </div>
         </section>
 
-        <hr style="border: 0; border-top: 1px solid #334155; margin: 3rem 0;">
-
         <section class="doc-section">
-            <h2 class="step-title"><i class="fas fa-server"></i> 2. Préparation des serveurs RHEL 9</h2>
+            <h2>2. Préparation des serveurs RHEL 9</h2>
 
-            <h3>A. IP Statique & NMCLI</h3>
-            <p>Config via <code>nmcli</code> ou édition directe du fichier <code>.nmconnection</code> :</p>
-            <pre>
+            <h3>A. Configuration IP statique</h3>
+            <p>Modification via NetworkManager dans <code
+                    class="highlight-file">/etc/NetworkManager/system-connections/ens160.nmconnection</code> :</p>
+            <div class="code-container">
+                <pre>
 [ipv4]
 method=manual
 address1=192.168.80.X/24
 gateway=192.168.80.2
 dns=8.8.8.8;1.1.1.1;</pre>
+            </div>
+            <p>Rechargement de l'interface :</p>
+            <div class="code-container">
+                <pre>
+sudo nmcli connection reload
+sudo nmcli connection up ens160</pre>
+            </div>
 
-            <h3>B. Enregistrement & Update</h3>
-            <pre>
+            <h3>B. Système & Abonnement</h3>
+            <div class="code-container">
+                <pre>
+<span class="comment"># Enregistrement RedHat (Credentials requis)</span>
 sudo subscription-manager register
-sudo subscription-manager repos --enable=rhel-9-for-x86_64-baseos-rpms
-sudo dnf update -y</pre>
 
-            <h3>C. Privilèges Sudo</h3>
-            <p>Pour permettre l'automatisation sans mot de passe :</p>
-            <pre>innosys ALL=(ALL) NOPASSWD: ALL</pre>
+<span class="comment"># Activation des dépôts</span>
+sudo subscription-manager repos --enable=rhel-9-for-x86_64-baseos-rpms
+sudo subscription-manager repos --enable=rhel-9-for-x86_64-appstream-rpms
+
+<span class="comment"># Mise à jour système</span>
+sudo dnf update -y</pre>
+            </div>
+
+            <h3>C. Hostname & Sudo</h3>
+            <div class="code-container">
+                <pre>sudo hostnamectl set-hostname web2laravel</pre>
+            </div>
+            <p>Configuration des droits sudo sans mot de passe (<code class="highlight-file">sudo visudo</code>) :</p>
+            <div class="code-container">
+                <pre>innosys ALL=(ALL) NOPASSWD: ALL</pre>
+            </div>
+        </section>
+
+        <section class="doc-section">
+            <h2>3. Finalisation depuis le contrôleur</h2>
+
+            <h3>Propagation clé SSH</h3>
+            <p>Envoi de la clé publique vers la machine cible pour la connexion sans mot de passe :</p>
+            <div class="code-container">
+                <pre>ssh-copy-id innosys@192.168.80.X</pre>
+            </div>
+
+            <h3>Test connexion</h3>
+            <div class="code-container">
+                <pre>ssh innosys@192.168.80.X</pre>
+            </div>
+            <p><em>Si aucune demande de mot de passe n’apparaît, la configuration est valide.</em></p>
         </section>
 
         <div class="diagram-container">
-            <img src="../images/memo.png" alt="Architecture Lab">
-            <div class="diagram-caption"><i class="fas fa-project-diagram"></i> Architecture Logique du Laboratoire
-            </div>
+            <img src="../images/memo.png" alt="Infrastructure">
+            <div class="diagram-caption">Architecture PC Admin / Serveurs</div>
         </div>
-
-        <section class="doc-section">
-            <h2 class="step-title"><i class="fas fa-check-double"></i> 3. Connexion</h2>
-            <p>Depuis le contrôleur, envoyer la clé pour valider la confiance SSH :</p>
-            <pre>
-ssh-copy-id innosys@192.168.80.X
-ssh innosys@192.168.80.X <span style="color:#64748b"># Test de connexion directe</span></pre>
-        </section>
-
     </main>
 
     <footer>
-        <p>© 2025 Nicolas Blin | <a href="../projets_ansible.html" style="color:var(--accent)">← Retour au projet</a>
-        </p>
+        <p>© 2025 Nicolas Blin | Tous droits réservés.</p>
+        <p style="margin-top: 10px;"><a href="../projets_ansible.html"
+                style="color:var(--accent); text-decoration: none;">← Retour au projet</a></p>
     </footer>
 
 </body>
