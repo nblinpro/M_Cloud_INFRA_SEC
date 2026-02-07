@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation | Déploiement Laravel Ansible</title>
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Style spécifique pour la doc technique */
+        main {
+            max-width: 1100px;
+            margin: auto;
+            padding: 2rem;
+        }
+
+        .doc-section {
+            margin-bottom: 4rem;
+            scroll-margin-top: 100px;
+        }
+
+        .code-container {
+            margin: 1.5rem 0;
+            background: #0f172a;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #334155;
+        }
+
+        .code-header {
+            background: #1e293b;
+            padding: 10px 16px;
+            font-size: 0.85rem;
+            color: var(--accent);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+        }
+
+        pre {
+            margin: 0;
+            padding: 1.5rem;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #e2e8f0;
+        }
+
+        h2 {
+            border-left: 4px solid var(--accent);
+            padding-left: 15px;
+            margin-top: 3rem;
+            color: #f8fafc;
+        }
+
+        h3 {
+            color: var(--accent);
+            margin-top: 2rem;
+        }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-bottom: 2rem;
+        }
+
+        .conclusion-card {
+            background-color: var(--secondary);
+            padding: 2rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent);
+            margin-top: 3rem;
+            text-align: center;
+        }
+
+        /* Coloration légère pour les commentaires YAML */
+        .comment {
+            color: #64748b;
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">Nicolas<span>.infra</span></div>
+        <nav>
+            <ul>
+                <li><a href="https://nblinpro.github.io/portfolio/index.html">Accueil</a></li>
+                <li><a href="https://nblinpro.github.io/portfolio/pages/parcours.html">Parcours</a></li>
+                <li><a href="../projets_ansible.html">Projets</a></li>
+                <li><a href="mailto:nicolas.blin.pro1@gmail.com" class="btn btn-primary">Me Contacter</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <a href="../projets_ansible.html" class="btn-back"><i class="fas fa-arrow-left"></i> Retour aux projets</a>
+
+        <section class="hero-doc">
+            <h1>Déploiement Automatisé Laravel via Ansible</h1>
+            <p>Documentation technique du projet d'automatisation incluant la gestion de configuration, le déploiement
+                sécurisé (Vault) et l'optimisation serveur.</p>
+        </section>
+
+        <section id="arborescence" class="doc-section">
+            <h2>1. Arborescence du projet</h2>
+            <div class="code-container">
+                <div class="code-header"><span>Structure du Repository</span><i class="fas fa-sitemap"></i></div>
+                <pre>
+mon_projet_ansible/
+├── hosts.ini                <span class="comment"># Inventaire</span>
+├── site.yml                 <span class="comment"># Playbook principal</span>
+├── group_vars/              <span class="comment"># Variables partagées</span>
+│   ├── db/vault.yml
+│   └── web/
+│       ├── vault.yml
+│       └── vars.yml
+└── roles/
+    ├── database/            <span class="comment"># Tâches MySQL</span>
+    ├── php/                 <span class="comment"># Install PHP 8.3</span>
+    ├── apache/              <span class="comment"># Config HTTPD & VHost</span>
+    ├── composer/            <span class="comment"># Install binaire</span>
+    ├── laravel/             <span class="comment"># Déploiement App</span>
+    ├── selinux/             <span class="comment"># Contextes de sécurité</span>
+    └── firewall/            <span class="comment"># Ouverture des flux</span></pre>
+            </div>
+        </section>
+
+        <section id="config" class="doc-section">
+            <h2>2. Configuration Racine</h2>
+            <h3>Fichier d'inventaire (hosts.ini)</h3>
+            <div class="code-container">
+                <pre>
+[web]
+weblaravel ansible_host=192.168.80.167 ansible_user=innosys
+
+[db]
+bddlaravel ansible_host=192.168.80.168 ansible_user=innosys</pre>
+            </div>
+
+            <h3>Playbook Principal (site.yml)</h3>
+            <div class="code-container">
+                <pre>
+---
+- name: Déploiement Base de Données
+  hosts: db
+  become: yes
+  roles:
+    - database
+
+- name: Déploiement Serveur Web
+  hosts: web
+  become: yes
+  roles:
+    - php
+    - apache
+    - composer
+    - laravel
+    - selinux
+    - firewall</pre>
+            </div>
+        </section>
+
+        <section id="security" class="doc-section">
+            <h2>3. Variables & Sécurité (Vault)</h2>
+            <p>Création des coffres-forts : <code>sudo ansible-vault create group_vars/db/vault.yml</code></p>
+
+            <div class="code-container">
+                <div class="code-header"><span>group_vars/db/vault.yml</span><i class="fas fa-lock"></i></div>
+                <pre>
+mysql_root_password: "RootPass123!"
+laravel_db: "laravel_db"
+laravel_user: "laravel_user"
+laravel_password: "LaravelPass123!"</pre>
+            </div>
+
+            <h3>Sécurisation des permissions (Hardening)</h3>
+            <div class="code-container">
+                <pre>
+sudo chown -R nicolas:nicolas group_vars
+sudo chmod 700 group_vars/db
+sudo chmod 600 group_vars/db/vault.yml</pre>
+            </div>
+        </section>
+
+        <section id="roles" class="doc-section">
+            <h2>4. Détails des Rôles</h2>
+
+            <h3>Role : Database (MySQL)</h3>
+            <div class="code-container">
+                <div class="code-header"><span>roles/database/tasks/main.yml</span></div>
+                <pre>
+- name: Installer MySQL server et client
+  dnf:
+    name: [mysql-server, mysql, python3-PyMySQL]
+    state: present
+
+- name: Créer l'utilisateur Laravel (Restreint au serveur Web)
+  mysql_user:
+    name: "{{ laravel_user }}"
+    password: "{{ laravel_password }}"
+    host: "{{ web_server_ip }}"
+    priv: "{{ laravel_db }}.*:ALL"
+    state: present</pre>
+            </div>
+
+            <h3>Role : PHP (Remi Repo)</h3>
+            <div class="code-container">
+                <pre>
+- name: Activer module PHP 8.3
+  shell: |
+    dnf module reset php -y
+    dnf module enable php:remi-8.3 -y</pre>
+            </div>
+
+            <h3>Role : Sécurité (SELinux)</h3>
+            <div class="code-container">
+                <div class="code-header"><span>roles/selinux/tasks/main.yml</span></div>
+                <pre>
+- name: Autoriser connexion réseau Apache
+  command: setsebool -P httpd_can_network_connect on
+
+- name: Appliquer contexte SELinux (Lecture/Ecriture)
+  command: chcon -R -t httpd_sys_rw_content_t {{ item }}
+  loop:
+    - "{{ app_path }}/storage"
+    - "{{ app_path }}/bootstrap/cache"</pre>
+            </div>
+        </section>
+
+        <div class="conclusion-card">
+            <h3>Synthèse du Projet</h3>
+            <p>Cette infrastructure automatisée permet un déploiement <strong>idempotent</strong>. Chaque exécution
+                garantit que le serveur est dans l'état souhaité, sans interruption de service.</p>
+            <a href="https://github.com/nblinpro/projet_ansible" class="btn btn-primary" style="margin-top: 15px;">Voir
+                sur GitHub</a>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2025 Nicolas Blin | Expert Infrastructure S.I. Cloud</p>
+    </footer>
+
+</body>
+
+</html>
