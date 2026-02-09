@@ -1,0 +1,377 @@
+stack@nicolas:~/devstack$ cat cloud-config.yaml
+#cloud-config
+users:
+  - name: user-ynov
+    passwd: $6$mPHT5TDIJ.BoTxup$xrjjAj8y.ywyC7aCOHlYVo1ENlH0FUI3Cgsr7s5KSuE3bcEJMUza9k/eJsidOC94nNGXYbp82Qsvo4Yk9qvpP0
+    lock_passwd: false
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: users, admin
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIXJ65f4q9LFSt+lqauOvdxwATKqlbxartYMKsE8ZTgw
+ssh_pwauth: True
+chpasswd: { expire: False }
+
+________________________________________________________________________________________________________________________
+
+
+stack@nicolas:~/devstack$ cat local.conf
+[[local|localrc]]
+ADMIN_PASSWORD=secret
+DATABASE_PASSWORD=$ADMIN_PASSWORD
+RABBIT_PASSWORD=$ADMIN_PASSWORD
+SERVICE_PASSWORD=$ADMIN_PASSWORD
+# Activer Swift
+enable_service s-account s-container s-object s-proxy
+# Activer Heat
+enable_plugin heat https://opendev.org/openstack/heat
+enable_service h-eng h-api h-api-cfn h-api-cw
+
+___________________________________________________________________________
+
+
+stack@nicolas:~/devstack$ cat my-key
+-----BEGIN OPENSSH PRIVATE KEY-----
+b3BlbnNzaC1rZXktdjEAAAAACmFlczI1Ni1jdHIAAAAGYmNyeXB0AAAAGAAAABAT0wjMyF
+I4b2rxD3y9/UFcAAAAGAAAAAEAAAAzAAAAC3NzaC1lZDI1NTE5AAAAIIXJ65f4q9LFSt+l
+qauOvdxwATKqlbxartYMKsE8ZTgwAAAAkLFZQFN35zxuIMAsj8CBvhAzqouxffoDdtnQdK
+ZceISsvqFHT6u9jzyc9wPwd//99qMmMP5+mkTC1MEwdMnE/P+7qrmgVYVoWBE0UnTJF526
+tbTLxRqfRKCgNposCga0g9FJZw5sHjTGLUsKIlBijmElLuwE1Q3bTEwF9ImMEsgsq0dFMx
+4X9/KGbYNVW1zbWQ==
+-----END OPENSSH PRIVATE KEY-----
+
+_________________________________________________________________________________________
+
+stack@nicolas:~/devstack$ cat my-key.pub
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIXJ65f4q9LFSt+lqauOvdxwATKqlbxartYMKsE8ZTgw
+
+
+_________________________________________________________________________________________
+
+
+stack@nicolas:~/devstack$ cat setup_env.sh
+#!/bin/bash
+# setup_env.sh - À lancer une seule fois après une installation fraîche de DevStack
+
+set -e # Arrête le script dès qu'une erreur survient
+
+#echo ">>> 1. Création des Flavors..."
+openstack flavor create --id auto --vcpus 1 --ram 512 --disk 5 flavor_leger
+openstack flavor create --id auto --vcpus 2 --ram 4096 --disk 20 flavor_standard
+openstack flavor create --id auto --vcpus 8 --ram 16384 --disk 50 flavor_ia
+
+# 1. Création du réseau
+echo ">>> 2. Création du réseau 100..."
+openstack network create network100
+openstack subnet create --network network100 \
+  --subnet-range 192.168.100.0/24 \
+  --gateway 192.168.100.1 \
+  --dns-nameserver 8.8.8.8 \
+  subnet100
+openstack router create router_lan_1
+openstack router set router_lan_1 --external-gateway public
+openstack router add subnet router_lan_1 subnet100
+
+#echo ">>> 3. Création du réseau 200..."
+#openstack network create network200
+#openstack subnet create --network network200 \
+#  --subnet-range 192.168.200.0/24 \
+#  --gateway 192.168.200.1 \
+#  --dns-nameserver 8.8.8.8 \
+#  subnet200
+#openstack router create router_lan_2
+#openstack router set router_lan_2 --external-gateway public
+#openstack router add subnet router_lan_2 subnet200
+
+# Génération locale
+#ssh-keygen -f my-key
+openstack keypair create --public-key my-key.pub my-key
+
+# Création du groupe
+echo ">>> 5. Création du Security Group..."
+openstack security group create my-secgroup
+openstack security group rule create --proto icmp my-secgroup
+openstack security group rule create --proto tcp --dst-port 22 my-secgroup
+openstack security group rule create --proto tcp --dst-port 80 my-secgroup
+
+# Création de l'instance #vm-test1
+# NOTE: On vérifie quelle image Cirros est dispo (souvent différente selon la version DevStack)
+# On prend la première image qui contient "cirros" dans le nom
+#IMAGE_CIRROS=$(openstack image list --format value -c Name | grep cirros | head -n 1)
+#echo "Utilisation de l'image : $IMAGE_CIRROS"
+
+#echo ">>> 6. VM Test 1..."
+#openstack server create --flavor flavor_standard \
+#  --image "$IMAGE_CIRROS" \
+#  --network network100 \
+#  --security-group my-secgroup \
+#  --key-name my-key \
+#  vm-test1
+# Capture et assignation de l'IP
+#FIP1=$(openstack floating ip create public -f value -c floating_ip_address)
+#openstack server add floating ip vm-test1 $FIP1
+#echo "VM-Test1 est accessible sur : $FIP1"
+
+# Création de l'instance vm-test2
+#echo ">>> 7. VM Test 2..."
+#openstack server create --flavor flavor_standard \
+#  --image "$IMAGE_CIRROS" \
+#  --network network200 \
+#  --security-group my-secgroup \
+#  --key-name my-key \
+#  vm-test2
+
+#FIP2=$(openstack floating ip create public -f value -c floating_ip_address)
+#openstack server add floating ip vm-test2 $FIP2
+#echo "VM-Test2 est accessible sur : $FIP2"
+
+echo ">>> 8. Préparation de Debian..."
+# Création correcte du fichier yaml
+PASS_HASH=$(openssl passwd -6 stack)
+SSH_KEY=$(cat my-key.pub)
+
+cat <<EOF > cloud-config.yaml
+#cloud-config
+users:
+  - name: user-ynov
+    passwd: $PASS_HASH
+    lock_passwd: false
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: users, admin
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - $SSH_KEY
+ssh_pwauth: True
+chpasswd: { expire: False }
+EOF
+
+#Modification des droits sur cloud-config.yaml
+sudo chown -R stack:stack cloud-config.yaml
+sudo chmod 777 cloud-config.yaml
+
+# Téléchargement et Création de l'image dans OpenStack
+if ! openstack image show "Debian-12" > /dev/null 2>&1; then
+    echo "Téléchargement de l'image Debian..."
+    wget -nc https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2
+    echo "Upload de l'image dans Glance..."
+    openstack image create "Debian-12" \
+      --file debian-12-generic-amd64.qcow2 \
+      --disk-format qcow2 \
+      --container-format bare \
+      --public
+else
+    echo "L'image Debian-12 existe déjà."
+fi
+
+echo ">>> 9. Lancement Instance Debian TP5..."
+openstack server create \
+  --image "Debian-12" \
+  --flavor "flavor_standard" \
+  --network "network100" \
+  --security-group "my-secgroup" \
+  --user-data cloud-config.yaml \
+  --key-name my-key \
+  Debian_tp5
+
+FIP3=$(openstack floating ip create public -f value -c floating_ip_address)
+openstack server add floating ip Debian_tp5 $FIP3
+
+#Snapshot de Debian_tp5 pour création de la template
+#openstack server image create --name "debian_ynov" Debian_tp5 --wait
+
+
+#FIP4=$(openstack floating ip create public -f value -c floating_ip_address)
+
+echo "------------------------------------------------"
+echo "Environnement prêt !"
+echo "Debian IP: $FIP3 (User: user-ynov / Pass: stack)"
+echo "Clé privée disponible ici : ./my-key"
+echo "------------------------------------------------"
+
+
+______________________________________________________________________________________________________
+
+
+stack@nicolas:~/devstack$ cat template_new_stack.yaml
+heat_template_version: 2021-04-16
+description: Deploie un NOUVEAU reseau 150, un routeur, une VM et une Floating IP.
+
+# SECTION 1 : LES PARAMÈTRES
+parameters:
+  key_name:
+    type: string
+    description: Nom de la clé SSH
+    default: my-key
+
+  image_name:
+    type: string
+    description: Nom de l'image à utiliser
+    default: "debian_ynov"
+
+  flavor_name:
+    type: string
+    description: Gabarit de la VM (Pense à utiliser flavor_standard si tu manques de CPU)
+    default: flavor_standard
+
+  public_net:
+    type: string
+    description: Nom du réseau externe (pour la sortie internet du routeur)
+    default: public
+
+  my_secgroup:
+    type: string
+    description: Groupe de sécurité existant
+    default: my-secgroup
+
+# SECTION 2 : LES RESSOURCES
+resources:
+
+  # --- 1. L'INFRASTRUCTURE RÉSEAU (Le squelette) ---
+
+  # Le Nouveau Réseau 150
+  my_network_150:
+    type: OS::Neutron::Net
+    properties:
+      name: network150
+
+  # Le Sous-réseau 192.168.150.0/24
+  my_subnet_150:
+    type: OS::Neutron::Subnet
+    properties:
+      name: subnet150
+      network_id: { get_resource: my_network_150 } # Lié au réseau juste au-dessus
+      cidr: 192.168.150.0/24
+      gateway_ip: 192.168.150.1
+      dns_nameservers: [8.8.8.8]
+
+  # Le Nouveau Routeur
+  my_router_15:
+    type: OS::Neutron::Router
+    properties:
+      name: routeur_lan_15
+      external_gateway_info:
+        network: { get_param: public_net }
+
+  # Le lien entre le Routeur et le Sous-réseau
+  my_router_interface:
+    type: OS::Neutron::RouterInterface
+    properties:
+      router_id: { get_resource: my_router_15 }
+      subnet_id: { get_resource: my_subnet_150 }
+
+  # --- 2. LES INSTANCES (Les meubles) ---
+
+  # Le Port Réseau (La prise murale sur le réseau 150)
+  my_port:
+    type: OS::Neutron::Port
+    properties:
+      # ATTENTION : Ici on pointe vers la RESSOURCE créée en haut, plus vers un paramètre
+      network_id: { get_resource: my_network_150 }
+      fixed_ips:
+        - subnet_id: { get_resource: my_subnet_150 }
+      security_groups:
+        - { get_param: my_secgroup }
+
+  # La Machine Virtuelle
+  my_instance:
+    type: OS::Nova::Server
+    properties:
+      name: vm_heat_debian_150
+      image: { get_param: image_name }
+      flavor: { get_param: flavor_name }
+      key_name: { get_param: key_name }
+      networks:
+        - port: { get_resource: my_port }
+
+  # L'IP Flottante
+  my_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network: { get_param: public_net }
+
+  # Association de l'IP
+  association_fip:
+    type: OS::Neutron::FloatingIPAssociation
+    properties:
+      floatingip_id: { get_resource: my_floating_ip }
+      port_id: { get_resource: my_port }
+
+______________________________________________________________________________________________________________
+
+  stack@nicolas:~/devstack$ cat template_stack.yaml
+heat_template_version: 2021-04-16
+description: Deploie une VM (Debian) dans le réseau existant network100 avec une IP Flottante.
+
+# SECTION 1 : LES PARAMÈTRES
+parameters:
+  key_name:
+    type: string
+    description: Nom de la clé SSH
+    default: my-key
+
+  image_name:
+    type: string
+    description: Nom de l'image à utiliser
+    default: "debian_ynov"
+
+  flavor_name:
+    type: string
+    description: Gabarit de la VM (Petit gabarit pour DevStack)
+    default: flavor_standard
+
+  public_net:
+    type: string
+    description: Nom du réseau externe pour l'IP flottante
+    default: public
+
+  my_secgroup:
+    type: string
+    description: Groupe de sécurité existant
+    default: my-secgroup
+
+  # NOUVEAU PARAMÈTRE : On demande le nom du réseau existant
+  existing_net_name:
+    type: string
+    description: Nom du réseau privé existant
+    default: network100
+
+# SECTION 2 : LES RESSOURCES
+resources:
+
+  # 1. CRÉATION DU PORT RÉSEAU (La "prise murale")
+  # Au lieu de créer un réseau, on crée un port DANS le réseau existant.
+  # C'est la méthode la plus robuste pour attacher ensuite une IP flottante.
+  my_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_param: existing_net_name } # Se connecte à network100
+      security_groups:
+        - { get_param: my_secgroup }
+
+  # 2. La Machine Virtuelle
+  my_instance:
+    type: OS::Nova::Server
+    properties:
+      name: vm_heat_debian
+      image: { get_param: image_name }
+      flavor: { get_param: flavor_name }
+      key_name: { get_param: key_name }
+      # On connecte la VM au port créé juste au-dessus
+      networks:
+        - port: { get_resource: my_port }
+
+  # 3. L'IP Flottante
+  my_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network: { get_param: public_net }
+
+  # 4. Association de l'IP flottante au Port
+  association_fip:
+    type: OS::Neutron::FloatingIPAssociation
+    properties:
+      floatingip_id: { get_resource: my_floating_ip }
+      port_id: { get_resource: my_port }
+      # Beaucoup plus simple : on associe l'IP directement au port qu'on a créé en ressource 1.
+
+  
