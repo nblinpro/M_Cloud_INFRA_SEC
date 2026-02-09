@@ -374,4 +374,55 @@ resources:
       port_id: { get_resource: my_port }
       # Beaucoup plus simple : on associe l'IP directement au port qu'on a créé en ressource 1.
 
-  
+______________________________________________________________________________________________________________________
+
+
+stack@nicolas:~/devstack$ ll
+total 436664
+drwxrwxr-x 15 stack stack      4096 Feb  9 16:42 ./
+drwxr-x--x 25 stack stack      4096 Jan 21 11:10 ../
+-rwxrwxr-x  1 stack stack      3307 Nov  5 14:37 clean.sh*
+-rwxrwxrwx  1 stack stack       422 Jan 21 11:03 cloud-config.yaml*
+-rw-rw-r--  1 stack stack       607 Nov  5 14:37 CONTRIBUTING.rst
+drwxrwxr-x  2 stack stack      4096 Nov  5 14:37 data/
+-rw-rw-r--  1 stack stack 446706688 Jan 12 17:56 debian-12-generic-amd64.qcow2
+drwxrwxr-x  3 stack stack      4096 Nov  5 14:37 doc/
+drwxrwxr-x  2 stack stack      4096 Nov  5 14:37 extras.d/
+drwxrwxr-x  9 stack stack      4096 Jan 21 10:45 files/
+-rw-rw-r--  1 stack stack     32179 Nov  5 14:37 functions
+-rw-rw-r--  1 stack stack     78131 Nov  5 14:37 functions-common
+-rw-rw-r--  1 stack stack      3774 Nov  5 14:37 FUTURE.rst
+drwxrwxr-x  2 stack stack      4096 Nov  5 14:37 gate/
+drwxrwxr-x  8 stack stack      4096 Nov  5 14:37 .git/
+-rw-rw-r--  1 stack stack       481 Nov  5 14:37 .gitignore
+-rw-rw-r--  1 stack stack        75 Nov  5 14:37 .gitreview
+-rw-rw-r--  1 stack stack     11799 Nov  5 14:37 HACKING.rst
+drwxrwxr-x  2 stack stack      4096 Nov  5 14:37 inc/
+drwxrwxr-x  8 stack stack      4096 Nov  5 14:37 lib/
+-rw-rw-r--  1 stack stack     10143 Nov  5 14:37 LICENSE
+-rw-r--r--  1 root  root        324 Jan 21 09:50 local.conf
+-rw-r--r--  1 stack stack       336 Jan 21 10:04 .localrc.auto
+-rw-r--r--  1 stack stack        32 Nov  5 14:40 .localrc.password
+-rw-rw-r--  1 stack stack       340 Nov  5 14:37 .mailmap
+-rw-rw-r--  1 stack stack      2490 Nov  5 14:37 Makefile
+-rw-------  1 stack stack       444 Jan 21 09:45 my-key
+-rw-r--r--  1 stack stack        82 Jan 21 09:45 my-key.pub
+-rw-rw-r--  1 stack stack      2442 Nov  5 14:37 openrc
+drwxrwxr-x  4 stack stack      4096 Nov  5 14:37 playbooks/
+-rw-r--r--  1 stack stack        43 Jan 21 10:11 .prereqs
+-rw-rw-r--  1 stack stack      3930 Nov  5 14:37 README.rst
+drwxrwxr-x 22 stack stack      4096 Nov  5 14:37 roles/
+-rwxrwxr-x  1 stack stack      1188 Nov  5 14:37 run_tests.sh*
+drwxrwxr-x  2 stack stack      4096 Nov  5 14:37 samples/
+-rwxr-xr-x  1 stack stack      4712 Jan 21 11:41 setup_env.sh*
+-rw-r--r--  1 stack stack       779 Jan 21 10:38 .stackenv
+-rw-rw-r--  1 stack stack     37267 Nov  5 14:37 stackrc
+-rwxrwxr-x  1 stack stack     48066 Nov  5 14:37 stack.sh*
+-rw-r--r--  1 root  root       2717 Jan 21 11:32 template_new_stack.yaml
+-rw-r--r--  1 stack stack      2128 Jan 21 11:16 template_stack.yaml
+drwxrwxr-x  2 stack stack      4096 Nov  5 14:37 tests/
+drwxrwxr-x  3 stack stack      4096 Nov  5 14:37 tools/
+-rw-rw-r--  1 stack stack      1821 Nov  5 14:37 tox.ini
+-rwxrwxr-x  1 stack stack      4135 Nov  5 14:37 unstack.sh*
+-rw-rw-r--  1 stack stack     34218 Nov  5 14:37 .zuul.yaml
+
