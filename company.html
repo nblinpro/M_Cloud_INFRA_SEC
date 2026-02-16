@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Missions Entreprise | Nicolas Blin</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -13,8 +12,7 @@
             --secondary: #1e293b;
             --text-muted: #94a3b8;
             --bg-dark: #0f172a;
-            --pro-violet: #a78bfa;
-            /* Nouvelle couleur pro */
+            --pro-violet: #a78bfa; /* Ta couleur violette */
         }
 
         body {
@@ -24,10 +22,9 @@
             margin: 0;
         }
 
-        /* Hero */
+        /* Hero Style */
         .hero p {
             background: rgba(167, 139, 250, 0.1);
-            /* Violet transparent */
             display: inline-block;
             padding: 8px 20px;
             border-radius: 20px;
@@ -60,16 +57,16 @@
 
         .filter-btn.active {
             background: var(--pro-violet);
-            color: white;
+            color: #0f172a;
             border-color: var(--pro-violet);
             box-shadow: 0 0 15px rgba(167, 139, 250, 0.4);
         }
 
-        /* Grille */
+        /* Grille et Cartes */
         .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 25px;
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+            gap: 25px; 
             padding: 2rem;
             max-width: 1200px;
             margin: 0 auto;
@@ -84,17 +81,15 @@
             border-radius: 12px;
             border: 1px solid #334155;
             transition: transform 0.3s ease, opacity 0.4s ease;
-            opacity: 1;
+            border-left: 4px solid var(--pro-violet); /* Rappel du style parcours */
         }
 
-        .card.hidden {
-            display: none;
-        }
+        .card.hidden { display: none; }
 
         .card:hover {
             transform: translateY(-10px);
             border-color: var(--pro-violet);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
         .card i {
@@ -123,6 +118,7 @@
             border: 1px solid #334155;
         }
 
+        /* Bouton violet */
         .btn-card {
             display: block;
             text-align: center;
@@ -136,27 +132,26 @@
             transition: 0.3s;
         }
 
-        .btn-card:hover {
-            background: #8b5cf6;
-            /* Un violet un peu plus foncé au survol */
-            color: white;
+        .btn-card:hover { 
+            background: #ffffff; 
+            color: #0f172a; 
         }
     </style>
 </head>
-
 <body>
+
     <header>
-        <div class="logo">Nicolas<span>.cloud</span></div>
+        <div class="logo">Nicolas<span>.infra</span></div>
         <nav>
             <ul>
-                <li><a href="https://nblinpro.github.io/portfolio/index.html">Accueil</a></li>
-                <li><a href="https://nblinpro.github.io/portfolio/pages/parcours.html">Parcours</a></li>
-                <li><a href="https://nblinpro.github.io/portfolio/pages/projets.html" class="active">Projets</a></li>
-                <li><a href="mailto:nicolas.blin.pro1@gmail.com" class="btn btn-primary"
-                        style="padding: 0.5rem 1rem;">Contact</a></li>
+                <li><a href="../index.html">Accueil</a></li>
+                <li><a href="parcours.html">Parcours</a></li>
+                <li><a href="projets.html" class="active">Projets</a></li>
+                <li><a href="mailto:nicolas.blin.pro1@gmail.com" class="btn btn-primary" style="padding: 0.5rem 1rem;">Me Contacter</a></li>
             </ul>
         </nav>
     </header>
+
     <main>
         <section class="hero" style="text-align: center; padding: 5rem 1rem;">
             <h1>Expériences en Entreprise</h1>
@@ -170,7 +165,7 @@
         </div>
 
         <section class="grid">
-
+            
             <article class="card" data-category="monitoring">
                 <div>
                     <span class="company-tag">Observabilité & Supervision</span>
@@ -181,12 +176,11 @@
                         <span class="tag-small">Prometheus</span>
                         <span class="tag-small">Grafana</span>
                     </div>
-                    <p>Mise en place et administration de solutions de supervision. Création de dashboards dynamiques
-                        Grafana et sondes Centreon pour le suivi en temps réel des serveurs et du réseau.</p>
+                    <p>Mise en place et administration de solutions de supervision. Création de dashboards dynamiques Grafana et sondes Centreon pour le suivi en temps réel.</p>
                 </div>
                 <a href="#" class="btn-card">Détails techniques <i class="fa-solid fa-microscope"></i></a>
             </article>
-
+            
             <article class="card" data-category="auto">
                 <div>
                     <span class="company-tag">Infrastructure as Code</span>
@@ -197,11 +191,9 @@
                         <span class="tag-small">YAML</span>
                         <span class="tag-small">Linux</span>
                     </div>
-                    <p>Déploiement automatisé de configurations serveurs et gestion de parc via Ansible. Réduction du
-                        temps de déploiement et standardisation des environnements Linux.</p>
+                    <p>Déploiement automatisé de configurations serveurs et gestion de parc via Ansible. Standardisation des environnements Linux.</p>
                 </div>
-                <a href="projects_ansible/projets_ansible.html" class="btn-card">Voir la mission <i
-                        class="fa-solid fa-terminal"></i></a>
+                <a href="projects_ansible/projets_ansible.html" class="btn-card">Voir la mission <i class="fa-solid fa-terminal"></i></a>
             </article>
 
         </section>
@@ -228,5 +220,4 @@
     </script>
 
 </body>
-
 </html>
