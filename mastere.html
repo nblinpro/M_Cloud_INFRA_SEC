@@ -3,40 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cloud & Infra | Portail Technique</title>
+    <title>Projets Mastère | Nicolas Blin</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* Optimisation du Hero pour le Mastère */
         .hero p {
             background: rgba(59, 130, 246, 0.1);
             display: inline-block;
-            padding: 5px 15px;
+            padding: 8px 20px;
             border-radius: 20px;
             color: var(--accent);
             font-weight: bold;
-            margin-top: 10px;
+            margin-top: 15px;
+            border: 1px solid rgba(59, 130, 246, 0.3);
         }
+
+        /* Système de grille amélioré */
+        .grid {
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+            gap: 25px; 
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
         .card {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            transition: transform 0.3s ease;
+            background: var(--secondary); /* Assure-toi que cette variable est définie ou utilise #1e293b */
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #334155;
+            transition: all 0.3s ease;
         }
+
         .card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-10px);
+            border-color: var(--accent);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
+
         .card i {
-            font-size: 2rem;
+            font-size: 2.5rem;
             color: var(--accent);
-            margin-bottom: 1rem;
+            margin-bottom: 1.2rem;
         }
+
+        /* Badges de catégories pour filtrer visuellement */
+        .category-pill {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            display: block;
+            font-weight: 800;
+        }
+
         .tag-small {
             font-size: 0.7rem;
-            background: #334155;
-            color: #f8fafc;
-            padding: 2px 8px;
-            border-radius: 4px;
+            background: #0f172a;
+            color: #94a3b8;
+            padding: 4px 10px;
+            border-radius: 6px;
             margin-right: 5px;
+            border: 1px solid #334155;
+        }
+
+        .project-status {
+            font-size: 0.75rem;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #10b981; /* Vert pour terminé */
         }
     </style>
 </head>
@@ -48,64 +91,78 @@
             <ul>
                 <li><a href="https://nblinpro.github.io/portfolio/index.html">Accueil</a></li>
                 <li><a href="https://nblinpro.github.io/portfolio/pages/parcours.html">Parcours</a></li>
-                <li><a href="https://nblinpro.github.io/portfolio/pages/projets.html">Projets</a></li>
-                <li><a href="mailto:nicolas.blin.pro1@gmail.com" class="btn btn-primary" style="padding: 0.5rem 1rem;">Contact</a></li>
+                <li><a href="https://nblinpro.github.io/portfolio/pages/projets.html" class="active">Projets</a></li>
+                <li><a href="mailto:nicolas.blin.pro1@gmail.com" class="btn btn-primary">Contact</a></li>
             </ul>
         </nav>
     </header>
 
     <main>
-        <section class="hero" style="text-align: center; padding: 4rem 1rem;">
-            <h1>Architecture & Cloud Computing</h1>
-            <p><i class="fa-solid fa-server"></i> Mastering OpenStack Ecosystem</p>
+        <section class="hero" style="text-align: center; padding: 5rem 1rem;">
+            <h1>Réalisations Mastère</h1>
+            <p><i class="fa-solid fa-graduation-cap"></i> Expert Cloud, Infrastructure & Sécurité</p>
         </section>
 
-        <section class="grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; padding: 2rem;">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <span class="tag-small" style="cursor: pointer; background: var(--accent); color: white;">Tous</span>
+            <span class="tag-small" style="cursor: pointer;">Cloud</span>
+            <span class="tag-small" style="cursor: pointer;">DevSecOps</span>
+            <span class="tag-small" style="cursor: pointer;">Sécurité</span>
+        </div>
+
+        <section class="grid">
             
             <article class="card">
                 <div>
-                    <i class="fa-solid fa-terminal"></i>
-                    <h3>Déploiement via DevStack</h3>
-                    <div style="margin-bottom: 10px;">
-                        <span class="tag-small">Ubuntu 24.04</span>
+                    <span class="category-pill">Cloud Infrastructure</span>
+                    <i class="fa-solid fa-cloud"></i>
+                    <h3>Écosystème OpenStack</h3>
+                    <div style="margin: 10px 0;">
                         <span class="tag-small">IaaS</span>
+                        <span class="tag-small">DevStack</span>
+                        <span class="tag-small">Nova/Swift</span>
                     </div>
-                    <p>Guide complet pour installer et vérifier une plateforme OpenStack complète en environnement de test.</p>
+                    <p>Déploiement et administration d'une infrastructure Cloud complète. Gestion du compute, du stockage objet et du réseau virtuel.</p>
                 </div>
-                <a href="tps/tp1.html" class="btn btn-outline" style="margin-top: 1.5rem;">Lire la doc <i class="fa-solid fa-book"></i></a>
+                <a href="projets/openstack-master.html" class="btn btn-outline" style="margin-top: 1.5rem; text-align: center;">Détails du projet <i class="fa-solid fa-arrow-right"></i></a>
             </article>
             
             <article class="card">
                 <div>
-                    <i class="fa-solid fa-microchip"></i>
-                    <h3>Nova (Compute)</h3>
-                    <div style="margin-bottom: 10px;">
-                        <span class="tag-small">Instances</span>
-                        <span class="tag-small">Flavors</span>
+                    <span class="category-pill">DevSecOps</span>
+                    <i class="fa-solid fa-infinity"></i>
+                    <h3>Pipeline CI/CD Sécurisé</h3>
+                    <div style="margin: 10px 0;">
+                        <span class="tag-small">GitLab CI</span>
+                        <span class="tag-small">Docker</span>
+                        <span class="tag-small">Trivy</span>
                     </div>
-                    <p>Gestion du cycle de vie des instances, configuration réseau et orchestration des ressources de calcul.</p>
+                    <p>Mise en place d'une chaîne d'intégration continue intégrant des scans de vulnérabilités automatiques sur les images conteneurs.</p>
                 </div>
-                <a href="tps/tp2.html" class="btn btn-outline" style="margin-top: 1.5rem;">Lire la doc <i class="fa-solid fa-book"></i></a>
+                <div class="project-status"><i class="fa-solid fa-circle-check"></i> Projet validé</div>
+                <a href="#" class="btn btn-outline" style="margin-top: 1.5rem; text-align: center;">Voir le repo <i class="fa-brands fa-github"></i></a>
             </article>
 
             <article class="card">
                 <div>
-                    <i class="fa-solid fa-database"></i>
-                    <h3>Swift (Stockage Objet)</h3>
-                    <div style="margin-bottom: 10px;">
-                        <span class="tag-small">Object Storage</span>
-                        <span class="tag-small">Scalability</span>
+                    <span class="category-pill">Automatisation</span>
+                    <i class="fa-solid fa-code-branch"></i>
+                    <h3>Infrastructure as Code (IaC)</h3>
+                    <div style="margin: 10px 0;">
+                        <span class="tag-small">Terraform</span>
+                        <span class="tag-small">Ansible</span>
+                        <span class="tag-small">AWS</span>
                     </div>
-                    <p>Configuration du stockage distribué, gestion des containers et des objets via l'API OpenStack Swift.</p>
+                    <p>Provisionnement automatique d'une architecture multi-tiers sur AWS via Terraform et configuration logicielle avec Ansible.</p>
                 </div>
-                <a href="tps/tp3.html" class="btn btn-outline" style="margin-top: 1.5rem;">Lire la doc <i class="fa-solid fa-book"></i></a>
+                <a href="#" class="btn btn-outline" style="margin-top: 1.5rem; text-align: center;">Documentation <i class="fa-solid fa-book"></i></a>
             </article>
 
         </section>
     </main>
 
-    <footer style="text-align: center; padding: 2rem; color: var(--text-muted); border-top: 1px solid #334155;">
-        <p>© 2025 Nicolas Blin — Expert Architecture S.I.</p>
+    <footer style="text-align: center; padding: 3rem; color: var(--text-muted); border-top: 1px solid #334155; margin-top: 4rem;">
+        <p>© 2025 Nicolas Blin — Portfolio Mastère Ynov Campus</p>
     </footer>
 
 </body>
