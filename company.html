@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,136 +9,97 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --accent: #3b82f6;
-            --secondary: #1e293b;
+            /* On surcharge les variables du style.css pour cette page spécifique */
+            --accent: #a78bfa; /* Ton violet pro */
+            --accent-glow: rgba(167, 139, 250, 0.3);
+            --bg-body: #0f172a;
+            --bg-card: #1e293b;
+            --border: #334155;
             --text-muted: #94a3b8;
-            --bg-dark: #0f172a;
-            --pro-violet: #a78bfa; /* Ta couleur violette */
         }
 
-        body {
-            background-color: var(--bg-dark);
-            color: #f8fafc;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
+        /* --- Hero Spécifique --- */
+        .hero {
+            text-align: center;
+            padding: 5rem 5%;
+            min-height: 40vh;
+            align-items: center; /* Centre le contenu du hero */
         }
 
-        /* Hero Style */
-        .hero p {
+        .hero p.status-pill {
             background: rgba(167, 139, 250, 0.1);
             display: inline-block;
             padding: 8px 20px;
             border-radius: 20px;
-            color: var(--pro-violet);
+            color: var(--accent);
             font-weight: bold;
             margin-top: 15px;
             border: 1px solid rgba(167, 139, 250, 0.3);
         }
 
-        /* Filtres */
+        /* --- Système de Filtres --- */
         .filter-container {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 3rem;
         }
 
         .filter-btn {
             display: inline-block;
-            font-size: 0.8rem;
-            background: var(--secondary);
+            font-size: 0.85rem;
+            background: var(--bg-card);
             color: var(--text-muted);
-            padding: 6px 15px;
-            border-radius: 6px;
-            margin: 0 5px;
-            border: 1px solid #334155;
+            padding: 8px 20px;
+            border-radius: 8px;
+            margin: 0 8px;
+            border: 1px solid var(--border);
             cursor: pointer;
             transition: all 0.3s ease;
             text-transform: uppercase;
-            font-weight: bold;
+            font-weight: 600;
         }
 
         .filter-btn.active {
-            background: var(--pro-violet);
-            color: #0f172a;
-            border-color: var(--pro-violet);
-            box-shadow: 0 0 15px rgba(167, 139, 250, 0.4);
+            background: var(--accent);
+            color: var(--bg-body);
+            border-color: var(--accent);
+            box-shadow: 0 0 15px var(--accent-glow);
         }
 
-        /* Grille et Cartes */
-        .grid {
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
-            gap: 25px; 
-            padding: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
+        /* --- Ajustements Cartes --- */
         .card {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            background: var(--secondary);
-            padding: 1.5rem;
-            border-radius: 12px;
-            border: 1px solid #334155;
-            transition: transform 0.3s ease, opacity 0.4s ease;
-            border-left: 4px solid var(--pro-violet); /* Rappel du style parcours */
+            border-left: 4px solid var(--accent); /* Style type parcours */
+            opacity: 1;
+            transition: transform 0.3s ease, opacity 0.4s ease, border-color 0.3s ease;
         }
 
-        .card.hidden { display: none; }
-
-        .card:hover {
-            transform: translateY(-10px);
-            border-color: var(--pro-violet);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        .card.hidden {
+            display: none;
+            opacity: 0;
         }
 
-        .card i {
+        .card i.main-icon {
             font-size: 2.5rem;
-            color: var(--pro-violet);
-            margin-bottom: 1.2rem;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
         }
 
-        .company-tag {
-            font-size: 0.65rem;
+        .company-name {
+            font-size: 0.75rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--pro-violet);
+            letter-spacing: 1.5px;
+            color: var(--accent);
+            font-weight: 800;
             margin-bottom: 0.5rem;
             display: block;
-            font-weight: 800;
         }
 
-        .tag-small {
-            font-size: 0.7rem;
-            background: #0f172a;
-            color: #94a3b8;
-            padding: 4px 10px;
-            border-radius: 6px;
-            margin-right: 5px;
-            border: 1px solid #334155;
-        }
-
-        /* Bouton violet */
-        .btn-card {
-            display: block;
-            text-align: center;
-            background: var(--pro-violet);
-            color: #0f172a;
-            text-decoration: none;
-            padding: 10px;
-            border-radius: 8px;
-            margin-top: 1.5rem;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-
-        .btn-card:hover { 
-            background: #ffffff; 
-            color: #0f172a; 
+        /* --- Footer --- */
+        footer {
+            margin-top: 4rem;
         }
     </style>
 </head>
+
 <body>
 
     <header>
@@ -146,74 +108,90 @@
             <ul>
                 <li><a href="../index.html">Accueil</a></li>
                 <li><a href="parcours.html">Parcours</a></li>
-                <li><a href="projets.html" class="active">Projets</a></li>
+                <li><a href="#" class="active">Projets</a></li>
                 <li><a href="mailto:nicolas.blin.pro1@gmail.com" class="btn btn-primary" style="padding: 0.5rem 1rem;">Me Contacter</a></li>
             </ul>
         </nav>
     </header>
 
     <main>
-        <section class="hero" style="text-align: center; padding: 5rem 1rem;">
-            <h1>Expériences en Entreprise</h1>
-            <p><i class="fa-solid fa-briefcase"></i> Missions en Alternance / Stage</p>
+        <section class="hero">
+            <span class="hero-tag">Expériences Professionnelles</span>
+            <h1>Missions en <span style="color:var(--accent)">Entreprise</span></h1>
+            <p class="status-pill"><i class="fa-solid fa-briefcase"></i> Alternance & Stages techniques</p>
         </section>
 
         <div class="filter-container">
-            <span class="filter-btn active" onclick="filterProjects('all', this)">Tous</span>
-            <span class="filter-btn" onclick="filterProjects('monitoring', this)">Monitoring</span>
-            <span class="filter-btn" onclick="filterProjects('auto', this)">Automatisation</span>
+            <div class="filter-btn active" onclick="filterProjects('all', this)">Tous</div>
+            <div class="filter-btn" onclick="filterProjects('monitoring', this)">Monitoring</div>
+            <div class="filter-btn" onclick="filterProjects('auto', this)">Automatisation</div>
         </div>
 
-        <section class="grid">
+        <section class="grid" id="project-grid">
             
             <article class="card" data-category="monitoring">
                 <div>
-                    <span class="company-tag">Observabilité & Supervision</span>
-                    <i class="fa-solid fa-chart-line"></i>
+                    <span class="company-name">Observabilité & Supervision</span>
+                    <i class="fa-solid fa-chart-line main-icon"></i>
                     <h3>Monitoring Infra N3</h3>
-                    <div style="margin: 10px 0;">
-                        <span class="tag-small">Centreon</span>
-                        <span class="tag-small">Prometheus</span>
-                        <span class="tag-small">Grafana</span>
+                    <div class="tags" style="margin-bottom: 1.5rem;">
+                        <span class="tag">Centreon</span>
+                        <span class="tag">Prometheus</span>
+                        <span class="tag">Grafana</span>
                     </div>
-                    <p>Mise en place et administration de solutions de supervision. Création de dashboards dynamiques Grafana et sondes Centreon pour le suivi en temps réel.</p>
+                    <p>Mise en place et administration de solutions de supervision. Création de dashboards dynamiques Grafana pour le suivi des serveurs et du réseau.</p>
                 </div>
-                <a href="#" class="btn-card">Détails techniques <i class="fa-solid fa-microscope"></i></a>
+                <a href="#" class="btn btn-outline">Détails techniques <i class="fa-solid fa-arrow-right"></i></a>
             </article>
             
             <article class="card" data-category="auto">
                 <div>
-                    <span class="company-tag">Infrastructure as Code</span>
-                    <i class="fa-solid fa-gears"></i>
+                    <span class="company-name">Infrastructure as Code</span>
+                    <i class="fa-solid fa-gears main-icon"></i>
                     <h3>Automatisation Ansible</h3>
-                    <div style="margin: 10px 0;">
-                        <span class="tag-small">Ansible Playbooks</span>
-                        <span class="tag-small">YAML</span>
-                        <span class="tag-small">Linux</span>
+                    <div class="tags" style="margin-bottom: 1.5rem;">
+                        <span class="tag">Ansible</span>
+                        <span class="tag">YAML</span>
+                        <span class="tag">Linux</span>
                     </div>
-                    <p>Déploiement automatisé de configurations serveurs et gestion de parc via Ansible. Standardisation des environnements Linux.</p>
+                    <p>Déploiement automatisé de configurations serveurs et gestion de parc via Ansible Playbooks. Standardisation des environnements.</p>
                 </div>
-                <a href="projects_ansible/projets_ansible.html" class="btn-card">Voir la mission <i class="fa-solid fa-terminal"></i></a>
+                <a href="projects_ansible/projets_ansible.html" class="btn btn-outline">Voir la mission <i class="fa-solid fa-terminal"></i></a>
             </article>
 
         </section>
     </main>
+
+    <footer>
+        <p>&copy; 2025 Nicolas Blin. Tous droits réservés.</p>
+        <div style="margin-top: 10px;">
+            <a href="../index.html" style="color: var(--accent); text-decoration: none;">Retour à l'accueil</a>
+        </div>
+    </footer>
 
     <script>
         function filterProjects(category, button) {
             const cards = document.querySelectorAll('.card');
             const buttons = document.querySelectorAll('.filter-btn');
 
+            // Gérer les boutons
             buttons.forEach(btn => btn.classList.remove('active'));
             button.classList.add('active');
 
+            // Gérer les cartes
             cards.forEach(card => {
                 if (category === 'all' || card.getAttribute('data-category') === category) {
                     card.classList.remove('hidden');
-                    setTimeout(() => card.style.opacity = "1", 10);
+                    setTimeout(() => {
+                        card.style.opacity = "1";
+                        card.style.transform = "translateY(0)";
+                    }, 10);
                 } else {
                     card.style.opacity = "0";
-                    setTimeout(() => card.classList.add('hidden'), 300);
+                    card.style.transform = "translateY(10px)";
+                    setTimeout(() => {
+                        card.classList.add('hidden');
+                    }, 300);
                 }
             });
         }
