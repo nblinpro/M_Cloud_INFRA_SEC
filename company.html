@@ -12,7 +12,7 @@
             --secondary: #1e293b;
             --text-muted: #94a3b8;
             --bg-dark: #0f172a;
-            --pro-green: #10b981;
+            --pro-violet: #a78bfa; /* Nouvelle couleur pro */
         }
 
         body {
@@ -24,14 +24,14 @@
 
         /* Hero */
         .hero p {
-            background: rgba(16, 185, 129, 0.1);
+            background: rgba(167, 139, 250, 0.1); /* Violet transparent */
             display: inline-block;
             padding: 8px 20px;
             border-radius: 20px;
-            color: var(--pro-green);
+            color: var(--pro-violet);
             font-weight: bold;
             margin-top: 15px;
-            border: 1px solid rgba(16, 185, 129, 0.3);
+            border: 1px solid rgba(167, 139, 250, 0.3);
         }
 
         /* Filtres */
@@ -56,10 +56,10 @@
         }
 
         .filter-btn.active {
-            background: var(--pro-green);
+            background: var(--pro-violet);
             color: white;
-            border-color: var(--pro-green);
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+            border-color: var(--pro-violet);
+            box-shadow: 0 0 15px rgba(167, 139, 250, 0.4);
         }
 
         /* Grille */
@@ -81,19 +81,20 @@
             border-radius: 12px;
             border: 1px solid #334155;
             transition: transform 0.3s ease, opacity 0.4s ease;
+            opacity: 1;
         }
 
         .card.hidden { display: none; }
 
         .card:hover {
             transform: translateY(-10px);
-            border-color: var(--pro-green);
+            border-color: var(--pro-violet);
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
         .card i {
             font-size: 2.5rem;
-            color: var(--pro-green);
+            color: var(--pro-violet);
             margin-bottom: 1.2rem;
         }
 
@@ -101,7 +102,7 @@
             font-size: 0.65rem;
             text-transform: uppercase;
             letter-spacing: 1px;
-            color: var(--pro-green);
+            color: var(--pro-violet);
             margin-bottom: 0.5rem;
             display: block;
             font-weight: 800;
@@ -120,7 +121,7 @@
         .btn-card {
             display: block;
             text-align: center;
-            background: var(--pro-green);
+            background: var(--pro-violet);
             color: #0f172a;
             text-decoration: none;
             padding: 10px;
@@ -130,7 +131,10 @@
             transition: 0.3s;
         }
 
-        .btn-card:hover { background: #059669; color: white; }
+        .btn-card:hover { 
+            background: #8b5cf6; /* Un violet un peu plus foncé au survol */
+            color: white; 
+        }
     </style>
 </head>
 <body>
