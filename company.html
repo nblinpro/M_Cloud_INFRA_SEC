@@ -8,23 +8,59 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --accent: #3b82f6;
+            --accent: #3b82f6; /* Bleu par défaut pour les éléments globaux */
             --secondary: #1e293b;
             --text-muted: #94a3b8;
             --bg-dark: #0f172a;
-            --pro-violet: #a78bfa; /* Nouvelle couleur pro */
+            --pro-violet: #a78bfa; /* Ta couleur violette pro */
+            --text-main: #f1f5f9;
         }
 
         body {
             background-color: var(--bg-dark);
-            color: #f8fafc;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-main);
+            font-family: 'Inter', 'Segoe UI', sans-serif;
             margin: 0;
+            background-image: radial-gradient(circle at top right, #1e293b 0%, transparent 40%);
         }
 
-        /* Hero */
-        .hero p {
-            background: rgba(167, 139, 250, 0.1); /* Violet transparent */
+        /* --- Style du Header & Logo --- */
+        header {
+            background-color: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 1.2rem 5%;
+            border-bottom: 1px solid #334155;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-main); /* Nicolas en blanc */
+            letter-spacing: -0.5px;
+        }
+
+        .logo span { 
+            color: var(--pro-violet); /* .cloud en violet */
+        }
+
+        nav ul { list-style: none; display: flex; gap: 30px; margin: 0; }
+        nav a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        nav a:hover { color: var(--pro-violet); }
+
+        /* --- Hero --- */
+        .hero p.tagline {
+            background: rgba(167, 139, 250, 0.1);
             display: inline-block;
             padding: 8px 20px;
             border-radius: 20px;
@@ -34,7 +70,7 @@
             border: 1px solid rgba(167, 139, 250, 0.3);
         }
 
-        /* Filtres */
+        /* --- Filtres --- */
         .filter-container {
             text-align: center;
             margin-bottom: 2rem;
@@ -45,8 +81,8 @@
             font-size: 0.8rem;
             background: var(--secondary);
             color: var(--text-muted);
-            padding: 6px 15px;
-            border-radius: 6px;
+            padding: 8px 18px;
+            border-radius: 8px;
             margin: 0 5px;
             border: 1px solid #334155;
             cursor: pointer;
@@ -57,31 +93,30 @@
 
         .filter-btn.active {
             background: var(--pro-violet);
-            color: white;
+            color: #0f172a;
             border-color: var(--pro-violet);
             box-shadow: 0 0 15px rgba(167, 139, 250, 0.4);
         }
 
-        /* Grille */
+        /* --- Grille & Cards --- */
         .grid {
             display: grid; 
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
             gap: 25px; 
-            padding: 2rem;
+            padding: 2rem 5%;
             max-width: 1200px;
             margin: 0 auto;
         }
 
         .card {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
             background: var(--secondary);
-            padding: 1.5rem;
+            padding: 2rem;
             border-radius: 12px;
             border: 1px solid #334155;
-            transition: transform 0.3s ease, opacity 0.4s ease;
-            opacity: 1;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            border-left: 4px solid var(--pro-violet);
         }
 
         .card.hidden { display: none; }
@@ -99,7 +134,7 @@
         }
 
         .company-tag {
-            font-size: 0.65rem;
+            font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 1px;
             color: var(--pro-violet);
@@ -109,13 +144,13 @@
         }
 
         .tag-small {
-            font-size: 0.7rem;
-            background: #0f172a;
-            color: #94a3b8;
-            padding: 4px 10px;
-            border-radius: 6px;
+            font-size: 0.75rem;
+            background: rgba(167, 139, 250, 0.1);
+            color: var(--pro-violet);
+            padding: 4px 12px;
+            border-radius: 50px;
             margin-right: 5px;
-            border: 1px solid #334155;
+            border: 1px solid rgba(167, 139, 250, 0.2);
         }
 
         .btn-card {
@@ -124,7 +159,7 @@
             background: var(--pro-violet);
             color: #0f172a;
             text-decoration: none;
-            padding: 10px;
+            padding: 12px;
             border-radius: 8px;
             margin-top: 1.5rem;
             font-weight: bold;
@@ -132,12 +167,13 @@
         }
 
         .btn-card:hover { 
-            background: #8b5cf6; /* Un violet un peu plus foncé au survol */
-            color: white; 
+            background: #ffffff;
+            color: #0f172a;
         }
     </style>
 </head>
 <body>
+
 <header>
     <div class="logo">Nicolas<span>.cloud</span></div>
     <nav>
@@ -145,77 +181,76 @@
             <li><a href="https://nblinpro.github.io/portfolio/index.html">Accueil</a></li>
             <li><a href="https://nblinpro.github.io/portfolio/pages/parcours.html">Parcours</a></li>
             <li><a href="https://nblinpro.github.io/portfolio/pages/projets.html" class="active">Projets</a></li>
-            <li><a href="mailto:nicolas.blin.pro1@gmail.com" class="btn btn-primary" style="padding: 0.5rem 1rem;">Contact</a></li>
+            <li><a href="mailto:nicolas.blin.pro1@gmail.com" class="btn btn-primary" style="padding: 0.5rem 1rem; background: var(--pro-violet); color: #0f172a; border-radius: 8px; font-weight: bold;">Contact</a></li>
         </ul>
     </nav>
 </header>
-    <main>
+
+<main>
+    <section class="hero" style="text-align: center; padding: 5rem 1rem;">
+        <span style="color: var(--pro-violet); font-weight: bold; text-transform: uppercase; letter-spacing: 2px;">Portfolio</span>
+        <h1 style="font-size: 3rem; margin: 10px 0;">Expériences en <span style="color: var(--pro-violet);">Entreprise</span></h1>
+        <p class="tagline"><i class="fa-solid fa-briefcase"></i> Missions en Alternance / Stage</p>
+    </section>
+
+    <div class="filter-container">
+        <span class="filter-btn active" onclick="filterProjects('all', this)">Tous</span>
+        <span class="filter-btn" onclick="filterProjects('monitoring', this)">Monitoring</span>
+        <span class="filter-btn" onclick="filterProjects('auto', this)">Automatisation</span>
+    </div>
+
+    <section class="grid">
+        <article class="card" data-category="monitoring">
+            <div>
+                <span class="company-tag">Observabilité & Supervision</span>
+                <i class="fa-solid fa-chart-line"></i>
+                <h3>Monitoring Infra N3</h3>
+                <div style="margin-bottom: 15px;">
+                    <span class="tag-small">Centreon</span>
+                    <span class="tag-small">Prometheus</span>
+                    <span class="tag-small">Grafana</span>
+                </div>
+                <p>Mise en place et administration de solutions de supervision. Création de dashboards dynamiques Grafana pour le suivi en temps réel.</p>
+            </div>
+            <a href="#" class="btn-card">Détails techniques <i class="fa-solid fa-microscope"></i></a>
+        </article>
         
-        <section class="hero" style="text-align: center; padding: 5rem 1rem;">
-            <h1>Expériences en Entreprise</h1>
-            <p><i class="fa-solid fa-briefcase"></i> Missions en Alternance / Stage</p>
-        </section>
-
-        <div class="filter-container">
-            <span class="filter-btn active" onclick="filterProjects('all', this)">Tous</span>
-            <span class="filter-btn" onclick="filterProjects('monitoring', this)">Monitoring</span>
-            <span class="filter-btn" onclick="filterProjects('auto', this)">Automatisation</span>
-        </div>
-
-        <section class="grid">
-            
-            <article class="card" data-category="monitoring">
-                <div>
-                    <span class="company-tag">Observabilité & Supervision</span>
-                    <i class="fa-solid fa-chart-line"></i>
-                    <h3>Monitoring Infra N3</h3>
-                    <div style="margin: 10px 0;">
-                        <span class="tag-small">Centreon</span>
-                        <span class="tag-small">Prometheus</span>
-                        <span class="tag-small">Grafana</span>
-                    </div>
-                    <p>Mise en place et administration de solutions de supervision. Création de dashboards dynamiques Grafana et sondes Centreon pour le suivi en temps réel des serveurs et du réseau.</p>
+        <article class="card" data-category="auto">
+            <div>
+                <span class="company-tag">Infrastructure as Code</span>
+                <i class="fa-solid fa-gears"></i>
+                <h3>Automatisation Ansible</h3>
+                <div style="margin-bottom: 15px;">
+                    <span class="tag-small">Ansible</span>
+                    <span class="tag-small">YAML</span>
+                    <span class="tag-small">Linux</span>
                 </div>
-                <a href="#" class="btn-card">Détails techniques <i class="fa-solid fa-microscope"></i></a>
-            </article>
-            
-            <article class="card" data-category="auto">
-                <div>
-                    <span class="company-tag">Infrastructure as Code</span>
-                    <i class="fa-solid fa-gears"></i>
-                    <h3>Automatisation Ansible</h3>
-                    <div style="margin: 10px 0;">
-                        <span class="tag-small">Ansible Playbooks</span>
-                        <span class="tag-small">YAML</span>
-                        <span class="tag-small">Linux</span>
-                    </div>
-                    <p>Déploiement automatisé de configurations serveurs et gestion de parc via Ansible. Réduction du temps de déploiement et standardisation des environnements Linux.</p>
-                </div>
-                <a href="projects_ansible/projets_ansible.html" class="btn-card">Voir la mission <i class="fa-solid fa-terminal"></i></a>
-            </article>
+                <p>Déploiement automatisé de configurations serveurs et gestion de parc via Ansible Playbooks. Standardisation des environnements Linux.</p>
+            </div>
+            <a href="projects_ansible/projets_ansible.html" class="btn-card">Voir la mission <i class="fa-solid fa-terminal"></i></a>
+        </article>
+    </section>
+</main>
 
-        </section>
-    </main>
+<script>
+    function filterProjects(category, button) {
+        const cards = document.querySelectorAll('.card');
+        const buttons = document.querySelectorAll('.filter-btn');
 
-    <script>
-        function filterProjects(category, button) {
-            const cards = document.querySelectorAll('.card');
-            const buttons = document.querySelectorAll('.filter-btn');
+        buttons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
 
-            buttons.forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-
-            cards.forEach(card => {
-                if (category === 'all' || card.getAttribute('data-category') === category) {
-                    card.classList.remove('hidden');
-                    setTimeout(() => card.style.opacity = "1", 10);
-                } else {
-                    card.style.opacity = "0";
-                    setTimeout(() => card.classList.add('hidden'), 300);
-                }
-            });
-        }
-    </script>
+        cards.forEach(card => {
+            if (category === 'all' || card.getAttribute('data-category') === category) {
+                card.classList.remove('hidden');
+                setTimeout(() => card.style.opacity = "1", 10);
+            } else {
+                card.style.opacity = "0";
+                setTimeout(() => card.classList.add('hidden'), 300);
+            }
+        });
+    }
+</script>
 
 </body>
 </html>
