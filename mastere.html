@@ -7,7 +7,21 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Optimisation du Hero pour le Mastère */
+        :root {
+            --accent: #3b82f6;
+            --secondary: #1e293b;
+            --text-muted: #94a3b8;
+            --bg-dark: #0f172a;
+        }
+
+        /* Style global pour la cohérence */
+        body {
+            background-color: var(--bg-dark);
+            color: #f8fafc;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+        }
+
         .hero p {
             background: rgba(59, 130, 246, 0.1);
             display: inline-block;
@@ -19,7 +33,35 @@
             border: 1px solid rgba(59, 130, 246, 0.3);
         }
 
-        /* Système de grille amélioré */
+        /* Filtres */
+        .filter-container {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .filter-btn {
+            display: inline-block;
+            font-size: 0.8rem;
+            background: var(--secondary);
+            color: var(--text-muted);
+            padding: 6px 15px;
+            border-radius: 6px;
+            margin: 0 5px;
+            border: 1px solid #334155;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .filter-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Grille et Cartes */
         .grid {
             display: grid; 
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
@@ -33,11 +75,17 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            background: var(--secondary); /* Assure-toi que cette variable est définie ou utilise #1e293b */
+            background: var(--secondary);
             padding: 1.5rem;
             border-radius: 12px;
             border: 1px solid #334155;
-            transition: all 0.3s ease;
+            transition: transform 0.3s ease, opacity 0.4s ease, border-color 0.3s ease;
+            opacity: 1;
+        }
+
+        .card.hidden {
+            display: none;
+            opacity: 0;
         }
 
         .card:hover {
@@ -52,7 +100,6 @@
             margin-bottom: 1.2rem;
         }
 
-        /* Badges de catégories pour filtrer visuellement */
         .category-pill {
             font-size: 0.65rem;
             text-transform: uppercase;
@@ -75,27 +122,37 @@
 
         .project-status {
             font-size: 0.75rem;
-            margin-top: 10px;
+            margin-top: 15px;
             display: flex;
             align-items: center;
-            gap: 5px;
-            color: #10b981; /* Vert pour terminé */
+            gap: 8px;
+            color: #10b981;
+        }
+
+        /* Boutons des cartes */
+        .btn-card {
+            display: block;
+            text-align: center;
+            background: #38bdf8;
+            color: #0f172a;
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 1.5rem;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+
+        .btn-card:hover {
+            background: var(--accent);
+            color: white;
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo">Nicolas<span>.cloud</span></div>
-        <nav>
-            <ul>
-                <li><a href="https://nblinpro.github.io/portfolio/index.html">Accueil</a></li>
-                <li><a href="https://nblinpro.github.io/portfolio/pages/parcours.html">Parcours</a></li>
-                <li><a href="https://nblinpro.github.io/portfolio/pages/projets.html" class="active">Projets</a></li>
-                <li><a href="mailto:nicolas.blin.pro1@gmail.com" class="btn btn-primary">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
+        </header>
 
     <main>
         <section class="hero" style="text-align: center; padding: 5rem 1rem;">
@@ -103,16 +160,16 @@
             <p><i class="fa-solid fa-graduation-cap"></i> Expert Cloud, Infrastructure & Sécurité</p>
         </section>
 
-        <div style="text-align: center; margin-bottom: 2rem;">
-            <span class="tag-small" style="cursor: pointer; background: var(--accent); color: white;">Tous</span>
-            <span class="tag-small" style="cursor: pointer;">Cloud</span>
-            <span class="tag-small" style="cursor: pointer;">DevSecOps</span>
-            <span class="tag-small" style="cursor: pointer;">Sécurité</span>
+        <div class="filter-container">
+            <span class="filter-btn active" onclick="filterProjects('all', this)">Tous</span>
+            <span class="filter-btn" onclick="filterProjects('cloud', this)">Cloud</span>
+            <span class="filter-btn" onclick="filterProjects('devsecops', this)">DevSecOps</span>
+            <span class="filter-btn" onclick="filterProjects('securite', this)">Sécurité</span>
         </div>
 
-        <section class="grid">
+        <section class="grid" id="project-grid">
             
-            <article class="card">
+            <article class="card" data-category="cloud">
                 <div>
                     <span class="category-pill">Cloud Infrastructure</span>
                     <i class="fa-solid fa-cloud"></i>
@@ -120,49 +177,74 @@
                     <div style="margin: 10px 0;">
                         <span class="tag-small">IaaS</span>
                         <span class="tag-small">DevStack</span>
-                        <span class="tag-small">Nova/Swift</span>
                     </div>
-                    <p>Déploiement et administration d'une infrastructure Cloud complète. Gestion du compute, du stockage objet et du réseau virtuel.</p>
+                    <p>Déploiement et administration d'une infrastructure Cloud complète. Gestion du compute, du stockage objet et du réseau.</p>
                 </div>
-                <a href="./openstack/openstack.html" class="btn btn-outline" style="margin-top: 1.5rem; text-align: center;">Détails du projet <i class="fa-solid fa-arrow-right"></i></a>
+                <a href="./openstack/openstack.html" class="btn-card">Détails du projet <i class="fa-solid fa-arrow-right"></i></a>
             </article>
             
-            <article class="card">
+            <article class="card" data-category="devsecops">
                 <div>
                     <span class="category-pill">DevSecOps</span>
                     <i class="fa-solid fa-infinity"></i>
                     <h3>Pipeline CI/CD Sécurisé</h3>
                     <div style="margin: 10px 0;">
                         <span class="tag-small">GitLab CI</span>
-                        <span class="tag-small">Docker</span>
                         <span class="tag-small">Trivy</span>
                     </div>
-                    <p>Mise en place d'une chaîne d'intégration continue intégrant des scans de vulnérabilités automatiques sur les images conteneurs.</p>
+                    <p>Mise en place d'une chaîne d'intégration continue intégrant des scans de vulnérabilités automatiques.</p>
                 </div>
-                <a href="#" class="btn btn-outline" style="margin-top: 1.5rem; text-align: center;">Voir le repo <i class="fa-brands fa-github"></i></a>
+                <div class="project-status"><i class="fa-solid fa-circle-check"></i> Projet validé</div>
+                <a href="#" class="btn-card">Voir le repo <i class="fa-brands fa-github"></i></a>
             </article>
 
-            <article class="card">
+            <article class="card" data-category="securite">
                 <div>
-                    <span class="category-pill">Automatisation</span>
-                    <i class="fa-solid fa-code-branch"></i>
-                    <h3>Infrastructure as Code (IaC)</h3>
+                    <span class="category-pill">CyberSécurité</span>
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <h3>Audit de Sécurité Infra</h3>
                     <div style="margin: 10px 0;">
-                        <span class="tag-small">Terraform</span>
-                        <span class="tag-small">Ansible</span>
-                        <span class="tag-small">AWS</span>
+                        <span class="tag-small">Nmap</span>
+                        <span class="tag-small">Wireshark</span>
                     </div>
-                    <p>Provisionnement automatique d'une architecture multi-tiers sur AWS via Terraform et configuration logicielle avec Ansible.</p>
+                    <p>Analyse de surface d'attaque et durcissement (hardening) de serveurs Linux en environnement de production.</p>
                 </div>
-                <a href="#" class="btn btn-outline" style="margin-top: 1.5rem; text-align: center;">Documentation <i class="fa-solid fa-book"></i></a>
+                <a href="#" class="btn-card">Documentation <i class="fa-solid fa-book"></i></a>
             </article>
 
         </section>
     </main>
 
-    <footer style="text-align: center; padding: 3rem; color: var(--text-muted); border-top: 1px solid #334155; margin-top: 4rem;">
-        <p>© 2025 Nicolas Blin — Portfolio Mastère Ynov Campus</p>
-    </footer>
+    <script>
+        function filterProjects(category, button) {
+            const cards = document.querySelectorAll('.card');
+            const buttons = document.querySelectorAll('.filter-btn');
+
+            // 1. Gérer l'état actif des boutons
+            buttons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            // 2. Filtrer les cartes
+            cards.forEach(card => {
+                // Si 'all' ou si la catégorie correspond
+                if (category === 'all' || card.getAttribute('data-category') === category) {
+                    card.classList.remove('hidden');
+                    // Petit délai pour l'animation d'entrée
+                    setTimeout(() => {
+                        card.style.opacity = "1";
+                        card.style.transform = "scale(1)";
+                    }, 10);
+                } else {
+                    card.style.opacity = "0";
+                    card.style.transform = "scale(0.95)";
+                    // On attend la fin de la transition pour cacher l'élément du flux
+                    setTimeout(() => {
+                        card.classList.add('hidden');
+                    }, 300);
+                }
+            });
+        }
+    </script>
 
 </body>
 </html>
