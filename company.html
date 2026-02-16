@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Expériences Pro | Nicolas Blin</title>
+    <title>Missions Entreprise | Nicolas Blin</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -12,6 +12,7 @@
             --secondary: #1e293b;
             --text-muted: #94a3b8;
             --bg-dark: #0f172a;
+            --pro-green: #10b981;
         }
 
         body {
@@ -21,13 +22,13 @@
             margin: 0;
         }
 
-        /* Hero spécifique Entreprise */
+        /* Hero */
         .hero p {
-            background: rgba(16, 185, 129, 0.1); /* Vert pour le pro */
+            background: rgba(16, 185, 129, 0.1);
             display: inline-block;
             padding: 8px 20px;
             border-radius: 20px;
-            color: #10b981;
+            color: var(--pro-green);
             font-weight: bold;
             margin-top: 15px;
             border: 1px solid rgba(16, 185, 129, 0.3);
@@ -55,13 +56,13 @@
         }
 
         .filter-btn.active {
-            background: #10b981; /* Vert pour différencier du bleu académique */
+            background: var(--pro-green);
             color: white;
-            border-color: #10b981;
+            border-color: var(--pro-green);
             box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
         }
 
-        /* Grille et Cartes */
+        /* Grille */
         .grid {
             display: grid; 
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
@@ -79,24 +80,20 @@
             padding: 1.5rem;
             border-radius: 12px;
             border: 1px solid #334155;
-            transition: transform 0.3s ease, opacity 0.4s ease, border-color 0.3s ease;
-            opacity: 1;
+            transition: transform 0.3s ease, opacity 0.4s ease;
         }
 
-        .card.hidden {
-            display: none;
-            opacity: 0;
-        }
+        .card.hidden { display: none; }
 
         .card:hover {
             transform: translateY(-10px);
-            border-color: #10b981;
+            border-color: var(--pro-green);
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
         .card i {
             font-size: 2.5rem;
-            color: #10b981;
+            color: var(--pro-green);
             margin-bottom: 1.2rem;
         }
 
@@ -104,7 +101,7 @@
             font-size: 0.65rem;
             text-transform: uppercase;
             letter-spacing: 1px;
-            color: #10b981;
+            color: var(--pro-green);
             margin-bottom: 0.5rem;
             display: block;
             font-weight: 800;
@@ -120,87 +117,66 @@
             border: 1px solid #334155;
         }
 
-        /* Style Bouton Professionnel */
         .btn-card {
             display: block;
             text-align: center;
-            background: #10b981;
+            background: var(--pro-green);
             color: #0f172a;
             text-decoration: none;
             padding: 10px;
             border-radius: 8px;
             margin-top: 1.5rem;
             font-weight: bold;
-            transition: all 0.3s ease;
+            transition: 0.3s;
         }
 
-        .btn-card:hover {
-            background: #059669;
-            color: white;
-        }
+        .btn-card:hover { background: #059669; color: white; }
     </style>
 </head>
 <body>
 
-    <header>
-        </header>
-
     <main>
         <section class="hero" style="text-align: center; padding: 5rem 1rem;">
-            <h1>Projets en Entreprise</h1>
-            <p><i class="fa-solid fa-briefcase"></i> Missions & Réalisations Professionnelles</p>
+            <h1>Expériences en Entreprise</h1>
+            <p><i class="fa-solid fa-briefcase"></i> Missions en Alternance / Stage</p>
         </section>
 
         <div class="filter-container">
             <span class="filter-btn active" onclick="filterProjects('all', this)">Tous</span>
-            <span class="filter-btn" onclick="filterProjects('infra', this)">Infrastructure</span>
+            <span class="filter-btn" onclick="filterProjects('monitoring', this)">Monitoring</span>
             <span class="filter-btn" onclick="filterProjects('auto', this)">Automatisation</span>
-            <span class="filter-btn" onclick="filterProjects('support', this)">Support N3</span>
         </div>
 
-        <section class="grid" id="project-grid">
+        <section class="grid">
             
-            <article class="card" data-category="infra">
+            <article class="card" data-category="monitoring">
                 <div>
-                    <span class="company-tag">Nom de l'entreprise</span>
-                    <i class="fa-solid fa-server"></i>
-                    <h3>Migration Serveurs Cloud</h3>
+                    <span class="company-tag">Observabilité & Supervision</span>
+                    <i class="fa-solid fa-chart-line"></i>
+                    <h3>Monitoring Infra N3</h3>
                     <div style="margin: 10px 0;">
-                        <span class="tag-small">Azure</span>
-                        <span class="tag-small">Windows Server</span>
+                        <span class="tag-small">Centreon</span>
+                        <span class="tag-small">Prometheus</span>
+                        <span class="tag-small">Grafana</span>
                     </div>
-                    <p>Migration d'une infrastructure locale vers un environnement hybride Azure. Optimisation des coûts et de la disponibilité.</p>
+                    <p>Mise en place et administration de solutions de supervision. Création de dashboards dynamiques Grafana et sondes Centreon pour le suivi en temps réel des serveurs et du réseau.</p>
                 </div>
-                <a href="#" class="btn-card">Consulter la fiche mission <i class="fa-solid fa-file-contract"></i></a>
+                <a href="#" class="btn-card">Détails techniques <i class="fa-solid fa-microscope"></i></a>
             </article>
             
             <article class="card" data-category="auto">
                 <div>
-                    <span class="company-tag">Nom de l'entreprise</span>
-                    <i class="fa-solid fa-robot"></i>
-                    <h3>Automatisation des Backups</h3>
+                    <span class="company-tag">Infrastructure as Code</span>
+                    <i class="fa-solid fa-gears"></i>
+                    <h3>Automatisation Ansible</h3>
                     <div style="margin: 10px 0;">
-                        <span class="tag-small">Python</span>
-                        <span class="tag-small">Bash</span>
-                        <span class="tag-small">Crontab</span>
+                        <span class="tag-small">Ansible Playbooks</span>
+                        <span class="tag-small">YAML</span>
+                        <span class="tag-small">Linux</span>
                     </div>
-                    <p>Développement de scripts de sauvegarde automatisée pour les bases de données critiques avec alertes mail en cas d'échec.</p>
+                    <p>Déploiement automatisé de configurations serveurs et gestion de parc via Ansible. Réduction du temps de déploiement et standardisation des environnements Linux.</p>
                 </div>
-                <a href="#" class="btn-card">Détails techniques <i class="fa-solid fa-code"></i></a>
-            </article>
-
-            <article class="card" data-category="support">
-                <div>
-                    <span class="company-tag">Nom de l'entreprise</span>
-                    <i class="fa-solid fa-headset"></i>
-                    <h3>Gestion d'incidents critiques</h3>
-                    <div style="margin: 10px 0;">
-                        <span class="tag-small">Ticketing</span>
-                        <span class="tag-small">VPN</span>
-                    </div>
-                    <p>Résolution d'incidents réseaux complexes (VPN, Routage) et accompagnement des utilisateurs VIP en niveau 3.</p>
-                </div>
-                <a href="#" class="btn-card">Méthodologie <i class="fa-solid fa-magnifying-glass"></i></a>
+                <a href="#" class="btn-card">Voir la mission <i class="fa-solid fa-terminal"></i></a>
             </article>
 
         </section>
@@ -217,16 +193,10 @@
             cards.forEach(card => {
                 if (category === 'all' || card.getAttribute('data-category') === category) {
                     card.classList.remove('hidden');
-                    setTimeout(() => {
-                        card.style.opacity = "1";
-                        card.style.transform = "scale(1)";
-                    }, 10);
+                    setTimeout(() => card.style.opacity = "1", 10);
                 } else {
                     card.style.opacity = "0";
-                    card.style.transform = "scale(0.95)";
-                    setTimeout(() => {
-                        card.classList.add('hidden');
-                    }, 300);
+                    setTimeout(() => card.classList.add('hidden'), 300);
                 }
             });
         }
