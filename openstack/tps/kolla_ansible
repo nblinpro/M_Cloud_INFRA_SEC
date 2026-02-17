@@ -18,16 +18,17 @@ network:
       accept-ra: false
   
   sudo apt update && sudo apt upgrade -y
+  sudo apt install python3.12-venv -y
   python3 -m venv ~/kolla-venv
   source ~/kolla-venv/bin/activate
   pip install -U pip
-  pip install docker pkgconfig dbus-python
   sudo apt install libdbus-1-dev libglib2.0-dev build-essential
+  pip install docker pkgconfig dbus-python
   pip install git+https://opendev.org/openstack/kolla-ansible@master
   sudo mkdir -p /etc/kolla
   sudo chown $USER:$USER /etc/kolla
   sudo cp -r ~/kolla-venv/share/kolla-ansible/etc_examples/kolla/* /etc/kolla/
-  sudo cp kolla-venv/share/kolla-ansible/ansible/inventory/all-in-one
+  sudo cp kolla-venv/share/kolla-ansible/ansible/inventory/all-in-one .
   kolla-ansible install-deps
   kolla-genpwd
   sudo nano /etc/kolla/globals.yml
@@ -44,12 +45,15 @@ enable_cinder_backend_lvm: yes
   sudo losetup /dev/loop10 /cinder_data.img
   sudo pvcreate /dev/loop10
   sudo vgcreate cinder-volumes /dev/loop10
-  sudo docker pull quay.io/openstack.kolla/keystone:2024.2-ubuntu-noble
+  
 
   kolla-ansible bootstrap-servers -i ./all-in-one
   kolla-ansible prechecks -i ./all-in-one
   kolla-ansible pull -i ./all-in-one
+  sudo docker pull quay.io/openstack.kolla/keystone:2024.2-ubuntu-noble
   kolla-ansible deploy -i ./all-in-one
 
   pip install python-openstackclient -c https://releases.openstack.org/constraints/upper/master
   kolla-ansible post-deploy -i ./all-in-one
+
+  sudo grep "password" /etc/kolla/passwords.yml
