@@ -2,196 +2,248 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Déploiement Samba - Ansible</title>
-    <link rel="stylesheet" href="../../style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Déploiement Samba - Ansible | Nicolas Infra</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #020617;
+            --bg-card: #0b1120;
+            --bg-card-hover: #1e293b;
+            --accent: #22d3ee;
+            --accent-glow: rgba(34, 211, 238, 0.15);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #1e293b;
+            --radius: 12px;
+            --code-bg: #0f172a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-body); color: var(--text-main); line-height: 1.6; overflow-x: hidden; }
+
+        /* --- HEADER --- */
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1.5rem 8%; border-bottom: 1px solid var(--border);
+            position: sticky; top: 0; background: rgba(2, 6, 23, 0.8); backdrop-filter: blur(10px); z-index: 100;
+        }
+        .logo { font-weight: 800; font-size: 1.4rem; letter-spacing: -1px; }
+        .logo span { color: var(--accent); }
+        nav ul { display: flex; list-style: none; gap: 2rem; align-items: center; }
+        nav a { text-decoration: none; color: var(--text-muted); font-size: 0.9rem; transition: 0.3s; }
+        nav a:hover { color: var(--accent); }
+
+        /* --- BREADCRUMB --- */
+        .breadcrumb {
+            display: flex; align-items: center; gap: 10px;
+            margin: 2rem 0; font-size: 0.85rem; color: var(--text-muted);
+        }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: 0.3s; }
+        .breadcrumb a:hover { color: var(--accent); }
+        .breadcrumb i { font-size: 0.7rem; opacity: 0.5; }
+        .breadcrumb span { color: var(--accent); font-weight: 600; }
+
+        /* --- CONTENU DOC --- */
+        main { max-width: 1000px; margin: auto; padding: 0 8% 5rem; }
+        .doc-header { margin-bottom: 3rem; }
+        .doc-header h1 { font-size: 2.5rem; margin-bottom: 1rem; }
+        
+        h2 { color: var(--accent); font-size: 1.5rem; margin: 3rem 0 1.5rem; display: flex; align-items: center; gap: 12px; }
+        h2::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+        h3 { font-size: 1.1rem; margin: 2rem 0 1rem; color: var(--text-main); }
+
+        /* --- CODE BLOCKS --- */
+        .code-container {
+            margin: 1rem 0 2rem; background: var(--code-bg);
+            border-radius: 8px; border: 1px solid var(--border); overflow: hidden;
+        }
+        .code-header {
+            background: rgba(30, 41, 59, 0.5); padding: 8px 16px;
+            font-size: 0.75rem; color: var(--accent); font-family: 'JetBrains Mono', monospace;
+            border-bottom: 1px solid var(--border); display: flex; justify-content: space-between;
+        }
+        pre {
+            margin: 0; padding: 1.5rem; overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: #e2e8f0;
+        }
+        .comment { color: #64748b; font-style: italic; }
+
+        .conclusion {
+            background-color: var(--bg-card); padding: 1.5rem; 
+            border-radius: 8px; border-left: 4px solid var(--accent); 
+            margin-top: 3rem;
+        }
+
+        /* --- FOOTER --- */
+        footer { padding: 4rem 8% 2rem; background: var(--bg-card); border-top: 1px solid var(--border); margin-top: 5rem; }
+        .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 4rem; margin-bottom: 3rem; text-align: left; }
+        .footer-logo { font-weight: 800; margin-bottom: 1rem; font-size: 1.2rem; }
+        .footer-col h4 { margin-bottom: 1.5rem; font-size: 1rem; color: var(--text-main); }
+        .footer-col ul { list-style: none; }
+        .footer-col ul li { margin-bottom: 10px; }
+        .footer-col a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; transition: 0.3s; }
+        .footer-col a:hover { color: var(--accent); }
+        .social-links { display: flex; gap: 1rem; }
+        .social-btn { width: 40px; height: 40px; border-radius: 8px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--text-muted); text-decoration: none; transition: 0.3s; }
+        .social-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(34, 211, 238, 0.05); }
+        .footer-bottom { padding-top: 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); }
+
+        @media (max-width: 768px) {
+            header { padding: 1rem 5%; }
+            nav { display: none; }
+            .footer-top { grid-template-columns: 1fr; gap: 2rem; }
+        }
+    </style>
 </head>
+
 <body>
 
     <header>
-        <div class="logo">SysAdmin_Portal</div>
+        <div class="logo">DevOps<span>.</span></div>
         <nav>
             <ul>
                 <li><a href="https://nblinpro.github.io/portfolio/index.html">Accueil</a></li>
                 <li><a href="https://nblinpro.github.io/portfolio/pages/parcours.html">Parcours</a></li>
-                <li><a href="../projets_ansible.html">Projets Ansible</a></li>
-                <li><a href="mailto:nicolas.blin.pro1@gmail.com" class="btn btn-primary" style="padding: 0.5rem 1rem;">Me Contacter</a></li>
+                <li><a href="https://nblinpro.github.io/portfolio/pages/projets.html">Projets</a></li>
+                <li><a href="https://nblinpro.github.io/portfolio/pages/contact.html">Contact</a></li>
             </ul>
         </nav>
     </header>
 
     <main>
-        <h1>Déploiement Serveur de Fichiers Samba via Ansible</h1>
-        <p>Documentation technique du projet d'automatisation pour la mise en place d'un serveur de fichiers sécurisé, incluant la gestion des utilisateurs, des groupes et des accès réseaux.</p>
+        <nav class="breadcrumb">
+            <a href="https://nblinpro.github.io/portfolio/index.html">Accueil</a>
+            <i class="fas fa-chevron-right"></i>
+            <a href="../projets_ansible.html">Projets Ansible</a>
+            <i class="fas fa-chevron-right"></i>
+            <span>Déploiement Samba</span>
+        </nav>
+
+        <section class="doc-header">
+            <h1>Déploiement Samba via Ansible</h1>
+            <p style="color: var(--text-muted)">Automatisation d'un serveur de fichiers sécurisé avec gestion des utilisateurs, des groupes et des permissions SetGID.</p>
+        </section>
 
         <section>
             <h2>1. Arborescence du projet</h2>
-            <pre>
-mon_projet_ansible/
-├── group_vars
-│   └── samba
+            <div class="code-container">
+                <div class="code-header"><span>Structure</span></div>
+                <pre>mon_projet_ansible/
+├── group_vars/
+│   └── samba/
 │       └── vault.yml
 ├── hosts.ini
-├── roles
-│   └── samba
-│       ├── defaults
-│       │   └── main.yml
-│       ├── handlers
-│       │   └── main.yml
-│       └── tasks
-│           └── main.yml
-└── samba.yml
-</pre>
+├── roles/
+│   └── samba/
+│       ├── defaults/main.yml
+│       ├── handlers/main.yml
+│       └── tasks/main.yml
+└── samba.yml</pre>
+            </div>
         </section>
-
-        <hr style="border-color: var(--secondary); margin: 3rem 0;">
 
         <section>
             <h2>2. Configuration Racine</h2>
             <h3>Fichier d'inventaire (hosts.ini)</h3>
-            <pre>
-[samba]
-srv_samba ansible_host=@IP_Machine ansible_user=user
-</pre>
+            <div class="code-container">
+                <div class="code-header"><span>INI</span></div>
+                <pre>[samba]
+srv_samba ansible_host=@IP_Machine ansible_user=user</pre>
+            </div>
             <h3>Playbook Principal (samba.yml)</h3>
-            <pre>
----
+            <div class="code-container">
+                <div class="code-header"><span>YAML</span></div>
+                <pre>---
 - name: Configuration du Serveur de Fichiers (Samba)
   hosts: samba
   become: yes
   vars_files:
     - group_vars/samba/vault.yml
   roles:
-    - samba
-</pre>
+    - samba</pre>
+            </div>
         </section>
-
-        <hr style="border-color: var(--secondary); margin: 3rem 0;">
 
         <section>
             <h2>3. Variables & Sécurité (Vault)</h2>
-            <h3>Configuration Secrète (group_vars/samba/)</h3>
-            <p>Création du coffre-fort : <code>ansible-vault create group_vars/samba/vault.yml</code></p>
-            <pre>
-# vault.yml
-vault_samba_pass_test: "test"
-vault_samba_pass_admin: "user"
-</pre>
-            <h3>Sécurisation des permissions</h3>
-            <pre>
-sudo chown -R nicolas:nicolas group_vars
-sudo chmod 700 group_vars/samba
-sudo chmod 600 group_vars/samba/vault.yml
-</pre>
+            <h3>Coffre-fort Ansible Vault</h3>
+            <div class="code-container">
+                <div class="code-header"><span>Bash</span></div>
+                <pre>ansible-vault create group_vars/samba/vault.yml</pre>
+            </div>
+            <div class="code-container">
+                <div class="code-header"><span>vault.yml</span></div>
+                <pre>vault_samba_pass_test: "test"
+vault_samba_pass_admin: "user"</pre>
+            </div>
         </section>
-
-        <hr style="border-color: var(--secondary); margin: 3rem 0;">
 
         <section>
             <h2>4. Role : Samba</h2>
-            <h3>Variables par défaut (defaults/main.yml)</h3>
-            <pre>
----
-samba_share_path: "/srv/partage_commun"
-samba_group_name: "partageurs"
-samba_user_test: "test"
-samba_admin_user: "user"
-</pre>
-
-            <h3>Gestionnaire de service (handlers/main.yml)</h3>
-            <pre>
----
-- name: Restart Samba
-  ansible.builtin.service:
-    name: smbd
-    state: restarted
-</pre>
-
             <h3>Tâches principales (tasks/main.yml)</h3>
-            <pre>
----
-- name: Installer Samba
+            <div class="code-container">
+                <div class="code-header"><span>Ansible Tasks</span></div>
+                <pre>- name: Installer Samba
   ansible.builtin.apt:
     name: samba
     state: present
-    update_cache: yes
-
-- name: Créer le groupe de partage "{{ samba_group_name }}"
-  ansible.builtin.group:
-    name: "{{ samba_group_name }}"
-    state: present
-
-- name: Créer l'utilisateur test (sans login)
-  ansible.builtin.user:
-    name: "{{ samba_user_test }}"
-    shell: /usr/sbin/nologin
-    create_home: no
-    groups: "{{ samba_group_name }}"
-    append: yes
-    state: present
-
-- name: Ajouter l'admin "{{ samba_admin_user }}" au groupe "{{ samba_group_name }}"
-  ansible.builtin.user:
-    name: "{{ samba_admin_user }}"
-    groups: "{{ samba_group_name }}"
-    append: yes
 
 - name: Configurer le dossier partagé (Permissions 2770)
   ansible.builtin.file:
     path: "{{ samba_share_path }}"
     state: directory
-    owner: root
     group: "{{ samba_group_name }}"
     mode: '2770'
-
-- name: Définir le mot de passe Samba pour test
-  ansible.builtin.shell: >
-    (echo '{{ vault_samba_pass_test }}'; echo '{{ vault_samba_pass_test }}') | smbpasswd -s -a {{ samba_user_test }}
-  register: smb_test_result
-  changed_when: "'Added user' in smb_test_result.stdout"
-  no_log: true
-
-- name: Définir le mot de passe Samba pour l'Admin
-  ansible.builtin.shell: >
-    (echo '{{ vault_samba_pass_admin }}'; echo '{{ vault_samba_pass_admin }}') | smbpasswd -s -a {{ samba_admin_user }}
-  register: smb_admin_result
-  changed_when: "'Added user' in smb_admin_result.stdout"
-  no_log: true
 
 - name: Configurer le partage dans /etc/samba/smb.conf
   ansible.builtin.blockinfile:
     path: /etc/samba/smb.conf
-    marker: "# {mark} ANSIBLE MANAGED BLOCK - PARTAGE COMMUN"
     block: |
       [DossierCommun]
-          comment = Partage pour test et moi
           path = {{ samba_share_path }}
           browsable = yes
           read only = no
-          guest ok = no
           valid users = @{{ samba_group_name }}
-          create mask = 0660
-          directory mask = 0770
           force group = {{ samba_group_name }}
-  notify: Restart Samba
-
-- name: Afficher les informations de connexion
-  ansible.builtin.debug:
-    msg:
-      - "✅ Installation terminée avec succès !"
-      - "🖥️ Windows : \\\\{{ ansible_host }}\\DossierCommun"
-      - "🐧 Linux : smb://{{ ansible_host }}/DossierCommun"
-</pre>
+  notify: Restart Samba</pre>
+            </div>
         </section>
 
-        <section style="background-color: var(--secondary); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--accent); margin-top: 3rem;">
+        <section class="conclusion">
             <h3>Conclusion</h3>
-            <p>Ce projet démontre la mise en place d'un serveur de fichiers collaboratif sécurisé via Ansible Vault et SetGID.</p>
+            <p>Ce projet démontre la mise en place d'un serveur de fichiers collaboratif sécurisé via Ansible Vault et l'utilisation de permissions avancées Linux (SetGID) pour garantir la cohérence des droits d'accès au sein du groupe.</p>
         </section>
     </main>
 
     <footer>
-        <p>© 2025 Nicolas. Tous droits réservés.</p>
-        <p><a href="../projets_ansible.html">← Retour à l'accueil</a></p>
+        <div class="footer-top">
+            <div class="footer-col">
+                <div class="footer-logo">DevOps<span>.</span></div>
+                <p style="font-size: 0.9rem; color: var(--text-muted);">Ingénieur Infrastructure & DevOps passionné par l'automatisation.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Navigation</h4>
+                <ul>
+                    <li><a href="https://nblinpro.github.io/portfolio/index.html">Accueil</a></li>
+                    <li><a href="https://nblinpro.github.io/portfolio/pages/parcours.html">Parcours</a></li>
+                    <li><a href="https://nblinpro.github.io/portfolio/pages/projets.html">Projets</a></li>
+                    <li><a href="https://nblinpro.github.io/portfolio/pages/contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Contact</h4>
+                <div class="social-links">
+                    <a href="#" class="social-btn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://github.com/nblinpro" target="_blank" class="social-btn"><i class="fab fa-github"></i></a>
+                    <a href="mailto:nicolas.blin.pro1@gmail.com" class="social-btn"><i class="far fa-envelope"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Portfolio DevOps. Tous droits réservés.</p>
+        </div>
     </footer>
 </body>
 </html>
