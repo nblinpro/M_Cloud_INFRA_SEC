@@ -6,9 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fiche Mémo : Lab Ansible | Nicolas Infra</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-body: #020617;
@@ -23,311 +21,90 @@
             --code-bg: #0f172a;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-body); color: var(--text-main); line-height: 1.6; overflow-x: hidden; }
 
-        body {
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        /* --- HEADER HARMONISÉ --- */
+        /* --- HEADER --- */
         header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.5rem 8%;
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            background: rgba(2, 6, 23, 0.8);
-            backdrop-filter: blur(10px);
-            z-index: 100;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1.5rem 8%; border-bottom: 1px solid var(--border);
+            position: sticky; top: 0; background: rgba(2, 6, 23, 0.8); backdrop-filter: blur(10px); z-index: 100;
         }
-
-        .logo {
-            font-weight: 800;
-            font-size: 1.4rem;
-            letter-spacing: -1px;
-        }
-
-        .logo span {
-            color: var(--accent);
-        }
-
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        nav a {
-            text-decoration: none;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            transition: 0.3s;
-        }
-
-        nav a:hover {
-            color: var(--accent);
-        }
+        .logo { font-weight: 800; font-size: 1.4rem; letter-spacing: -1px; }
+        .logo span { color: var(--accent); }
+        nav ul { display: flex; list-style: none; gap: 2rem; align-items: center; }
+        nav a { text-decoration: none; color: var(--text-muted); font-size: 0.9rem; transition: 0.3s; }
+        nav a:hover { color: var(--accent); }
 
         /* --- BREADCRUMB --- */
         .breadcrumb {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 2rem 0;
-            font-size: 0.85rem;
-            color: var(--text-muted);
+            display: flex; align-items: center; gap: 10px;
+            margin: 2rem 0; font-size: 0.85rem; color: var(--text-muted);
         }
-
-        .breadcrumb a {
-            color: var(--text-muted);
-            text-decoration: none;
-            transition: 0.3s;
-        }
-
-        .breadcrumb a:hover {
-            color: var(--accent);
-        }
-
-        .breadcrumb i {
-            font-size: 0.7rem;
-            opacity: 0.5;
-        }
-
-        .breadcrumb span {
-            color: var(--accent);
-            font-weight: 600;
-        }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: 0.3s; }
+        .breadcrumb a:hover { color: var(--accent); }
+        .breadcrumb i { font-size: 0.7rem; opacity: 0.5; }
+        .breadcrumb span { color: var(--accent); font-weight: 600; }
 
         /* --- CONTENU DOC --- */
-        main {
-            max-width: 1000px;
-            margin: auto;
-            padding: 0 8% 5rem;
-        }
-
-        .doc-header {
-            margin-bottom: 3rem;
-        }
-
-        .doc-header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .lab-info {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 3rem;
-            flex-wrap: wrap;
-        }
-
+        main { max-width: 1000px; margin: auto; padding: 0 8% 5rem; }
+        .doc-header { margin-bottom: 3rem; }
+        .doc-header h1 { font-size: 2.5rem; margin-bottom: 1rem; }
+        
+        .lab-info { display: flex; gap: 12px; margin-bottom: 3rem; flex-wrap: wrap; }
         .info-badge {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--text-muted);
+            background: var(--bg-card); border: 1px solid var(--border);
+            padding: 8px 16px; border-radius: 8px; font-size: 0.85rem;
+            display: flex; align-items: center; gap: 10px; color: var(--text-muted);
         }
+        .info-badge i { color: var(--accent); }
 
-        .info-badge i {
-            color: var(--accent);
-        }
-
-        h2 {
-            color: var(--accent);
-            font-size: 1.5rem;
-            margin: 3rem 0 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        h2::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: var(--border);
-        }
-
-        h3 {
-            font-size: 1.1rem;
-            margin: 2rem 0 1rem;
-            color: var(--text-main);
-        }
+        h2 { color: var(--accent); font-size: 1.5rem; margin: 3rem 0 1.5rem; display: flex; align-items: center; gap: 12px; }
+        h2::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+        h3 { font-size: 1.1rem; margin: 2rem 0 1rem; color: var(--text-main); }
 
         /* --- CODE BLOCKS --- */
         .code-container {
-            margin: 1.5rem 0;
-            background: var(--code-bg);
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            overflow: hidden;
+            margin: 1rem 0 2rem; background: var(--code-bg);
+            border-radius: 8px; border: 1px solid var(--border); overflow: hidden;
         }
-
         .code-header {
-            background: rgba(30, 41, 59, 0.5);
-            padding: 8px 16px;
-            font-size: 0.75rem;
-            color: var(--accent);
-            font-family: 'JetBrains Mono', monospace;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
+            background: rgba(30, 41, 59, 0.5); padding: 8px 16px;
+            font-size: 0.75rem; color: var(--accent); font-family: 'JetBrains Mono', monospace;
+            border-bottom: 1px solid var(--border); display: flex; justify-content: space-between;
         }
-
         pre {
-            margin: 0;
-            padding: 1.5rem;
-            overflow-x: auto;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
-            color: #e2e8f0;
+            margin: 0; padding: 1.5rem; overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: #e2e8f0;
         }
-
-        .comment {
-            color: #64748b;
-            font-style: italic;
-        }
-
-        .highlight-file {
-            color: var(--accent);
-            font-weight: 600;
-            background: rgba(34, 211, 238, 0.1);
-            padding: 2px 6px;
-            border-radius: 4px;
-        }
+        .comment { color: #64748b; font-style: italic; }
+        .highlight-file { color: var(--accent); font-weight: 600; background: rgba(34, 211, 238, 0.1); padding: 2px 6px; border-radius: 4px; }
 
         .diagram-container {
-            margin: 4rem 0;
-            padding: 2rem;
-            background: var(--bg-card);
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-            text-align: center;
+            margin: 4rem 0; padding: 2rem; background: var(--bg-card);
+            border-radius: var(--radius); border: 1px solid var(--border); text-align: center;
         }
+        .diagram-container img { max-width: 100%; height: auto; border-radius: 4px; }
+        .diagram-caption { margin-top: 1rem; font-size: 0.85rem; color: var(--text-muted); font-style: italic; }
 
-        .diagram-container img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 4px;
-            filter: brightness(0.9);
-        }
-
-        .diagram-caption {
-            margin-top: 1rem;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            font-style: italic;
-        }
-
-        /* --- FOOTER UNIFIÉ --- */
-        footer {
-            padding: 4rem 8% 2rem;
-            background: var(--bg-card);
-            border-top: 1px solid var(--border);
-            margin-top: 5rem;
-        }
-
-        .footer-top {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr;
-            gap: 4rem;
-            margin-bottom: 3rem;
-            text-align: left;
-        }
-
-        .footer-logo {
-            font-weight: 800;
-            margin-bottom: 1rem;
-            font-size: 1.2rem;
-        }
-
-        .footer-col h4 {
-            margin-bottom: 1.5rem;
-            font-size: 1rem;
-            color: var(--text-main);
-        }
-
-        .footer-col ul {
-            list-style: none;
-        }
-
-        .footer-col ul li {
-            margin-bottom: 10px;
-        }
-
-        .footer-col a {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: 0.3s;
-        }
-
-        .footer-col a:hover {
-            color: var(--accent);
-        }
-
-        .social-links {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .social-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-muted);
-            text-decoration: none;
-            transition: 0.3s;
-        }
-
-        .social-btn:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-            background: rgba(34, 211, 238, 0.05);
-        }
-
-        .footer-bottom {
-            padding-top: 2rem;
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
+        /* --- FOOTER --- */
+        footer { padding: 4rem 8% 2rem; background: var(--bg-card); border-top: 1px solid var(--border); margin-top: 5rem; }
+        .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 4rem; margin-bottom: 3rem; text-align: left; }
+        .footer-logo { font-weight: 800; margin-bottom: 1rem; font-size: 1.2rem; }
+        .footer-col h4 { margin-bottom: 1.5rem; font-size: 1rem; color: var(--text-main); }
+        .footer-col ul { list-style: none; }
+        .footer-col ul li { margin-bottom: 10px; }
+        .footer-col a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; transition: 0.3s; }
+        .footer-col a:hover { color: var(--accent); }
+        .social-links { display: flex; gap: 1rem; }
+        .social-btn { width: 40px; height: 40px; border-radius: 8px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--text-muted); text-decoration: none; transition: 0.3s; }
+        .social-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(34, 211, 238, 0.05); }
+        .footer-bottom { padding-top: 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); }
 
         @media (max-width: 768px) {
-            header {
-                padding: 1rem 5%;
-            }
-
-            nav {
-                display: none;
-            }
-
-            .footer-top {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
+            header { padding: 1rem 5%; }
+            nav { display: none; }
+            .footer-top { grid-template-columns: 1fr; gap: 2rem; }
         }
     </style>
 </head>
@@ -357,8 +134,7 @@
 
         <section class="doc-header">
             <h1>Fiche Mémo : Lab Ansible</h1>
-            <p style="color: var(--text-muted)">Procédure complète de mise en place de l'environnement : Contrôleur
-                Ubuntu et cibles RedHat Enterprise Linux 9.</p>
+            <p style="color: var(--text-muted)">Ubuntu & RHEL 9 : Procédure complète de mise en place de l'environnement.</p>
         </section>
 
         <div class="lab-info">
@@ -386,34 +162,33 @@
           via: 192.168.80.2
       nameservers:
         addresses: [8.8.8.8, 1.1.1.1]</pre>
-                <p>Appliquer la configuration :</p>
-                <div class="code-container">
-                    <div class="code-header"><span>YAML</span></div>
-                    <pre>sudo netplan apply</pre>
-                </div>
+            </div>
+            <p>Appliquer la configuration :</p>
+            <div class="code-container">
+                <div class="code-header"><span>Bash</span></div>
+                <pre>sudo netplan apply</pre>
+            </div>
 
-                <h3>B. Installation Ansible</h3>
-                <div class="code-container">
-                    <div class="code-header"><span>Bash</span></div>
-                    <pre>sudo apt update && sudo apt install ansible ansible-core -y</pre>
-                </div>
+            <h3>B. Installation Ansible</h3>
+            <div class="code-container">
+                <div class="code-header"><span>Bash</span></div>
+                <pre>sudo apt update && sudo apt install ansible ansible-core -y</pre>
+            </div>
 
-                <h3>C. Génération clé SSH</h3>
-                <div class="code-container">
-                    <div class="code-header"><span>Bash</span></div>
-                    <pre>ssh-keygen -t rsa -b 4096
-                        <span class="comment"># Laisser les options par défaut (Entrée x3)</span>
-                        <span class="comment"># Fichier créé : ~/.ssh/id_rsa</span>
-                    </pre>
-                </div>
+            <h3>C. Génération clé SSH</h3>
+            <div class="code-container">
+                <div class="code-header"><span>Bash</span></div>
+                <pre>ssh-keygen -t rsa -b 4096
+<span class="comment"># Laisser les options par défaut (Entrée x3)
+# Fichier créé : ~/.ssh/id_rsa</span></pre>
+            </div>
         </section>
 
         <section class="doc-section">
             <h2>2. Préparation des serveurs RHEL 9</h2>
 
             <h3>A. Configuration IP statique</h3>
-            <p>Modification dans <code
-                    class="highlight-file">/etc/NetworkManager/system-connections/ens160.nmconnection</code> :</p>
+            <p>Modification dans <code class="highlight-file">/etc/NetworkManager/system-connections/ens160.nmconnection</code> :</p>
             <div class="code-container">
                 <div class="code-header"><span>Conf</span></div>
                 <pre>[ipv4]
@@ -421,45 +196,42 @@ method=manual
 address1=192.168.80.X/24
 gateway=192.168.80.2
 dns=8.8.8.8;1.1.1.1;</pre>
-                <p>Rechargement de l'interface :</p>
-                <div class="code-container">
-                    <div class="code-header"><span>Conf</span></div>
-                    <pre>sudo nmcli connection reload
+            </div>
+            <p>Rechargement de l'interface :</p>
+            <div class="code-container">
+                <div class="code-header"><span>Bash</span></div>
+                <pre>sudo nmcli connection reload
 sudo nmcli connection up ens160</pre>
-                </div>
+            </div>
 
-                <h3>B. Système & Abonnement</h3>
-                <div class="code-container">
-                    <div class="code-header"><span>Bash</span></div>
-                    <pre>
-<span class="comment"># Enregistrement RedHat (Credentials requis)</span>
+            <h3>B. Système & Abonnement</h3>
+            <div class="code-container">
+                <div class="code-header"><span>Bash</span></div>
+                <pre><span class="comment"># Enregistrement RedHat (Credentials requis)</span>
 sudo subscription-manager register
 
-<span class="comment"># Activation des dépôts</span>
+<span class="comment"># Activation des dépôts et mise à jour</span>
 sudo subscription-manager repos --enable=rhel-9-for-x86_64-baseos-rpms
 sudo subscription-manager repos --enable=rhel-9-for-x86_64-appstream-rpms
-
-<span class="comment"># Mise à jour système</span>
 sudo dnf update -y</pre>
-                </div>
+            </div>
 
-                <h3>C. Hostname & Droits Sudo</h3>
-                <div class="code-container">
-                    <div class="code-header"><span>Bash</span></div>
-                    <pre>sudo hostnamectl set-hostname web2laravel</pre>
-                </div>
-                <p>Ajout de l'utilisateur aux droits sudo sans mot de passe :</p>
-                <div class="code-container">
-                    <div class="code-header"><span>Visudo</span></div>
-                    <pre>innosys ALL=(ALL) NOPASSWD: ALL</pre>
-                </div>
+            <h3>C. Hostname & Droits Sudo</h3>
+            <div class="code-container">
+                <div class="code-header"><span>Bash</span></div>
+                <pre>sudo hostnamectl set-hostname web2laravel</pre>
+            </div>
+            <p>Configuration des droits sudo sans mot de passe (<code class="highlight-file">sudo visudo</code>) :</p>
+            <div class="code-container">
+                <div class="code-header"><span>Visudo</span></div>
+                <pre>innosys ALL=(ALL) NOPASSWD: ALL</pre>
+            </div>
         </section>
 
         <section class="doc-section">
             <h2>3. Finalisation technique</h2>
             <h3>Propagation clé SSH</h3>
             <div class="code-container">
-                <p>Envoi de la clé publique vers la machine cible pour la connexion sans mot de passe :</p>
                 <div class="code-header"><span>Bash</span></div>
                 <pre>ssh-copy-id innosys@192.168.80.X</pre>
             </div>
@@ -467,8 +239,8 @@ sudo dnf update -y</pre>
             <div class="code-container">
                 <div class="code-header"><span>Bash</span></div>
                 <pre>ssh innosys@192.168.80.X</pre>
-                <p>Si aucune demande de mot de passe n’apparaît, la configuration est valide.</p>
             </div>
+            <p>Si aucune demande de mot de passe n’apparaît, la configuration est valide.</p>
         </section>
 
         <div class="diagram-container">
@@ -481,8 +253,7 @@ sudo dnf update -y</pre>
         <div class="footer-top">
             <div class="footer-col">
                 <div class="footer-logo">DevOps<span>.</span></div>
-                <p style="font-size: 0.9rem; color: var(--text-muted);">Ingénieur Infrastructure & DevOps passionné par
-                    l'automatisation.</p>
+                <p style="font-size: 0.9rem; color: var(--text-muted);">Ingénieur Infrastructure & DevOps passionné par l'automatisation.</p>
             </div>
             <div class="footer-col">
                 <h4>Navigation</h4>
@@ -497,8 +268,7 @@ sudo dnf update -y</pre>
                 <h4>Contact</h4>
                 <div class="social-links">
                     <a href="#" class="social-btn"><i class="fab fa-linkedin-in"></i></a>
-                    <a href="https://github.com/nblinpro" target="_blank" class="social-btn"><i
-                            class="fab fa-github"></i></a>
+                    <a href="https://github.com/nblinpro" target="_blank" class="social-btn"><i class="fab fa-github"></i></a>
                     <a href="mailto:nicolas.blin.pro1@gmail.com" class="social-btn"><i class="far fa-envelope"></i></a>
                 </div>
             </div>
@@ -507,7 +277,5 @@ sudo dnf update -y</pre>
             <p>© 2026 Portfolio DevOps. Tous droits réservés.</p>
         </div>
     </footer>
-
 </body>
-
 </html>
