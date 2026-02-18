@@ -178,6 +178,13 @@ srv_samba ansible_host=@IP_Machine ansible_user=user</pre>
                 <pre>vault_samba_pass_test: "test"
 vault_samba_pass_admin: "user"</pre>
             </div>
+            <h3>Sécurisation des permissions</h3>
+            <div class="code-container">
+                <div class="code-header"><span>vault.yml</span></div>
+                <pre>sudo chown -R nicolas:nicolas group_vars
+sudo chmod 700 group_vars/samba
+sudo chmod 600 group_vars/samba/vault.yml</pre>
+            </div>
         </section>
 
         <section>
