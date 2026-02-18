@@ -5,109 +5,107 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fiche Mémo : Lab Ansible | Nicolas Infra</title>
-    <link rel="stylesheet" href="../../style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* Optimisation pour la lecture technique */
-        main {
-            max-width: 950px;
-            margin: auto;
-            padding: 2rem;
+        :root {
+            --bg-body: #020617;
+            --bg-card: #0b1120;
+            --bg-card-hover: #1e293b;
+            --accent: #22d3ee;
+            --accent-glow: rgba(34, 211, 238, 0.15);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #1e293b;
+            --radius: 12px;
+            --code-bg: #0f172a;
         }
 
-        .doc-section {
-            margin-bottom: 4rem;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-body); color: var(--text-main); line-height: 1.6; overflow-x: hidden; }
 
-        .lab-info {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
+        /* --- HEADER HARMONISÉ --- */
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1.5rem 8%; border-bottom: 1px solid var(--border);
+            position: sticky; top: 0; background: rgba(2, 6, 23, 0.8); backdrop-filter: blur(10px); z-index: 100;
         }
+        .logo { font-weight: 800; font-size: 1.4rem; letter-spacing: -1px; }
+        .logo span { color: var(--accent); }
+        nav ul { display: flex; list-style: none; gap: 2rem; align-items: center; }
+        nav a { text-decoration: none; color: var(--text-muted); font-size: 0.9rem; transition: 0.3s; }
+        nav a:hover { color: var(--accent); }
 
+        /* --- BREADCRUMB --- */
+        .breadcrumb {
+            display: flex; align-items: center; gap: 10px;
+            margin: 2rem 0; font-size: 0.85rem; color: var(--text-muted);
+        }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: 0.3s; }
+        .breadcrumb a:hover { color: var(--accent); }
+        .breadcrumb i { font-size: 0.7rem; opacity: 0.5; }
+        .breadcrumb span { color: var(--accent); font-weight: 600; }
+
+        /* --- CONTENU DOC --- */
+        main { max-width: 1000px; margin: auto; padding: 0 8% 5rem; }
+        
+        .doc-header { margin-bottom: 3rem; }
+        .doc-header h1 { font-size: 2.5rem; margin-bottom: 1rem; }
+        
+        .lab-info { display: flex; gap: 12px; margin-bottom: 3rem; flex-wrap: wrap; }
         .info-badge {
-            background: #1e293b;
-            border: 1px solid var(--accent);
-            padding: 10px 18px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: #f8fafc;
+            background: var(--bg-card); border: 1px solid var(--border);
+            padding: 8px 16px; border-radius: 8px; font-size: 0.85rem;
+            display: flex; align-items: center; gap: 10px; color: var(--text-muted);
         }
+        .info-badge i { color: var(--accent); }
 
+        h2 { color: var(--accent); font-size: 1.5rem; margin: 3rem 0 1.5rem; display: flex; align-items: center; gap: 12px; }
+        h2::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+        h3 { font-size: 1.1rem; margin: 2rem 0 1rem; color: var(--text-main); }
+
+        /* --- CODE BLOCKS --- */
         .code-container {
-            margin: 1.5rem 0;
-            background: #0f172a;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid #334155;
+            margin: 1.5rem 0; background: var(--code-bg);
+            border-radius: 8px; border: 1px solid var(--border); overflow: hidden;
         }
-
         .code-header {
-            background: #1e293b;
-            padding: 10px 16px;
-            font-size: 0.85rem;
-            color: var(--accent);
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 1px solid #334155;
-            font-family: monospace;
+            background: rgba(30, 41, 59, 0.5); padding: 8px 16px;
+            font-size: 0.75rem; color: var(--accent); font-family: 'JetBrains Mono', monospace;
+            border-bottom: 1px solid var(--border); display: flex; justify-content: space-between;
         }
-
         pre {
-            margin: 0;
-            padding: 1.5rem;
-            overflow-x: auto;
-            font-family: 'Fira Code', monospace;
-            font-size: 0.9rem;
-            line-height: 1.5;
-            color: #e2e8f0;
+            margin: 0; padding: 1.5rem; overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: #e2e8f0;
         }
-
-        h2 {
-            color: var(--accent);
-            border-bottom: 2px solid #334155;
-            padding-bottom: 10px;
-            margin-top: 3rem;
-        }
-
-        h3 {
-            margin-top: 2rem;
-            color: #f8fafc;
-        }
+        .comment { color: #64748b; font-style: italic; }
+        .highlight-file { color: var(--accent); font-weight: 600; background: rgba(34, 211, 238, 0.1); padding: 2px 6px; border-radius: 4px; }
 
         .diagram-container {
-            text-align: center;
-            margin: 3rem 0;
-            padding: 2rem;
-            background-color: #0f172a;
-            border-radius: 12px;
-            border: 1px solid #334155;
+            margin: 4rem 0; padding: 2rem; background: var(--bg-card);
+            border-radius: var(--radius); border: 1px solid var(--border); text-align: center;
         }
+        .diagram-container img { max-width: 100%; height: auto; border-radius: 4px; filter: brightness(0.9); }
+        .diagram-caption { margin-top: 1rem; font-size: 0.85rem; color: var(--text-muted); font-style: italic; }
 
-        .diagram-container img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 4px;
-        }
+        /* --- FOOTER UNIFIÉ --- */
+        footer { padding: 4rem 8% 2rem; background: var(--bg-card); border-top: 1px solid var(--border); margin-top: 5rem; }
+        .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 4rem; margin-bottom: 3rem; text-align: left; }
+        .footer-logo { font-weight: 800; margin-bottom: 1rem; font-size: 1.2rem; }
+        .footer-col h4 { margin-bottom: 1.5rem; font-size: 1rem; color: var(--text-main); }
+        .footer-col ul { list-style: none; }
+        .footer-col ul li { margin-bottom: 10px; }
+        .footer-col a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; transition: 0.3s; }
+        .footer-col a:hover { color: var(--accent); }
+        .social-links { display: flex; gap: 1rem; }
+        .social-btn { width: 40px; height: 40px; border-radius: 8px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--text-muted); text-decoration: none; transition: 0.3s; }
+        .social-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(34, 211, 238, 0.05); }
+        .footer-bottom { padding-top: 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); }
 
-        .diagram-caption {
-            margin-top: 1rem;
-            font-size: 0.9rem;
-            color: #94a3b8;
-            font-style: italic;
-        }
-
-        .highlight-file {
-            color: #f472b6;
-            font-weight: bold;
-        }
-
-        .comment {
-            color: #64748b;
+        @media (max-width: 768px) {
+            header { padding: 1rem 5%; }
+            nav { display: none; }
+            .footer-top { grid-template-columns: 1fr; gap: 2rem; }
         }
     </style>
 </head>
@@ -115,22 +113,29 @@
 <body>
 
     <header>
-        <div class="logo">Nicolas<span>.infra</span></div>
+        <div class="logo">DevOps<span>.</span></div>
         <nav>
             <ul>
                 <li><a href="https://nblinpro.github.io/portfolio/index.html">Accueil</a></li>
                 <li><a href="https://nblinpro.github.io/portfolio/pages/parcours.html">Parcours</a></li>
-                <li><a href="../projets_ansible.html">Projets</a></li>
-                <li><a href="mailto:nicolas.blin.pro1@gmail.com" class="btn btn-primary">Me Contacter</a></li>
+                <li><a href="https://nblinpro.github.io/portfolio/pages/projets.html">Projets</a></li>
+                <li><a href="https://nblinpro.github.io/portfolio/pages/contact.html">Contact</a></li>
             </ul>
         </nav>
     </header>
 
     <main>
-        <section class="hero-small">
-            <h1>Fiche Mémo : Lab Ansible (Ubuntu & RHEL9)</h1>
-            <p>Procédure complète de mise en place de l'environnement : Contrôleur Ubuntu et cibles RedHat Enterprise
-                Linux 9.</p>
+        <nav class="breadcrumb">
+            <a href="https://nblinpro.github.io/portfolio/index.html">Accueil</a>
+            <i class="fas fa-chevron-right"></i>
+            <a href="../../company.html">Missions Entreprise</a>
+            <i class="fas fa-chevron-right"></i>
+            <span>Fiche Mémo Ansible</span>
+        </nav>
+
+        <section class="doc-header">
+            <h1>Fiche Mémo : Lab Ansible</h1>
+            <p style="color: var(--text-muted)">Procédure complète de mise en place de l'environnement : Contrôleur Ubuntu et cibles RedHat Enterprise Linux 9.</p>
         </section>
 
         <div class="lab-info">
@@ -145,8 +150,8 @@
             <h3>A. Configuration IP statique (Netplan)</h3>
             <p>Éditer le fichier <code class="highlight-file">/etc/netplan/50-cloud-init.yaml</code> :</p>
             <div class="code-container">
-                <pre>
-network:
+                <div class="code-header"><span>YAML</span><i class="far fa-copy"></i></div>
+                <pre>network:
   version: 2
   ethernets:
     ens33:
@@ -157,28 +162,13 @@ network:
         - to: default
           via: 192.168.80.2
       nameservers:
-        addresses:
-          - 8.8.8.8
-          - 1.1.1.1</pre>
-            </div>
-            <p>Appliquer la configuration :</p>
-            <div class="code-container">
-                <pre>sudo netplan apply</pre>
+        addresses: [8.8.8.8, 1.1.1.1]</pre>
             </div>
 
             <h3>B. Installation Ansible</h3>
             <div class="code-container">
-                <pre>
-sudo apt update
-sudo apt install ansible ansible-core -y</pre>
-            </div>
-
-            <h3>C. Génération clé SSH</h3>
-            <div class="code-container">
-                <pre>
-ssh-keygen -t rsa -b 4096
-<span class="comment"># Laisser les options par défaut (Entrée x3)
-# Fichier créé : ~/.ssh/id_rsa</span></pre>
+                <div class="code-header"><span>Bash</span></div>
+                <pre>sudo apt update && sudo apt install ansible ansible-core -y</pre>
             </div>
         </section>
 
@@ -186,75 +176,63 @@ ssh-keygen -t rsa -b 4096
             <h2>2. Préparation des serveurs RHEL 9</h2>
 
             <h3>A. Configuration IP statique</h3>
-            <p>Modification via NetworkManager dans <code
-                    class="highlight-file">/etc/NetworkManager/system-connections/ens160.nmconnection</code> :</p>
+            <p>Modification via NetworkManager :</p>
             <div class="code-container">
-                <pre>
-[ipv4]
+                <div class="code-header"><span>Conf</span></div>
+                <pre>[ipv4]
 method=manual
 address1=192.168.80.X/24
 gateway=192.168.80.2
 dns=8.8.8.8;1.1.1.1;</pre>
             </div>
-            <p>Rechargement de l'interface :</p>
-            <div class="code-container">
-                <pre>
-sudo nmcli connection reload
-sudo nmcli connection up ens160</pre>
-            </div>
 
             <h3>B. Système & Abonnement</h3>
             <div class="code-container">
-                <pre>
-<span class="comment"># Enregistrement RedHat (Credentials requis)</span>
+                <div class="code-header"><span>Bash</span></div>
+                <pre><span class="comment"># Enregistrement RedHat</span>
 sudo subscription-manager register
 
-<span class="comment"># Activation des dépôts</span>
+<span class="comment"># Activation des dépôts et mise à jour</span>
 sudo subscription-manager repos --enable=rhel-9-for-x86_64-baseos-rpms
 sudo subscription-manager repos --enable=rhel-9-for-x86_64-appstream-rpms
-
-<span class="comment"># Mise à jour système</span>
 sudo dnf update -y</pre>
             </div>
-
-            <h3>C. Hostname & Sudo</h3>
-            <div class="code-container">
-                <pre>sudo hostnamectl set-hostname web2laravel</pre>
-            </div>
-            <p>Configuration des droits sudo sans mot de passe (<code class="highlight-file">sudo visudo</code>) :</p>
-            <div class="code-container">
-                <pre>innosys ALL=(ALL) NOPASSWD: ALL</pre>
-            </div>
-        </section>
-
-        <section class="doc-section">
-            <h2>3. Finalisation depuis le contrôleur</h2>
-
-            <h3>Propagation clé SSH</h3>
-            <p>Envoi de la clé publique vers la machine cible pour la connexion sans mot de passe :</p>
-            <div class="code-container">
-                <pre>ssh-copy-id innosys@192.168.80.X</pre>
-            </div>
-
-            <h3>Test connexion</h3>
-            <div class="code-container">
-                <pre>ssh innosys@192.168.80.X</pre>
-            </div>
-            <p><em>Si aucune demande de mot de passe n’apparaît, la configuration est valide.</em></p>
         </section>
 
         <div class="diagram-container">
-            <img src="../images/memo.png" alt="Infrastructure">
-            <div class="diagram-caption">Architecture PC Admin / Serveurs</div>
+            <img src="../images/memo.png" alt="Infrastructure Architecture">
+            <div class="diagram-caption">Schéma de l'infrastructure PC Admin / Nodes managés</div>
         </div>
     </main>
 
     <footer>
-        <p>© 2025 Nicolas Blin | Tous droits réservés.</p>
-        <p style="margin-top: 10px;"><a href="../projets_ansible.html"
-                style="color:var(--accent); text-decoration: none;">← Retour au projet</a></p>
+        <div class="footer-top">
+            <div class="footer-col">
+                <div class="footer-logo">DevOps<span>.</span></div>
+                <p style="font-size: 0.9rem; color: var(--text-muted);">Ingénieur Infrastructure & DevOps passionné par l'automatisation.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Navigation</h4>
+                <ul>
+                    <li><a href="https://nblinpro.github.io/portfolio/index.html">Accueil</a></li>
+                    <li><a href="https://nblinpro.github.io/portfolio/pages/parcours.html">Parcours</a></li>
+                    <li><a href="https://nblinpro.github.io/portfolio/pages/projets.html">Projets</a></li>
+                    <li><a href="https://nblinpro.github.io/portfolio/pages/contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Contact</h4>
+                <div class="social-links">
+                    <a href="#" class="social-btn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://github.com/nblinpro" target="_blank" class="social-btn"><i class="fab fa-github"></i></a>
+                    <a href="mailto:nicolas.blin.pro1@gmail.com" class="social-btn"><i class="far fa-envelope"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Portfolio DevOps. Tous droits réservés.</p>
+        </div>
     </footer>
 
 </body>
-
 </html>
