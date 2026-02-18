@@ -48,7 +48,6 @@
 
         /* --- CONTENU DOC --- */
         main { max-width: 1000px; margin: auto; padding: 0 8% 5rem; }
-        
         .doc-header { margin-bottom: 3rem; }
         .doc-header h1 { font-size: 2.5rem; margin-bottom: 1rem; }
         
@@ -150,7 +149,7 @@
             <h3>A. Configuration IP statique (Netplan)</h3>
             <p>Éditer le fichier <code class="highlight-file">/etc/netplan/50-cloud-init.yaml</code> :</p>
             <div class="code-container">
-                <div class="code-header"><span>YAML</span><i class="far fa-copy"></i></div>
+                <div class="code-header"><span>YAML</span></div>
                 <pre>network:
   version: 2
   ethernets:
@@ -170,13 +169,20 @@
                 <div class="code-header"><span>Bash</span></div>
                 <pre>sudo apt update && sudo apt install ansible ansible-core -y</pre>
             </div>
+
+            <h3>C. Génération clé SSH</h3>
+            <div class="code-container">
+                <div class="code-header"><span>Bash</span></div>
+                <pre>ssh-keygen -t rsa -b 4096
+<span class="comment"># Fichier créé : ~/.ssh/id_rsa</span></pre>
+            </div>
         </section>
 
         <section class="doc-section">
             <h2>2. Préparation des serveurs RHEL 9</h2>
 
             <h3>A. Configuration IP statique</h3>
-            <p>Modification via NetworkManager :</p>
+            <p>Modification dans <code class="highlight-file">/etc/NetworkManager/system-connections/ens160.nmconnection</code> :</p>
             <div class="code-container">
                 <div class="code-header"><span>Conf</span></div>
                 <pre>[ipv4]
@@ -189,13 +195,34 @@ dns=8.8.8.8;1.1.1.1;</pre>
             <h3>B. Système & Abonnement</h3>
             <div class="code-container">
                 <div class="code-header"><span>Bash</span></div>
-                <pre><span class="comment"># Enregistrement RedHat</span>
+                <pre><span class="comment"># Enregistrement et mise à jour</span>
 sudo subscription-manager register
-
-<span class="comment"># Activation des dépôts et mise à jour</span>
-sudo subscription-manager repos --enable=rhel-9-for-x86_64-baseos-rpms
-sudo subscription-manager repos --enable=rhel-9-for-x86_64-appstream-rpms
 sudo dnf update -y</pre>
+            </div>
+
+            <h3>C. Hostname & Droits Sudo</h3>
+            <div class="code-container">
+                <div class="code-header"><span>Bash</span></div>
+                <pre>sudo hostnamectl set-hostname web2laravel</pre>
+            </div>
+            <p>Ajout de l'utilisateur aux droits sudo sans mot de passe :</p>
+            <div class="code-container">
+                <div class="code-header"><span>Visudo</span></div>
+                <pre>innosys ALL=(ALL) NOPASSWD: ALL</pre>
+            </div>
+        </section>
+
+        <section class="doc-section">
+            <h2>3. Finalisation technique</h2>
+            <h3>Propagation clé SSH</h3>
+            <div class="code-container">
+                <div class="code-header"><span>Bash</span></div>
+                <pre>ssh-copy-id innosys@192.168.80.X</pre>
+            </div>
+            <h3>Test de connexion</h3>
+            <div class="code-container">
+                <div class="code-header"><span>Bash</span></div>
+                <pre>ssh innosys@192.168.80.X</pre>
             </div>
         </section>
 
