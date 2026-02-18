@@ -182,6 +182,26 @@ vault_samba_pass_admin: "user"</pre>
 
         <section>
             <h2>4. Role : Samba</h2>
+            <h3>Variables par défaut (defaults/main.yml)</h3>
+            <div class="code-container">
+                <div class="code-header"><span>Ansible Tasks</span></div>
+                <pre>---
+samba_share_path: "/srv/partage_commun"
+samba_group_name: "partageurs"
+samba_user_test: "test"
+samba_admin_user: "user"
+                </pre>
+            </div>
+            <h3>Gestionnaire de service (handlers/main.yml)</h3>
+            <div class="code-container">
+                <div class="code-header"><span>Ansible Tasks</span></div>
+                <pre>---
+- name: Restart Samba
+  ansible.builtin.service:
+    name: smbd
+    state: restarted
+                </pre>
+            </div>
             <h3>Tâches principales (tasks/main.yml)</h3>
             <div class="code-container">
                 <div class="code-header"><span>Ansible Tasks</span></div>
