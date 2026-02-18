@@ -34,8 +34,26 @@
         nav a { text-decoration: none; color: var(--text-muted); font-size: 0.9rem; transition: 0.3s; }
         nav a:hover { color: var(--accent); }
 
+        /* --- BREADCRUMB (FIL D'ARIANE) --- */
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 2rem 0 1rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .breadcrumb a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        .breadcrumb a:hover { color: var(--accent); }
+        .breadcrumb i { font-size: 0.7rem; opacity: 0.5; }
+        .breadcrumb span { color: var(--accent); font-weight: 600; }
+
         /* --- HERO --- */
-        .hero { padding: 4rem 8% 2rem; text-align: center; }
+        .hero { padding: 1rem 8% 2rem; text-align: center; }
         .hero-tag {
             background: rgba(34, 211, 238, 0.1); color: var(--accent);
             padding: 6px 15px; border-radius: 20px; font-size: 0.75rem; font-weight: 700;
@@ -57,7 +75,7 @@
             box-shadow: 0 0 15px var(--accent-glow);
         }
 
-        /* --- GRILLE & CARDS (IMAGE 3 STYLE) --- */
+        /* --- GRILLE & CARDS --- */
         main { padding: 0 8% 5rem; max-width: 1400px; margin: 0 auto; }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem; }
         
@@ -124,6 +142,14 @@
 </header>
 
 <main>
+    <nav class="breadcrumb">
+        <a href="https://nblinpro.github.io/portfolio/index.html">Accueil</a>
+        <i class="fas fa-chevron-right"></i>
+        <a href="https://nblinpro.github.io/portfolio/pages/projets.html">Projets</a>
+        <i class="fas fa-chevron-right"></i>
+        <span>Missions Entreprise</span>
+    </nav>
+
     <section class="hero">
         <span class="hero-tag"><i class="fa-solid fa-briefcase"></i> EXPÉRIENCES</span>
         <h1>Missions en <span style="color: var(--accent);">Entreprise</span></h1>
