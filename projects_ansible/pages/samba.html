@@ -185,29 +185,78 @@ vault_samba_pass_admin: "user"</pre>
             <h3>Tâches principales (tasks/main.yml)</h3>
             <div class="code-container">
                 <div class="code-header"><span>Ansible Tasks</span></div>
-                <pre>- name: Installer Samba
+                <pre>---
+- name: Installer Samba
   ansible.builtin.apt:
     name: samba
     state: present
+    update_cache: yes
+
+- name: Créer le groupe de partage "{{ samba_group_name }}"
+  ansible.builtin.group:
+    name: "{{ samba_group_name }}"
+    state: present
+
+- name: Créer l'utilisateur test (sans login)
+  ansible.builtin.user:
+    name: "{{ samba_user_test }}"
+    shell: /usr/sbin/nologin
+    create_home: no
+    groups: "{{ samba_group_name }}"
+    append: yes
+    state: present
+
+- name: Ajouter l'admin "{{ samba_admin_user }}" au groupe "{{ samba_group_name }}"
+  ansible.builtin.user:
+    name: "{{ samba_admin_user }}"
+    groups: "{{ samba_group_name }}"
+    append: yes
 
 - name: Configurer le dossier partagé (Permissions 2770)
   ansible.builtin.file:
     path: "{{ samba_share_path }}"
     state: directory
+    owner: root
     group: "{{ samba_group_name }}"
     mode: '2770'
+
+- name: Définir le mot de passe Samba pour test
+  ansible.builtin.shell: >
+    (echo '{{ vault_samba_pass_test }}'; echo '{{ vault_samba_pass_test }}') | smbpasswd -s -a {{ samba_user_test }}
+  register: smb_test_result
+  changed_when: "'Added user' in smb_test_result.stdout"
+  no_log: true
+
+- name: Définir le mot de passe Samba pour l'Admin
+  ansible.builtin.shell: >
+    (echo '{{ vault_samba_pass_admin }}'; echo '{{ vault_samba_pass_admin }}') | smbpasswd -s -a {{ samba_admin_user }}
+  register: smb_admin_result
+  changed_when: "'Added user' in smb_admin_result.stdout"
+  no_log: true
 
 - name: Configurer le partage dans /etc/samba/smb.conf
   ansible.builtin.blockinfile:
     path: /etc/samba/smb.conf
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - PARTAGE COMMUN"
     block: |
       [DossierCommun]
+          comment = Partage pour test et moi
           path = {{ samba_share_path }}
           browsable = yes
           read only = no
+          guest ok = no
           valid users = @{{ samba_group_name }}
+          create mask = 0660
+          directory mask = 0770
           force group = {{ samba_group_name }}
-  notify: Restart Samba</pre>
+  notify: Restart Samba
+
+- name: Afficher les informations de connexion
+  ansible.builtin.debug:
+    msg:
+      - "✅ Installation terminée avec succès !"
+      - "🖥️ Windows : \\\\{{ ansible_host }}\\DossierCommun"
+      - "🐧 Linux : smb://{{ ansible_host }}/DossierCommun"</pre>
             </div>
         </section>
 
