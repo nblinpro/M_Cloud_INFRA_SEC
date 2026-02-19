@@ -134,10 +134,13 @@ drwxr-x--- 7 nicolas nicolas 4096 nov.  21 08:40 ../
 
   <span style="color: #7ee787;">tasks:</span>
     - <span style="color: #7ee787;">name:</span> Mettre à jour l'APT
-      <span style="color: #7ee787;">apt:</span> { <span style="color: #a5d6ff;">update_cache:</span> yes }
+      <span style="color: #7ee787;">apt:</span>
+         <span style="color: #a5d6ff;">update_cache:</span> yes }
 
     - <span style="color: #7ee787;">name:</span> Installer open-vm-tools
-      <span style="color: #7ee787;">apt:</span> { <span style="color: #a5d6ff;">name:</span> open-vm-tools, <span style="color: #a5d6ff;">state:</span> present }
+      <span style="color: #7ee787;">apt:</span> 
+        <span style="color: #a5d6ff;">name:</span> open-vm-tools, 
+        <span style="color: #a5d6ff;">state:</span> present 
 
     - <span style="color: #7ee787;">name:</span> Installer dépendances pour Docker
       <span style="color: #7ee787;">apt:</span>
@@ -159,10 +162,15 @@ drwxr-x--- 7 nicolas nicolas 4096 nov.  21 08:40 ../
       <span style="color: #7ee787;">apt:</span> { <span style="color: #a5d6ff;">update_cache:</span> yes }
 
     - <span style="color: #7ee787;">name:</span> Installer docker-ce
-      <span style="color: #7ee787;">apt:</span> { <span style="color: #a5d6ff;">name:</span> docker-ce, <span style="color: #a5d6ff;">state:</span> present }
+      <span style="color: #7ee787;">apt:</span> 
+         <span style="color: #a5d6ff;">name:</span> docker-ce 
+         <span style="color: #a5d6ff;">state:</span> present 
 
     - <span style="color: #7ee787;">name:</span> S’assurer que Docker démarre
-      <span style="color: #7ee787;">service:</span> { <span style="color: #a5d6ff;">name:</span> docker, <span style="color: #a5d6ff;">enabled:</span> yes, <span style="color: #a5d6ff;">state:</span> started }</pre>
+      <span style="color: #7ee787;">service:</span> 
+         <span style="color: #a5d6ff;">name:</span> docker 
+         <span style="color: #a5d6ff;">enabled:</span> yes 
+         <span style="color: #a5d6ff;">state:</span> started </pre>
             </div>
         </div>
 
@@ -188,31 +196,38 @@ drwxr-x--- 7 nicolas nicolas 4096 nov.  21 08:40 ../
     <span style="color: #7ee787;">container_name:</span> prometheus
     <span style="color: #7ee787;">volumes:</span>
       - <span style="color: #a5d6ff;">./prometheus.yml:/etc/prometheus/prometheus.yml</span>
-    <span style="color: #7ee787;">ports:</span> [ <span style="color: #a5d6ff;">"9090:9090"</span> ]
-    <span style="color: #7ee787;">networks:</span> [ <span style="color: #a5d6ff;">monitor</span> ]
-
+    <span style="color: #7ee787;">ports:</span> 
+      - <span style="color: #a5d6ff;">"9090:9090"</span> 
+    <span style="color: #7ee787;">networks:</span> 
+      - <span style="color: #a5d6ff;">monitor</span> 
+                    
   <span style="color: #7ee787;">grafana:</span>
     <span style="color: #7ee787;">image:</span> grafana/grafana
     <span style="color: #7ee787;">container_name:</span> grafana
-    <span style="color: #7ee787;">ports:</span> [ <span style="color: #a5d6ff;">"3000:3000"</span> ]
+    <span style="color: #7ee787;">ports:</span> 
+      - <span style="color: #a5d6ff;">"3000:3000"</span> 
     <span style="color: #7ee787;">environment:</span>
       - <span style="color: #a5d6ff;">GF_SECURITY_ADMIN_PASSWORD=admin</span>
-    <span style="color: #7ee787;">networks:</span> [ <span style="color: #a5d6ff;">monitor</span> ]
+    <span style="color: #7ee787;">networks:</span> 
+      - <span style="color: #a5d6ff;">monitor</span> 
 
   <span style="color: #7ee787;">cadvisor:</span>
     <span style="color: #7ee787;">image:</span> gcr.io/cadvisor/cadvisor:latest
     <span style="color: #7ee787;">container_name:</span> cadvisor
-    <span style="color: #7ee787;">ports:</span> [ <span style="color: #a5d6ff;">"8080:8080"</span> ]
+    <span style="color: #7ee787;">ports:</span> 
+      - <span style="color: #a5d6ff;">"8080:8080"</span> 
     <span style="color: #7ee787;">volumes:</span>
       - <span style="color: #a5d6ff;">/:/rootfs:ro</span>
       - <span style="color: #a5d6ff;">/var/run:/var/run:ro</span>
-    <span style="color: #7ee787;">networks:</span> [ <span style="color: #a5d6ff;">monitor</span> ]
+    <span style="color: #7ee787;">networks:</span> 
+      - <span style="color: #a5d6ff;">monitor</span> 
 
   <span style="color: #7ee787;">nodeexporter:</span>
     <span style="color: #7ee787;">image:</span> prom/node-exporter
     <span style="color: #7ee787;">container_name:</span> nodeexporter
     <span style="color: #7ee787;">network_mode:</span> host
-    <span style="color: #7ee787;">command:</span> [ <span style="color: #a5d6ff;">'--path.rootfs=/'</span> ]
+    <span style="color: #7ee787;">command:</span> 
+      - <span style="color: #a5d6ff;">'--path.rootfs=/'</span> 
 
 <span style="color: #7ee787;">networks:</span>
   <span style="color: #7ee787;">monitor:</span>
