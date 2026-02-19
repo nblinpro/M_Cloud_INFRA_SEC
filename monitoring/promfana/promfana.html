@@ -233,7 +233,7 @@ drwxr-x--- 7 nicolas nicolas 4096 nov.  21 08:40 ../
     <span style="color: #7ee787;">ports</span>
       - <span style="color: #a5d6ff;">-9100:9100</span>
     <span style="color: #7ee787;">restart:</span> unless-stopped
-    <span style="color: #7ee787;">pid</span>"host"
+    <span style="color: #7ee787;">pid:</span> "host"
     <span style="color: #7ee787;">network_mode:</span> host
     <span style="color: #7ee787;">command:</span> 
       - <span style="color: #a5d6ff;">'--path.rootfs=/'</span> 
@@ -265,7 +265,8 @@ drwxr-x--- 7 nicolas nicolas 4096 nov.  21 08:40 ../
 
   - <span style="color: #7ee787;">job_name:</span> <span style="color: #a5d6ff;">"nodeexporter"</span>
     <span style="color: #7ee787;">static_configs:</span>
-      - <span style="color: #7ee787;">targets:</span> [<span style="color: #a5d6ff;">"192.168.80.152:9100"</span>, <span style="color: #a5d6ff;">"192.168.80.151:9100"</span>]
+      - <span style="color: #7ee787;">targets:</span> [<span style="color: #a5d6ff;">"192.168.80.152:9100"</span>]
+      - <span style="color: #7ee787;">targets:</span> [<span style="color: #a5d6ff;">"192.168.80.151:9100"</span>]
 
   - <span style="color: #7ee787;">job_name:</span> <span style="color: #a5d6ff;">"apache-client"</span>
     <span style="color: #7ee787;">static_configs:</span>
