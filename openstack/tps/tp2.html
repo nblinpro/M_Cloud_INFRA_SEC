@@ -220,14 +220,22 @@ openstack flavor create --vcpus 8 --ram 16384 --disk 50 flavor_ia</pre>
             <div class="code-container">
                 <div class="code-header"><span>CLI - Networking</span></div>
                 <pre>
-<span class="comment"># 1. Création du réseau et sous-réseau</span>
+<span class="comment"># 1. Création du réseau</span>
 openstack network create private_tp2
-openstack subnet create --network private_tp2 --subnet-range 192.168.100.0/24 my-private-subnet
 
-<span class="comment"># 2. Configuration du routage externe</span>
+<span class="comment"># 2. Configuration du sous-réseau (192.168.100.0/24)</span>
+openstack subnet create --network private_tp2 \
+  --subnet-range 192.168.100.0/24 \
+  --gateway 192.168.100.1 \
+  --dns-nameserver 8.8.8.8 \
+  my-private-subnet
+
+<span class="comment"># 3. Création et configuration du routeur</span>
 openstack router create router_tp2
 openstack router set router_tp2 --external-gateway public
-openstack router add subnet router_tp2 my-private-subnet</pre>
+
+<span class="comment"># 4. Connexion du sous-réseau au routeur</span>
+openstack router add subnet router_tp2 my-private-subnet
             </div>
         </section>
 
