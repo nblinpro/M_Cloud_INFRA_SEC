@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Automation & Monitoring | Nicolas Blin</title>
+    <title>Monitoring & Automation Innosys | Nicolas Blin</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -14,7 +14,7 @@
             --accent: #22d3ee;
             --text-main: #f3f4f6;
             --text-muted: #9ca3af;
-            --code-bg: #010409;
+            --terminal-bg: #010409;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
@@ -35,60 +35,59 @@
         .logo { font-weight: 800; font-size: 1.2rem; text-decoration: none; color: white; }
         .logo span { color: var(--accent); }
 
-        nav a { text-decoration: none; color: var(--text-muted); font-size: 0.85rem; transition: 0.3s; }
-        nav a:hover { color: var(--accent); }
-
         main { padding: 40px 10% 80px; max-width: 1200px; margin: 0 auto; }
 
         .breadcrumb { display: flex; gap: 10px; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 30px; align-items: center; }
         .breadcrumb a { color: inherit; text-decoration: none; }
-        .breadcrumb i { font-size: 0.6rem; }
 
-        .hero-doc { margin-bottom: 60px; }
-        .hero-doc h1 { font-size: 3rem; font-weight: 800; letter-spacing: -2px; margin-bottom: 15px; }
-        .hero-doc p { color: var(--text-muted); font-size: 1.1rem; max-width: 800px; }
+        .hero-doc { margin-bottom: 50px; }
+        .hero-doc h1 { font-size: 2.8rem; font-weight: 800; letter-spacing: -2px; margin-bottom: 15px; }
+        .tag-cli { font-family: 'JetBrains Mono'; font-size: 0.75rem; color: var(--accent); background: rgba(34, 211, 238, 0.1); padding: 4px 12px; border-radius: 4px; margin-bottom: 10px; display: inline-block; }
 
-        .section-title { 
-            display: flex; align-items: center; gap: 15px; 
-            font-size: 1.5rem; font-weight: 700; margin: 40px 0 20px; 
-            color: var(--accent); 
+        .section-box { margin-bottom: 60px; }
+        .section-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .section-title i { color: var(--accent); font-size: 1.2rem; }
+
+        /* --- TERMINAL STYLE --- */
+        .terminal-window {
+            background: var(--terminal-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            margin-bottom: 25px;
         }
-
-        .doc-card {
-            background: var(--card-bg); border: 1px solid var(--border);
-            padding: 30px; border-radius: 16px; margin-bottom: 30px;
-            backdrop-filter: blur(10px);
+        .terminal-header {
+            background: #161b22;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid var(--border);
         }
+        .dot { width: 10px; height: 10px; border-radius: 50%; }
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27c93f; }
+        .terminal-title { color: var(--text-muted); font-size: 0.7rem; font-family: 'JetBrains Mono'; margin-left: 10px; }
 
-        /* --- CODE BLOCKS --- */
-        .code-header {
-            background: #161b22; border: 1px solid var(--border);
-            border-bottom: none; padding: 10px 20px;
-            border-radius: 12px 12px 0 0; font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem; color: var(--text-muted); display: flex; justify-content: space-between;
-        }
         pre {
-            background: var(--code-bg); border: 1px solid var(--border);
-            padding: 20px; border-radius: 0 0 12px 12px;
-            font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;
-            overflow-x: auto; color: #e6edf3; line-height: 1.5; margin-bottom: 20px;
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: #e6edf3;
+            overflow-x: auto;
+            white-space: pre-wrap;
         }
-        .yaml-key { color: #7ee787; } /* Vert */
-        .yaml-val { color: #a5d6ff; } /* Bleu */
-        .yaml-comment { color: #8b949e; font-style: italic; }
 
-        .tag-tech {
-            background: rgba(34, 211, 238, 0.1); color: var(--accent);
-            padding: 4px 12px; border-radius: 6px; font-size: 0.7rem;
-            font-weight: 700; font-family: 'JetBrains Mono';
-        }
+        .prompt { color: #7ee787; } /* Vert prompt */
+        .path { color: #a5d6ff; } /* Bleu path */
+        .cmd { color: white; font-weight: bold; }
+        .comment { color: #8b949e; font-style: italic; }
 
         footer { padding: 40px 10%; border-top: 1px solid var(--border); text-align: center; color: var(--text-muted); font-size: 0.8rem; }
 
-        @media (max-width: 768px) {
-            header, main { padding: 1.2rem 5%; }
-            .hero-doc h1 { font-size: 2rem; }
-        }
+        @media (max-width: 768px) { header, main { padding: 1rem 5%; } }
     </style>
 </head>
 <body>
@@ -97,120 +96,159 @@
 
     <header>
         <a href="../index.html" class="logo">Nicolas<span>.arch</span></a>
-        <nav>
-            <a href="projets.html">← Retour aux projets</a>
-        </nav>
+        <nav><a href="projets.html" style="color: var(--text-muted); text-decoration:none; font-size: 0.85rem;">← Projets</a></nav>
     </header>
 
     <main>
         <div class="breadcrumb">
-            <a href="../index.html">Accueil</a> <i class="fas fa-chevron-right"></i>
-            <a href="projets.html">Projets</a> <i class="fas fa-chevron-right"></i>
-            <span>Monitoring & Automation</span>
+            <a href="../index.html">Accueil</a> <i class="fas fa-chevron-right" style="font-size: 0.6rem;"></i>
+            <a href="projets.html">Projets</a> <i class="fas fa-chevron-right" style="font-size: 0.6rem;"></i>
+            <span>Monitoring Stack</span>
         </div>
 
         <section class="hero-doc">
-            <h1>Industrialisation du <br><span style="color: var(--accent)">Monitoring Système</span></h1>
-            <p>Déploiement automatisé d'une stack Prometheus / Grafana via Ansible et Docker Compose pour la surveillance en temps réel des infrastructures Innosys.</p>
+            <span class="tag-cli">innosys@promfana:~$</span>
+            <h1>Automatisation & <br><span style="color: var(--accent)">Monitoring Observabilité</span></h1>
+            <p style="color: var(--text-muted);">Transcription technique du déploiement IaC pour Innosys sur la machine <code>promfana</code>.</p>
         </section>
 
-        <h2 class="section-title"><i class="fas fa-cog"></i> 01. Provisioning via Ansible</h2>
-        <div class="doc-card">
-            <p style="margin-bottom: 20px;">Avant de déployer les conteneurs, nous utilisons un Playbook Ansible pour préparer l'hôte (Localhost). Ce script automatise l'installation de Docker et des outils d'intégration VM.</p>
-            
-            <div class="code-header">
-                <span>install_base.yaml</span>
-                <span class="tag-tech">Ansible</span>
+        <div class="section-box">
+            <h2 class="section-title"><i class="fas fa-terminal"></i> 1. Provisioning de base (Ansible)</h2>
+            <div class="terminal-window">
+                <div class="terminal-header">
+                    <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+                    <span class="terminal-title">innosys@promfana:~/ansible</span>
+                </div>
+                <pre><span class="prompt">innosys@promfana:~/ansible$</span> <span class="cmd">ll</span>
+total 12
+drwxr-xr-x 2 root    root    4096 nov.  20 15:45 ./
+drwxr-x--- 7 innosys innosys 4096 nov.  21 08:40 ../
+-rw-r--r-- 1 root    root    1110 nov.  20 15:32 <span style="color: var(--accent)">install_base.yaml</span>
+
+<span class="prompt">innosys@promfana:~/ansible$</span> <span class="cmd">cat install_base.yaml</span>
+<span class="comment">---</span>
+- <span style="color: #7ee787;">name:</span> Installation Docker et Open VM Tools sur la machine locale
+  <span style="color: #7ee787;">hosts:</span> localhost
+  <span style="color: #7ee787;">connection:</span> local
+  <span style="color: #7ee787;">become:</span> yes
+
+  <span style="color: #7ee787;">tasks:</span>
+    - <span style="color: #7ee787;">name:</span> Mettre à jour l'APT
+      <span style="color: #7ee787;">apt:</span> { <span style="color: #a5d6ff;">update_cache:</span> yes }
+
+    - <span style="color: #7ee787;">name:</span> Installer open-vm-tools
+      <span style="color: #7ee787;">apt:</span> { <span style="color: #a5d6ff;">name:</span> open-vm-tools, <span style="color: #a5d6ff;">state:</span> present }
+
+    - <span style="color: #7ee787;">name:</span> Installer dépendances pour Docker
+      <span style="color: #7ee787;">apt:</span>
+        <span style="color: #a5d6ff;">name:</span>
+          - ca-certificates
+          - curl
+          - gnupg
+        <span style="color: #a5d6ff;">state:</span> present
+
+    - <span style="color: #7ee787;">name:</span> Ajouter la clé GPG Docker
+      <span style="color: #7ee787;">apt_key:</span> { <span style="color: #a5d6ff;">url:</span> https://download.docker.com/linux/ubuntu/gpg, <span style="color: #a5d6ff;">state:</span> present }
+
+    - <span style="color: #7ee787;">name:</span> Ajouter le dépôt Docker
+      <span style="color: #7ee787;">apt_repository:</span>
+        <span style="color: #a5d6ff;">repo:</span> "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+        <span style="color: #a5d6ff;">state:</span> present
+
+    - <span style="color: #7ee787;">name:</span> Installer docker-ce
+      <span style="color: #7ee787;">apt:</span> { <span style="color: #a5d6ff;">name:</span> docker-ce, <span style="color: #a5d6ff;">state:</span> present }
+
+    - <span style="color: #7ee787;">name:</span> S’assurer que Docker démarre
+      <span style="color: #7ee787;">service:</span> { <span style="color: #a5d6ff;">name:</span> docker, <span style="color: #a5d6ff;">enabled:</span> yes, <span style="color: #a5d6ff;">state:</span> started }</pre>
             </div>
-            <pre>
-<span class="yaml-comment">---</span>
-- <span class="yaml-key">name:</span> Installation Docker et Open VM Tools
-  <span class="yaml-key">hosts:</span> localhost
-  <span class="yaml-key">connection:</span> local
-  <span class="yaml-key">become:</span> yes
-
-  <span class="yaml-key">tasks:</span>
-    - <span class="yaml-key">name:</span> Mettre à jour l'APT
-      <span class="yaml-key">apt:</span> { <span class="yaml-key">update_cache:</span> yes }
-
-    - <span class="yaml-key">name:</span> Installer open-vm-tools
-      <span class="yaml-key">apt:</span> { <span class="yaml-key">name:</span> open-vm-tools, <span class="yaml-key">state:</span> present }
-
-    - <span class="yaml-key">name:</span> Ajouter le dépôt Docker et installer docker-ce
-      <span class="yaml-key">apt_repository:</span>
-        <span class="yaml-key">repo:</span> <span class="yaml-val">"deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"</span>
-        <span class="yaml-key">state:</span> present
-
-    - <span class="yaml-key">name:</span> S’assurer que Docker démarre
-      <span class="yaml-key">service:</span> { <span class="yaml-key">name:</span> docker, <span class="yaml-key">enabled:</span> yes, <span class="yaml-key">state:</span> started }</pre>
         </div>
 
-        <h2 class="section-title"><i class="fab fa-docker"></i> 02. Orchestration Docker Compose</h2>
-        <div class="doc-card">
-            <p style="margin-bottom: 20px;">La stack de monitoring est isolée dans un réseau dédié <code>monitor</code>. Elle comprend Prometheus pour la collecte, Grafana pour la visualisation, et cAdvisor/NodeExporter pour les métriques.</p>
-            
-            <div class="code-header">
-                <span>docker-compose.yml</span>
-                <span class="tag-tech">Docker</span>
+        <div class="section-box">
+            <h2 class="section-title"><i class="fab fa-docker"></i> 2. Stack de Monitoring (Docker)</h2>
+            <div class="terminal-window">
+                <div class="terminal-header">
+                    <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+                    <span class="terminal-title">innosys@promfana:~/monitoring</span>
+                </div>
+                <pre><span class="prompt">innosys@promfana:~/monitoring$</span> <span class="cmd">ll</span>
+total 16
+drwxrwxr-x 2 innosys innosys 4096 nov.  21 09:53 ./
+drwxr-x--- 7 innosys innosys 4096 nov.  21 08:40 ../
+-rw-r--r-- 1 root    root     944 nov.  21 08:50 <span style="color: var(--accent)">docker-compose.yml</span>
+-rw-r--r-- 1 root    root     438 nov.  21 09:53 <span style="color: var(--accent)">prometheus.yml</span>
+
+<span class="prompt">innosys@promfana:~/monitoring$</span> <span class="cmd">cat docker-compose.yml</span>
+<span style="color: #7ee787;">version:</span> <span style="color: #a5d6ff;">"3.8"</span>
+<span style="color: #7ee787;">services:</span>
+  <span style="color: #7ee787;">prometheus:</span>
+    <span style="color: #7ee787;">image:</span> prom/prometheus
+    <span style="color: #7ee787;">container_name:</span> prometheus
+    <span style="color: #7ee787;">volumes:</span>
+      - <span style="color: #a5d6ff;">./prometheus.yml:/etc/prometheus/prometheus.yml</span>
+    <span style="color: #7ee787;">ports:</span> [ <span style="color: #a5d6ff;">"9090:9090"</span> ]
+    <span style="color: #7ee787;">networks:</span> [ <span style="color: #a5d6ff;">monitor</span> ]
+
+  <span style="color: #7ee787;">grafana:</span>
+    <span style="color: #7ee787;">image:</span> grafana/grafana
+    <span style="color: #7ee787;">container_name:</span> grafana
+    <span style="color: #7ee787;">ports:</span> [ <span style="color: #a5d6ff;">"3000:3000"</span> ]
+    <span style="color: #7ee787;">environment:</span>
+      - <span style="color: #a5d6ff;">GF_SECURITY_ADMIN_PASSWORD=admin</span>
+    <span style="color: #7ee787;">networks:</span> [ <span style="color: #a5d6ff;">monitor</span> ]
+
+  <span style="color: #7ee787;">cadvisor:</span>
+    <span style="color: #7ee787;">image:</span> gcr.io/cadvisor/cadvisor:latest
+    <span style="color: #7ee787;">container_name:</span> cadvisor
+    <span style="color: #7ee787;">ports:</span> [ <span style="color: #a5d6ff;">"8080:8080"</span> ]
+    <span style="color: #7ee787;">volumes:</span>
+      - <span style="color: #a5d6ff;">/:/rootfs:ro</span>
+      - <span style="color: #a5d6ff;">/var/run:/var/run:ro</span>
+    <span style="color: #7ee787;">networks:</span> [ <span style="color: #a5d6ff;">monitor</span> ]
+
+  <span style="color: #7ee787;">nodeexporter:</span>
+    <span style="color: #7ee787;">image:</span> prom/node-exporter
+    <span style="color: #7ee787;">container_name:</span> nodeexporter
+    <span style="color: #7ee787;">network_mode:</span> host
+    <span style="color: #7ee787;">command:</span> [ <span style="color: #a5d6ff;">'--path.rootfs=/'</span> ]
+
+<span style="color: #7ee787;">networks:</span>
+  <span style="color: #7ee787;">monitor:</span>
+    <span style="color: #7ee787;">driver:</span> bridge</pre>
             </div>
-            <pre>
-<span class="yaml-key">version:</span> <span class="yaml-val">"3.8"</span>
-<span class="yaml-key">services:</span>
-  <span class="yaml-key">prometheus:</span>
-    <span class="yaml-key">image:</span> prom/prometheus
-    <span class="yaml-key">volumes:</span>
-      - <span class="yaml-val">./prometheus.yml:/etc/prometheus/prometheus.yml</span>
-    <span class="yaml-key">ports:</span> [ <span class="yaml-val">"9090:9090"</span> ]
-
-  <span class="yaml-key">grafana:</span>
-    <span class="yaml-key">image:</span> grafana/grafana
-    <span class="yaml-key">ports:</span> [ <span class="yaml-val">"3000:3000"</span> ]
-    <span class="yaml-key">environment:</span>
-      - <span class="yaml-val">GF_SECURITY_ADMIN_PASSWORD=admin</span>
-
-  <span class="yaml-key">cadvisor:</span>
-    <span class="yaml-key">image:</span> gcr.io/cadvisor/cadvisor:latest
-    <span class="yaml-key">volumes:</span>
-      - <span class="yaml-val">/:/rootfs:ro</span>
-      - <span class="yaml-val">/var/run:/var/run:ro</span>
-
-  <span class="yaml-key">nodeexporter:</span>
-    <span class="yaml-key">image:</span> prom/node-exporter
-    <span class="yaml-key">network_mode:</span> host</pre>
         </div>
 
-        <h2 class="section-title"><i class="fas fa-chart-line"></i> 03. Collecte des Métriques (Scraping)</h2>
-        <div class="doc-card">
-            <p style="margin-bottom: 20px;">Configuration du moteur Prometheus pour cibler les différents agents NodeExporter déployés sur le réseau Innosys (Intervalle : 5s).</p>
-            
-            <div class="code-header">
-                <span>prometheus.yml</span>
-                <span class="tag-tech">Prometheus</span>
+        <div class="section-box">
+            <h2 class="section-title"><i class="fas fa-search"></i> 3. Configuration Scrape (Prometheus)</h2>
+            <div class="terminal-window">
+                <div class="terminal-header">
+                    <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+                    <span class="terminal-title">cat ~/monitoring/prometheus.yml</span>
+                </div>
+                <pre><span style="color: #7ee787;">global:</span>
+  <span style="color: #7ee787;">scrape_interval:</span> <span style="color: #a5d6ff;">5s</span>
+
+<span style="color: #7ee787;">scrape_configs:</span>
+  - <span style="color: #7ee787;">job_name:</span> <span style="color: #a5d6ff;">"prometheus"</span>
+    <span style="color: #7ee787;">static_configs:</span>
+      - <span style="color: #7ee787;">targets:</span> [<span style="color: #a5d6ff;">"prometheus:9090"</span>]
+
+  - <span style="color: #7ee787;">job_name:</span> <span style="color: #a5d6ff;">"cadvisor"</span>
+    <span style="color: #7ee787;">static_configs:</span>
+      - <span style="color: #7ee787;">targets:</span> [<span style="color: #a5d6ff;">"cadvisor:8080"</span>]
+
+  - <span style="color: #7ee787;">job_name:</span> <span style="color: #a5d6ff;">"nodeexporter"</span>
+    <span style="color: #7ee787;">static_configs:</span>
+      - <span style="color: #7ee787;">targets:</span> [<span style="color: #a5d6ff;">"192.168.80.152:9100"</span>, <span style="color: #a5d6ff;">"192.168.80.151:9100"</span>]
+
+  - <span style="color: #7ee787;">job_name:</span> <span style="color: #a5d6ff;">"apache-client"</span>
+    <span style="color: #7ee787;">static_configs:</span>
+      - <span style="color: #7ee787;">targets:</span> [<span style="color: #a5d6ff;">"192.168.80.151:9117"</span>]</pre>
             </div>
-            <pre>
-<span class="yaml-key">global:</span>
-  <span class="yaml-key">scrape_interval:</span> <span class="yaml-val">5s</span>
-
-<span class="yaml-key">scrape_configs:</span>
-  - <span class="yaml-key">job_name:</span> <span class="yaml-val">"nodeexporter"</span>
-    <span class="yaml-key">static_configs:</span>
-      - <span class="yaml-key">targets:</span> [<span class="yaml-val">"192.168.80.152:9100"</span>, <span class="yaml-val">"192.168.80.151:9100"</span>]
-
-  - <span class="yaml-key">job_name:</span> <span class="yaml-val">"apache-client"</span>
-    <span class="yaml-key">static_configs:</span>
-      - <span class="yaml-key">targets:</span> [<span class="yaml-val">"192.168.80.151:9117"</span>]</pre>
-        </div>
-
-        <div style="background: rgba(34, 211, 238, 0.05); border: 1px solid var(--accent); padding: 25px; border-radius: 12px; margin-top: 50px;">
-            <h4 style="color: var(--accent); margin-bottom: 10px;"><i class="fas fa-info-circle"></i> Résultat opérationnel</h4>
-            <p style="font-size: 0.9rem; color: var(--text-muted);">
-                Grâce à cette approche IaC (Infrastructure as Code), le temps de déploiement d'une nouvelle sonde de monitoring a été réduit à quelques secondes, garantissant une observabilité totale des services critiques d'Innosys.
-            </p>
         </div>
     </main>
 
     <footer>
-        <p>© 2026 Nicolas Blin | Expert Architecture SI | Industrialisation & Cloud</p>
+        <p>© 2026 Nicolas Blin | Expert Architecture SI | promfana.innosys.local</p>
     </footer>
 
 </body>
