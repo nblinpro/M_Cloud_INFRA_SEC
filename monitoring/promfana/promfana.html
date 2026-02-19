@@ -222,12 +222,18 @@ drwxr-x--- 7 nicolas nicolas 4096 nov.  21 08:40 ../
     <span style="color: #7ee787;">volumes:</span>
       - <span style="color: #a5d6ff;">/:/rootfs:ro</span>
       - <span style="color: #a5d6ff;">/var/run:/var/run:ro</span>
+      - <span style="color: #a5d6ff;">/sys:/sys:ro</span>
+      - <span style="color: #a5d6ff;">/var/lib/docker/:/var/lib/docker:ro</span>
     <span style="color: #7ee787;">networks:</span> 
       - <span style="color: #a5d6ff;">monitor</span> 
 
   <span style="color: #7ee787;">nodeexporter:</span>
     <span style="color: #7ee787;">image:</span> prom/node-exporter
     <span style="color: #7ee787;">container_name:</span> nodeexporter
+    <span style="color: #7ee787;">ports</span>
+      - <span style="color: #a5d6ff;">-9100:9100</span>
+    <span style="color: #7ee787;">restart:</span> unless-stopped
+    <span style="color: #7ee787;">pid</span>"host"
     <span style="color: #7ee787;">network_mode:</span> host
     <span style="color: #7ee787;">command:</span> 
       - <span style="color: #a5d6ff;">'--path.rootfs=/'</span> 
