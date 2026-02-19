@@ -155,6 +155,9 @@ drwxr-x--- 7 nicolas nicolas 4096 nov.  21 08:40 ../
         <span style="color: #a5d6ff;">repo:</span> "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
         <span style="color: #a5d6ff;">state:</span> present
 
+    - <span style="color: #7ee787;">name:</span> Mise à jour APT après ajout dépôt Docker
+      <span style="color: #7ee787;">apt:</span> { <span style="color: #a5d6ff;">update_cache:</span> yes }
+
     - <span style="color: #7ee787;">name:</span> Installer docker-ce
       <span style="color: #7ee787;">apt:</span> { <span style="color: #a5d6ff;">name:</span> docker-ce, <span style="color: #a5d6ff;">state:</span> present }
 
