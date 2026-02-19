@@ -1,0 +1,135 @@
+innosys@promfana:~/ansible$ ll
+total 12
+drwxr-xr-x 2 root    root    4096 nov.  20 15:45 ./
+drwxr-x--- 7 innosys innosys 4096 nov.  21 08:40 ../
+-rw-r--r-- 1 root    root    1110 nov.  20 15:32 install_base.yaml
+innosys@promfana:~/ansible$ cat install_base.yaml
+---
+- name: Installation Docker et Open VM Tools sur la machine locale
+  hosts: localhost
+  connection: local
+  become: yes
+
+  tasks:
+
+    - name: Mettre à jour l'APT
+      apt:
+        update_cache: yes
+
+    - name: Installer open-vm-tools
+      apt:
+        name: open-vm-tools
+        state: present
+
+    - name: Installer dépendances pour Docker
+      apt:
+        name:
+          - ca-certificates
+          - curl
+          - gnupg
+        state: present
+
+    - name: Ajouter la clé GPG Docker
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Ajouter le dépôt Docker
+      apt_repository:
+        repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+        state: present
+
+    - name: Mise à jour APT après ajout dépôt Docker
+      apt:
+        update_cache: yes
+
+    - name: Installer docker-ce
+      apt:
+        name: docker-ce
+        state: present
+
+    - name: S’assurer que Docker démarre
+      service:
+        name: docker
+        enabled: yes
+        state: started
+innosys@promfana:~/ansible$
+
+innosys@promfana:~/monitoring$ ll
+total 16
+drwxrwxr-x 2 innosys innosys 4096 nov.  21 09:53 ./
+drwxr-x--- 7 innosys innosys 4096 nov.  21 08:40 ../
+-rw-r--r-- 1 root    root     944 nov.  21 08:50 docker-compose.yml
+-rw-r--r-- 1 root    root     438 nov.  21 09:53 prometheus.yml
+innosys@promfana:~/monitoring$ cat docker-compose.yml
+version: "3.8"
+
+services:
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - monitor
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    networks:
+      - monitor
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    ports:
+      - "8080:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    networks:
+      - monitor
+
+  nodeexporter:
+    image: prom/node-exporter
+    container_name: nodeexporter
+    ports:
+      - 9100:9100
+    restart: unless-stopped
+    pid: "host"
+    network_mode: host
+    command:
+      - '--path.rootfs=/'
+
+networks:
+  monitor:
+    driver: bridge
+innosys@promfana:~/monitoring$ cat prometheus.yml
+global:
+  scrape_interval: 5s
+
+scrape_configs:
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["prometheus:9090"]
+
+  - job_name: "cadvisor"
+    static_configs:
+      - targets: ["cadvisor:8080"]
+
+  - job_name: "nodeexporter"
+    static_configs:
+      - targets: ["192.168.80.152:9100"]
+      - targets: ["192.168.80.151:9100"]
+
+  - job_name: "apache-client"
+    static_configs:
+      - targets: ["192.168.80.151:9117"]
