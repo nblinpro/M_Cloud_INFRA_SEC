@@ -1,5 +1,534 @@
 <!DOCTYPE html>
 <html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TP1 : Installation OpenStack | Nicolas Blin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #020617;
+            --bg-card: #0b1120;
+            --bg-card-hover: #1e293b;
+            --accent: #22d3ee;
+            --accent-glow: rgba(34, 211, 238, 0.15);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #1e293b;
+            --radius: 12px;
+            --code-bg: #0f172a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- HEADER --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 8%;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            background: rgba(2, 6, 23, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 1.4rem;
+            letter-spacing: -1px;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--accent);
+        }
+
+        /* --- BREADCRUMB --- */
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 2rem 8% 1rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .breadcrumb a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--accent);
+        }
+
+        .breadcrumb i {
+            font-size: 0.7rem;
+            opacity: 0.5;
+        }
+
+        .breadcrumb span {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* --- HERO --- */
+        .hero {
+            padding: 2rem 8%;
+            text-align: left;
+        }
+
+        .hero-tag {
+            background: rgba(34, 211, 238, 0.1);
+            color: var(--accent);
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            border: 1px solid var(--accent-glow);
+            margin-bottom: 1.5rem;
+            display: inline-block;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            max-width: 800px;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        /* --- CONTENT SECTIONS --- */
+        main {
+            padding-bottom: 5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        section {
+            padding: 3rem 8% 0;
+        }
+
+        h2 {
+            color: var(--accent);
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            margin: 1.5rem 0 1rem;
+            color: var(--text-main);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 2rem;
+            border-radius: var(--radius);
+            transition: 0.3s;
+        }
+
+        /* --- CODE BLOCKS --- */
+        .code-container {
+            margin: 1.5rem 0;
+            background: var(--code-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .code-header {
+            background: rgba(30, 41, 59, 0.5);
+            padding: 8px 16px;
+            font-size: 0.75rem;
+            color: var(--accent);
+            font-family: 'JetBrains Mono', monospace;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        pre {
+            margin: 0;
+            padding: 1.5rem;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: #e2e8f0;
+        }
+
+        .comment {
+            color: #64748b;
+            font-style: italic;
+        }
+
+        /* --- IMAGES --- */
+        .doc-img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 1.5rem 0 3rem;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .btn-pdf {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--accent);
+            color: #020617;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: 0.3s;
+        }
+
+        .btn-pdf:hover {
+            box-shadow: 0 0 20px var(--accent-glow);
+            transform: translateY(-2px);
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            padding: 4rem 8% 2rem;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+            margin-top: 5rem;
+        }
+
+        .footer-top {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-logo {
+            font-weight: 800;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-col h4 {
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            color: var(--text-main);
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+
+        .footer-col a:hover {
+            color: var(--accent);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .social-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: rgba(34, 211, 238, 0.05);
+        }
+
+        .footer-bottom {
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem 5%;
+            }
+
+            nav {
+                display: none;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-top {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">Nicolas<span>.SI</span></div>
+        <nav>
+            <ul>
+                <li><a href="https://nblinpro.github.io/portfolio/index.html">Accueil</a></li>
+                <li><a href="https://nblinpro.github.io/portfolio/pages/parcours.html">Parcours</a></li>
+                <li><a href="https://nblinpro.github.io/portfolio/pages/projets.html">Projets</a></li>
+                <li><a href="https://nblinpro.github.io/portfolio/pages/contact.html">Contact</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <nav class="breadcrumb">
+            <a href="https://nblinpro.github.io/portfolio/pages/projets.html">Projets</a>
+            <i class="fas fa-chevron-right"></i>
+            <a href="../mastere.html">Projets Mastère</a>
+            <i class="fas fa-chevron-right"></i>
+            <a href="../openstack.html">Architecture & Cloud</a>
+            <i class="fas fa-chevron-right"></i>
+            <span>Installation DevStack</span>
+        </nav>
+
+        <section class="hero">
+            <span class="hero-tag">Cloud Computing • IaaS</span>
+            <h1>Installation <span style="color:var(--accent)">OpenStack via DevStack</span></h1>
+            <p>Guide complet pour déployer une infrastructure IaaS sur Ubuntu 24.04. Maîtrisez les services essentiels :
+                Keystone, Nova, Neutron, Glance, Cinder et Swift.</p>
+            <a href="../documents/TP1 _ Installation dOpenStack-2.pdf" class="btn-pdf" target="_blank">
+                <i class="fas fa-file-pdf"></i> Télécharger le sujet complet
+            </a>
+        </section>
+
+        <section>
+            <h2><i class="fas fa-bullseye"></i> Objectifs & Architecture</h2>
+            <div class="grid">
+                <article class="card">
+                    <h3>Objectif Principal</h3>
+                    <p>Installer une plateforme OpenStack complète (IaaS) sur Ubuntu 24.04 via l'outil officiel
+                        <strong>DevStack</strong>.</p>
+                </article>
+                <article class="card">
+                    <h3>Services Déployés</h3>
+                    <ul style="list-style: none; color: var(--text-muted); font-size: 0.9rem;">
+                        <li><i class="fas fa-key" style="color:var(--accent); width: 25px;"></i> Keystone (Identité)
+                        </li>
+                        <li><i class="fas fa-server" style="color:var(--accent); width: 25px;"></i> Nova (Compute)</li>
+                        <li><i class="fas fa-network-wired" style="color:var(--accent); width: 25px;"></i> Neutron
+                            (Réseau)</li>
+                        <li><i class="fas fa-hdd" style="color:var(--accent); width: 25px;"></i> Cinder & Swift
+                            (Stockage)</li>
+                    </ul>
+                </article>
+            </div>
+        </section>
+
+        <section>
+            <h2><i class="fas fa-tools"></i> Préparation du Système</h2>
+            <p>OpenStack ne doit jamais être exécuté en root. Nous créons un utilisateur dédié <code>stack</code>.</p>
+
+            <div class="code-container">
+                <div class="code-header"><span>Bash</span></div>
+                <pre>
+<span class="comment"># 1. Mise à jour du système</span>
+sudo apt update && sudo apt upgrade -y
+
+<span class="comment"># 2. Création de l'utilisateur stack</span>
+sudo useradd -s /bin/bash -d /opt/stack -m stack
+
+<span class="comment"># 3. Droits sudo sans mot de passe</span>
+echo "stack ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/stack
+
+<span class="comment"># 4. Connexion à l'utilisateur stack</span>
+sudo su - stack</pre>
+            </div>
+        </section>
+
+        <section>
+            <h2><i class="fas fa-rocket"></i> Configuration DevStack</h2>
+            <div class="code-container">
+                <div class="code-header"><span>local.conf</span></div>
+                <pre>
+[[local|localrc]]
+ADMIN_PASSWORD=secret
+DATABASE_PASSWORD=$ADMIN_PASSWORD
+RABBIT_PASSWORD=$ADMIN_PASSWORD
+SERVICE_PASSWORD=$ADMIN_PASSWORD
+
+<span class="comment"># Activation de Swift (Object Storage)</span>
+enable_service s-account s-container s-object s-proxy</pre>
+            </div>
+            <p>Lancement du script d'installation :</p>
+            <div class="code-container">
+                <div class="code-header"><span>Bash</span></div>
+                <pre>./stack.sh</pre>
+            </div>
+        </section>
+
+        <section>
+            <h2><i class="fas fa-desktop"></i> Accès Dashboard Horizon</h2>
+            <div class="card" style="border-left: 4px solid var(--accent);">
+                <p>URL par défaut : <strong>http://[IP_SERVEUR]/dashboard</strong></p>
+                <p>Identifiants : <strong>admin / secret</strong></p>
+                <img src="../images/openstack_dashbord.png" alt="Horizon Dashboard" class="doc-img">
+            </div>
+        </section>
+
+        <section>
+            <h2><i class="fas fa-check-double"></i> Vérification des Services</h2>
+            <p>Utilisation de la CLI OpenStack après chargement des variables d'environnement.</p>
+
+            <div class="code-container">
+                <div class="code-header"><span>Bash</span></div>
+                <pre>source openrc admin admin</pre>
+            </div>
+
+            <h3>1. Identité (Keystone)</h3>
+            <div class="code-container">
+                <div class="code-header"><span>CLI</span></div>
+                <pre>openstack token issue</pre>
+            </div>
+            <img src="../images/token_openstack.png" alt="Token Keystone" class="doc-img">
+
+            <h3>2. Compute (Nova)</h3>
+            <div class="code-container">
+                <div class="code-header"><span>CLI</span></div>
+                <pre>openstack compute service list</pre>
+            </div>
+            <img src="../images/compute_openstack.png" alt="Compute Nova" class="doc-img">
+
+            <h3>3. Réseau (Neutron)</h3>
+            <div class="code-container">
+                <div class="code-header"><span>CLI</span></div>
+                <pre>openstack network agent list</pre>
+            </div>
+            <img src="../images/network_openstack.png" alt="Network Neutron" class="doc-img">
+        </section>
+
+        <section
+            style="background-color: var(--bg-card); padding: 2.5rem; border-radius: var(--radius); border: 1px solid var(--accent); margin: 4rem 8% 0;">
+            <h3><i class="fas fa-graduation-cap" style="color: var(--accent)"></i> Compétences Validées</h3>
+            <ul style="list-style: none; color: var(--text-muted);">
+                <li><i class="fas fa-check" style="color: var(--accent); margin-right: 15px;"></i> Déploiement
+                    automatisé d'un Cloud IaaS.</li>
+                <li><i class="fas fa-check" style="color: var(--accent); margin-right: 15px;"></i> Compréhension de
+                    l'architecture modulaire d'OpenStack.</li>
+                <li><i class="fas fa-check" style="color: var(--accent); margin-right: 15px;"></i> Administration
+                    avancée via CLI (Python Clients).</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-top">
+            <div class="footer-col">
+                <div class="footer-logo">Nicolas<span>.SI</span></div>
+                <p style="font-size: 0.9rem; color: var(--text-muted);">Expert en Architecture des SI spécialisé dans la
+                    conception d'infrastructures Cloud.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Navigation</h4>
+                <ul>
+                    <li><a href="https://nblinpro.github.io/portfolio/index.html">Accueil</a></li>
+                    <li><a href="https://nblinpro.github.io/portfolio/pages/projets.html">Projets</a></li>
+                    <li><a href="../openstack.html">OpenStack</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Contact</h4>
+                <div class="social-links">
+                    <a href="https://github.com/nblinpro" target="_blank" class="social-btn"><i
+                            class="fab fa-github"></i></a>
+                    <a href="https://www.linkedin.com/in/nicolas-blin-pro" target="_blank" class="social-btn"><i
+                            class="fab fa-linkedin-in"></i></a>
+                    <a href="mailto:nicolas.blin.pro1@gmail.com" class="social-btn"><i class="far fa-envelope"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Nicolas Blin | Expert Architecture SI.</p>
+        </div>
+    </footer>
+
+</body>
+
+</html><!DOCTYPE html>
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
