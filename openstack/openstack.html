@@ -4,108 +4,210 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cloud & Infra | Portail Technique</title>
-    <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        .hero p {
-            background: rgba(59, 130, 246, 0.1);
-            display: inline-block;
-            padding: 5px 15px;
-            border-radius: 20px;
-            color: var(--accent);
-            font-weight: bold;
-            margin-top: 10px;
+        :root {
+            --bg-body: #020617;
+            --bg-card: #0b1120;
+            --bg-card-hover: #1e293b;
+            --accent: #22d3ee;
+            --accent-glow: rgba(34, 211, 238, 0.15);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #1e293b;
+            --radius: 12px;
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-body); color: var(--text-main); line-height: 1.6; overflow-x: hidden; }
+
+        /* --- HEADER --- */
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1.5rem 8%; border-bottom: 1px solid var(--border);
+            position: sticky; top: 0; background: rgba(2, 6, 23, 0.8); backdrop-filter: blur(10px); z-index: 100;
+        }
+        .logo { font-weight: 800; font-size: 1.4rem; letter-spacing: -1px; }
+        .logo span { color: var(--accent); }
+        nav ul { display: flex; list-style: none; gap: 2rem; align-items: center; }
+        nav a { text-decoration: none; color: var(--text-muted); font-size: 0.9rem; transition: 0.3s; }
+        nav a:hover { color: var(--accent); }
+
+        /* --- BREADCRUMB --- */
+        .breadcrumb {
+            display: flex; align-items: center; gap: 10px;
+            margin: 2rem 8% 1rem; font-size: 0.85rem; color: var(--text-muted);
+        }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: 0.3s; }
+        .breadcrumb a:hover { color: var(--accent); }
+        .breadcrumb i { font-size: 0.7rem; opacity: 0.5; }
+        .breadcrumb span { color: var(--accent); font-weight: 600; }
+
+        /* --- HERO --- */
+        .hero { padding: 1rem 8% 2rem; text-align: center; }
+        .hero-tag {
+            background: rgba(34, 211, 238, 0.1); color: var(--accent);
+            padding: 6px 15px; border-radius: 20px; font-size: 0.75rem; font-weight: 700;
+            letter-spacing: 1px; border: 1px solid var(--accent-glow); margin-bottom: 1rem; display: inline-block;
+        }
+        h1 { font-size: 2.8rem; margin-bottom: 1rem; }
+        .hero p { color: var(--text-muted); max-width: 600px; margin: 0 auto; }
+
+        /* --- GRID & CARDS --- */
+        main { padding-bottom: 5rem; max-width: 1400px; margin: 0 auto; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; padding: 0 8%; }
+        
         .card {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            transition: transform 0.3s ease;
+            background: var(--bg-card); border: 1px solid var(--border);
+            padding: 2.5rem; border-radius: var(--radius); transition: 0.3s;
+            display: flex; flex-direction: column;
+            border-top: 4px solid var(--accent);
         }
-        .card:hover {
-            transform: translateY(-5px);
-        }
-        .card i {
-            font-size: 2rem;
-            color: var(--accent);
-            margin-bottom: 1rem;
-        }
+        .card:hover { border-color: var(--accent); transform: translateY(-5px); background: var(--bg-card-hover); }
+
+        .card i { font-size: 2.5rem; color: var(--accent); margin-bottom: 1.5rem; }
+        .card h3 { font-size: 1.3rem; margin-bottom: 1rem; color: var(--text-main); }
+        .card p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 2rem; flex-grow: 1; }
+
+        .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.5rem; }
         .tag-small {
-            font-size: 0.7rem;
-            background: #334155;
-            color: #f8fafc;
-            padding: 2px 8px;
-            border-radius: 4px;
-            margin-right: 5px;
+            background: rgba(34, 211, 238, 0.05); color: var(--accent);
+            padding: 4px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 600; border: 1px solid var(--border);
+        }
+
+        .btn-doc {
+            background: transparent; border: 1px solid var(--border); color: var(--text-main);
+            text-align: center; padding: 12px; border-radius: 8px; text-decoration: none;
+            font-weight: 700; font-size: 0.85rem; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .btn-doc:hover { background: var(--accent); color: #020617; border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
+
+        /* --- FOOTER --- */
+        footer { padding: 4rem 8% 2rem; background: var(--bg-card); border-top: 1px solid var(--border); margin-top: 5rem; }
+        .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 4rem; text-align: left; }
+        .footer-logo { font-weight: 800; margin-bottom: 1rem; font-size: 1.2rem; }
+        .footer-col h4 { margin-bottom: 1.5rem; font-size: 1rem; color: var(--text-main); }
+        .footer-col ul { list-style: none; }
+        .footer-col a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; transition: 0.3s; }
+        .footer-col a:hover { color: var(--accent); }
+        .social-links { display: flex; gap: 1rem; }
+        .social-btn { width: 40px; height: 40px; border-radius: 8px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--text-muted); text-decoration: none; transition: 0.3s; }
+        .social-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(34, 211, 238, 0.05); }
+        .footer-bottom { padding-top: 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); margin-top: 2rem; }
+
+        @media (max-width: 768px) {
+            header { padding: 1rem 5%; }
+            nav { display: none; }
+            .grid { grid-template-columns: 1fr; padding: 0 5%; }
+            .footer-top { grid-template-columns: 1fr; gap: 2rem; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo">Nicolas<span>.cloud</span></div>
+        <div class="logo">Nicolas<span>.arch</span></div>
         <nav>
             <ul>
                 <li><a href="https://nblinpro.github.io/portfolio/index.html">Accueil</a></li>
                 <li><a href="https://nblinpro.github.io/portfolio/pages/parcours.html">Parcours</a></li>
                 <li><a href="../mastere.html">Projets Mastère</a></li>
-                <li><a href="mailto:nicolas.blin.pro1@gmail.com" class="btn btn-primary" style="padding: 0.5rem 1rem;">Contact</a></li>
+                <li><a href="mailto:nicolas.blin.pro1@gmail.com" class="btn btn-primary" style="padding: 0.5rem 1rem; background: var(--accent); color: #020617; border-radius: 8px; font-weight: bold; text-decoration: none;">Contact</a></li>
             </ul>
         </nav>
     </header>
 
     <main>
-        <section class="hero" style="text-align: center; padding: 4rem 1rem;">
-            <h1>Architecture & Cloud Computing</h1>
-            <p><i class="fa-solid fa-server"></i> Mastering OpenStack Ecosystem</p>
+        <nav class="breadcrumb">
+            <a href="https://nblinpro.github.io/portfolio/index.html">Accueil</a>
+            <i class="fas fa-chevron-right"></i>
+            <a href="../mastere.html">Projets Mastère</a>
+            <i class="fas fa-chevron-right"></i>
+            <span>Architecture & Cloud</span>
+        </nav>
+
+        <section class="hero">
+            <span class="hero-tag"><i class="fa-solid fa-server"></i> CLOUD COMPUTING</span>
+            <h1>Architecture & <span style="color: var(--accent);">Cloud</span></h1>
+            <p>Maîtrise de l'écosystème OpenStack et des infrastructures virtualisées IaaS.</p>
         </section>
 
-        <section class="grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; padding: 2rem;">
-            
+        <section class="grid">
             <article class="card">
-                <div>
-                    <i class="fa-solid fa-terminal"></i>
-                    <h3>Déploiement via DevStack</h3>
-                    <div style="margin-bottom: 10px;">
-                        <span class="tag-small">Ubuntu 24.04</span>
-                        <span class="tag-small">IaaS</span>
-                    </div>
-                    <p>Guide complet pour installer et vérifier une plateforme OpenStack complète en environnement de test.</p>
+                <i class="fa-solid fa-terminal"></i>
+                <h3>Déploiement DevStack</h3>
+                <div class="tags">
+                    <span class="tag-small">Ubuntu 24.04</span>
+                    <span class="tag-small">IaaS</span>
                 </div>
-                <a href="tps/tp1.html" class="btn btn-outline" style="margin-top: 1.5rem;">Lire la doc <i class="fa-solid fa-book"></i></a>
-            </article>
-            
-            <article class="card">
-                <div>
-                    <i class="fa-solid fa-microchip"></i>
-                    <h3>Nova (Compute)</h3>
-                    <div style="margin-bottom: 10px;">
-                        <span class="tag-small">Instances</span>
-                        <span class="tag-small">Flavors</span>
-                    </div>
-                    <p>Gestion du cycle de vie des instances, configuration réseau et orchestration des ressources de calcul.</p>
-                </div>
-                <a href="tps/tp2.html" class="btn btn-outline" style="margin-top: 1.5rem;">Lire la doc <i class="fa-solid fa-book"></i></a>
+                <p>Guide complet pour installer et vérifier une plateforme OpenStack complète en environnement de test.</p>
+                <a href="tps/tp1.html" class="btn-doc">Lire la doc <i class="fa-solid fa-book"></i></a>
             </article>
 
             <article class="card">
-                <div>
-                    <i class="fa-solid fa-database"></i>
-                    <h3>Swift (Stockage Objet)</h3>
-                    <div style="margin-bottom: 10px;">
-                        <span class="tag-small">Object Storage</span>
-                        <span class="tag-small">Scalability</span>
-                    </div>
-                    <p>Configuration du stockage distribué, gestion des containers et des objets via l'API OpenStack Swift.</p>
+                <i class="fa-solid fa-terminal"></i>
+                <h3>Déploiement avec Kolla-ansible</h3>
+                <div class="tags">
+                    <span class="tag-small">Ubuntu 24.04</span>
+                    <span class="tag-small">Docker</span>
+                    <span class="tag-small">Ansible</span>
+                    <span class="tag-small">IaaS</span>
                 </div>
-                <a href="tps/tp3.html" class="btn btn-outline" style="margin-top: 1.5rem;">Lire la doc <i class="fa-solid fa-book"></i></a>
+                <p>Orchestration du déploiement d'OpenStack dans des conteneurs Docker via Kolla-Ansible. Gestion de la haute disponibilité et des services cloud.</p>
+                <a href="tps/tp1.html" class="btn-doc">Lire la doc <i class="fa-solid fa-book"></i></a>
+            </article>
+            
+            <article class="card">
+                <i class="fa-solid fa-microchip"></i>
+                <h3>Nova (Compute)</h3>
+                <div class="tags">
+                    <span class="tag-small">Instances</span>
+                    <span class="tag-small">Flavors</span>
+                </div>
+                <p>Gestion du cycle de vie des instances, configuration réseau et orchestration des ressources de calcul.</p>
+                <a href="tps/tp2.html" class="btn-doc">Lire la doc <i class="fa-solid fa-book"></i></a>
             </article>
 
+            <article class="card">
+                <i class="fa-solid fa-database"></i>
+                <h3>Swift (Object Storage)</h3>
+                <div class="tags">
+                    <span class="tag-small">Storage</span>
+                    <span class="tag-small">Scalability</span>
+                </div>
+                <p>Configuration du stockage distribué, gestion des containers et des objets via l'API OpenStack Swift.</p>
+                <a href="tps/tp3.html" class="btn-doc">Lire la doc <i class="fa-solid fa-book"></i></a>
+            </article>
         </section>
     </main>
 
-    <footer style="text-align: center; padding: 2rem; color: var(--text-muted); border-top: 1px solid #334155;">
-        <p>© 2025 Nicolas Blin — Expert Architecture S.I.</p>
+    <footer>
+        <div class="footer-top">
+            <div class="footer-col">
+                <div class="footer-logo">Nicolas<span>.SI</span></div>
+                <p style="font-size: 0.9rem; color: var(--text-muted);">Expert en Architecture des SI & DevOps passionné par l'automatisation et le Cloud.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Navigation</h4>
+                <ul>
+                    <li><a href="https://nblinpro.github.io/portfolio/index.html">Accueil</a></li>
+                    <li><a href="https://nblinpro.github.io/portfolio/pages/parcours.html">Parcours</a></li>
+                    <li><a href="../mastere.html">Projets Mastère</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Contact</h4>
+                <div class="social-links">
+                    <a href="https://github.com/nblinpro" target="_blank" class="social-btn"><i class="fab fa-github"></i></a>
+                    <a href="https://www.linkedin.com/in/nicolas-blin-pro" target="_blank" class="social-btn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="mailto:nicolas.blin.pro1@gmail.com" class="social-btn"><i class="far fa-envelope"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Nicolas Blin | Expert Architecture SI.</p>
+        </div>
     </footer>
 
 </body>
