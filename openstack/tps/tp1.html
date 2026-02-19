@@ -204,9 +204,11 @@
                 <div class="card" style="background: rgba(34, 211, 238, 0.05);">
                     <h3><i class="fas fa-laptop-code"></i> Config du TP</h3>
                     <ul class="check-list" style="font-family: 'JetBrains Mono', monospace;">
+                        <li>OS : Ubuntu 24.04 </li>
                         <li>RAM : 32 Go (VMware)</li>
                         <li>CPU : 6 Processeurs</li>
-                        <li>OS : Ubuntu 24.04 Desktop</li>
+                        <li>Disk : 95 Go</li>
+                        <li>Réseau : Mode NAT</li>
                     </ul>
                 </div>
             </div>
@@ -255,7 +257,7 @@ SERVICE_PASSWORD=$ADMIN_PASSWORD
 enable_service s-account s-container s-object s-proxy</pre>
             </div>
             <h3>C. Lancement du déploiement</h3>
-            <p><em>Durée estimée : 15 à 30 minutes.</em></p>
+            <p><em>Durée estimée : 30 minutes à 1/2 heures.</em></p>
             <div class="code-container">
                 <div class="code-header"><span>Bash</span></div>
                 <pre>./stack.sh</pre>
@@ -267,7 +269,7 @@ enable_service s-account s-container s-object s-proxy</pre>
             <div class="card" style="border-left: 4px solid var(--accent);">
                 <h3><i class="fas fa-check-circle"></i> Installation Terminée</h3>
                 <p>Accédez à l'interface web :</p>
-                <p style="margin-top:10px;"><strong>URL :</strong> <span style="color: var(--accent);">http://192.168.80.128/dashboard</span></p>
+                <p style="margin-top:10px;"><strong>URL :</strong> <span style="color: var(--accent);">http://IP_Vm/dashboard</span></p>
                 <p><strong>Login :</strong> admin / <strong>Pass :</strong> secret</p>
                 <img src="../images/openstack_dashbord.png" alt="Dashboard Horizon" class="doc-img">
             </div>
@@ -278,7 +280,7 @@ enable_service s-account s-container s-object s-proxy</pre>
             <p>Chargement des variables d'environnement pour utiliser la CLI OpenStack :</p>
             <div class="code-container">
                 <div class="code-header"><span>Bash</span></div>
-                <pre>source openrc admin admin
+                <pre>source openrc admin admin/demo
 env | grep OS_</pre>
             </div>
 
