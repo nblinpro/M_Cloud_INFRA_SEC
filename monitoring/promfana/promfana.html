@@ -26,16 +26,47 @@
             z-index: -1;
         }
 
+        /* --- HEADER --- */
         header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 1.2rem 10%; position: sticky; top: 0; 
-            background: rgba(3, 7, 18, 0.6); backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border); z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 8%;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            background: rgba(2, 6, 23, 0.7);
+            backdrop-filter: blur(12px);
+            z-index: 1000;
         }
-        .logo { font-weight: 800; font-size: 1.2rem; text-decoration: none; color: white; }
-        .logo span { color: var(--accent); }
 
-        main { padding: 40px 10% 80px; max-width: 1200px; margin: 0 auto; }
+        .logo {
+            font-weight: 800;
+            font-size: 1.4rem;
+            letter-spacing: -1px;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--accent);
+        }
 
         .breadcrumb { display: flex; gap: 10px; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 30px; align-items: center; }
         .breadcrumb a { color: inherit; text-decoration: none; }
@@ -85,8 +116,65 @@
         .cmd { color: white; font-weight: bold; }
         .comment { color: #8b949e; font-style: italic; }
 
-        footer { padding: 40px 10%; border-top: 1px solid var(--border); text-align: center; color: var(--text-muted); font-size: 0.8rem; }
+        /* --- FOOTER --- */
+        footer {
+            padding: 4rem 8% 2rem;
+            border-top: 1px solid var(--border);
+            background: rgba(2, 6, 23, 0.9);
+        }
 
+        .footer-top {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 4rem;
+        }
+
+        .footer-logo {
+            font-weight: 800;
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-col h4 {
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+
+        .footer-col a:hover {
+            color: var(--accent);
+        }
+
+        .social-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            transition: 0.3s;
+            margin-right: 10px;
+        }
+
+        .social-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        
         @media (max-width: 768px) { header, main { padding: 1rem 5%; } }
     </style>
 </head>
@@ -95,8 +183,15 @@
     <div class="ambient-bg"></div>
 
     <header>
-        <a href="../index.html" class="logo">Nicolas<span>.arch</span></a>
-        <nav><a href="projets.html" style="color: var(--text-muted); text-decoration:none; font-size: 0.85rem;">← Projets</a></nav>
+        <div class="logo">Nicolas<span>.arch</span></div>
+        <nav>
+            <ul>
+                <li><a href="#" style="color: var(--accent)">Accueil</a></li>
+                <li><a href="pages/parcours.html">Parcours</a></li>
+                <li><a href="pages/projets.html">Projets</a></li>
+                <li><a href="pages/contact.html">Contact</a></li>
+            </ul>
+        </nav>
     </header>
 
     <main>
@@ -276,7 +371,29 @@ drwxr-x--- 7 nicolas nicolas 4096 nov.  21 08:40 ../
     </main>
 
     <footer>
-        <p>© 2026 Nicolas Blin | Expert Architecture SI | promfana.nicolas.local</p>
+        <div class="footer-top">
+            <div class="footer-col">
+                <div class="logo">Nicolas<span>.arch</span></div>
+                <p style="font-size: 0.9rem; color: var(--text-muted); max-width: 300px;">Architecte SI spécialisé dans
+                    la résilience et l'automatisation.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Navigation</h4>
+                <ul>
+                    <li><a href="#">Accueil</a></li>
+                    <li><a href="pages/parcours.html">Parcours</a></li>
+                    <li><a href="pages/projets.html">Projets</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Contact</h4>
+                <a href="#" class="social-btn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="mailto:nicolas.blin.pro1@gmail.com" class="social-btn"><i class="far fa-envelope"></i></a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Nicolas Blin | Expert Architecture SI</p>
+        </div>
     </footer>
 
 </body>
