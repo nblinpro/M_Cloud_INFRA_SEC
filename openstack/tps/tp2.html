@@ -235,7 +235,7 @@ openstack router create router_tp2
 openstack router set router_tp2 --external-gateway public
 
 <span class="comment"># 4. Connexion du sous-réseau au routeur</span>
-openstack router add subnet router_tp2 my-private-subnet
+openstack router add subnet router_tp2 my-private-subnet</pre>
             </div>
         </section>
 
@@ -245,15 +245,21 @@ openstack router add subnet router_tp2 my-private-subnet
                 <div class="card">
                     <h3>Clés SSH</h3>
                     <div class="code-container">
-                        <pre>openstack keypair create --public-key my-key.pub my-key</pre>
+                        <pre><span class="comment"># Génération locale</span>
+                        ssh-keygen -f my-key
+                        <span class="comment"># Import dans OpenStack</span>
+                        openstack keypair create --public-key my-key.pub my-key</pre>
                     </div>
                 </div>
                 <div class="card">
                     <h3>Sécurité (Firewall)</h3>
                     <div class="code-container">
-                        <pre>openstack security group create my-secgroup
+                        <pre><span class="comment"># Création du groupe</span>
+openstack security group create my-secgroup
+                        <span class="comment"># Règles (Ping, SSH, HTTP)</span>
 openstack security group rule create --proto icmp my-secgroup
-openstack security group rule create --proto tcp --dst-port 22 my-secgroup</pre>
+openstack security group rule create --proto tcp --dst-port 22 my-secgroup
+openstack security group rule create --proto tcp --dst-port 80 my-secgroup</pre>
                     </div>
                 </div>
             </div>
