@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitoring & Automation nicolas | Nicolas Blin</title>
+    <title>Monitoring & Automation | Nicolas Blin</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -26,60 +26,29 @@
             z-index: -1;
         }
 
-        /* --- HEADER --- */
         header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.2rem 8%;
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            background: rgba(2, 6, 23, 0.7);
-            backdrop-filter: blur(12px);
-            z-index: 1000;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1.2rem 8%; border-bottom: 1px solid var(--border);
+            position: sticky; top: 0; background: rgba(2, 6, 23, 0.7); backdrop-filter: blur(12px); z-index: 1000;
         }
 
-        .logo {
-            font-weight: 800;
-            font-size: 1.4rem;
-            letter-spacing: -1px;
-        }
+        .logo { font-weight: 800; font-size: 1.4rem; letter-spacing: -1px; text-decoration: none; color: white; }
+        .logo span { color: var(--accent); }
+        nav ul { display: flex; list-style: none; gap: 2rem; align-items: center; }
+        nav a { text-decoration: none; color: var(--text-muted); font-size: 0.9rem; transition: 0.3s; }
+        nav a:hover { color: var(--accent); }
 
-        .logo span {
-            color: var(--accent);
-        }
-
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        nav a {
-            text-decoration: none;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            transition: 0.3s;
-        }
-
-        nav a:hover {
-            color: var(--accent);
-        }
-
+        main { padding: 40px 8% 80px; max-width: 1200px; margin: 0 auto; }
         .breadcrumb { display: flex; gap: 10px; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 30px; align-items: center; }
         .breadcrumb a { color: inherit; text-decoration: none; }
-
         .hero-doc { margin-bottom: 50px; }
         .hero-doc h1 { font-size: 2.8rem; font-weight: 800; letter-spacing: -2px; margin-bottom: 15px; }
         .tag-cli { font-family: 'JetBrains Mono'; font-size: 0.75rem; color: var(--accent); background: rgba(34, 211, 238, 0.1); padding: 4px 12px; border-radius: 4px; margin-bottom: 10px; display: inline-block; }
 
         .section-box { margin-bottom: 60px; }
         .section-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
-        .section-title i { color: var(--accent); font-size: 1.2rem; }
+        .section-title i { color: var(--accent); }
 
-        /* --- TERMINAL STYLE --- */
         .terminal-window {
             background: var(--terminal-bg);
             border: 1px solid var(--border);
@@ -102,80 +71,23 @@
         .dot-green { background: #27c93f; }
         .terminal-title { color: var(--text-muted); font-size: 0.7rem; font-family: 'JetBrains Mono'; margin-left: 10px; }
 
-        pre {
-            padding: 20px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
-            color: #e6edf3;
-            overflow-x: auto;
-            white-space: pre-wrap;
-        }
-
-        .prompt { color: #7ee787; } /* Vert prompt */
-        .path { color: #a5d6ff; } /* Bleu path */
+        pre { padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: #e6edf3; overflow-x: auto; white-space: pre-wrap; }
+        .prompt { color: #7ee787; }
         .cmd { color: white; font-weight: bold; }
         .comment { color: #8b949e; font-style: italic; }
 
-        /* --- FOOTER --- */
-        footer {
-            padding: 4rem 8% 2rem;
-            border-top: 1px solid var(--border);
-            background: rgba(2, 6, 23, 0.9);
-        }
+        footer { padding: 4rem 8% 2rem; border-top: 1px solid var(--border); background: rgba(2, 6, 23, 0.9); }
+        .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 4rem; }
+        .footer-logo { font-weight: 800; font-size: 1.2rem; margin-bottom: 1.5rem; }
+        .footer-col h4 { margin-bottom: 1.5rem; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+        .footer-col ul { list-style: none; }
+        .footer-col a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; transition: 0.3s; }
+        .footer-col a:hover { color: var(--accent); }
+        .social-btn { width: 40px; height: 40px; border-radius: 8px; border: 1px solid var(--border); display: inline-flex; align-items: center; justify-content: center; color: var(--text-muted); transition: 0.3s; margin-right: 10px; text-decoration: none; }
+        .social-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .footer-bottom { border-top: 1px solid var(--border); padding-top: 2rem; margin-top: 2rem; font-size: 0.75rem; color: var(--text-muted); }
 
-        .footer-top {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr;
-            gap: 4rem;
-        }
-
-        .footer-logo {
-            font-weight: 800;
-            font-size: 1.2rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .footer-col h4 {
-            margin-bottom: 1.5rem;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .footer-col ul {
-            list-style: none;
-        }
-
-        .footer-col a {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: 0.3s;
-        }
-
-        .footer-col a:hover {
-            color: var(--accent);
-        }
-
-        .social-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-muted);
-            transition: 0.3s;
-            margin-right: 10px;
-        }
-
-        .social-btn:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-        
-        @media (max-width: 768px) { header, main { padding: 1rem 5%; } }
+        @media (max-width: 768px) { .footer-top { grid-template-columns: 1fr; gap: 2rem; } }
     </style>
 </head>
 <body>
@@ -183,13 +95,13 @@
     <div class="ambient-bg"></div>
 
     <header>
-        <div class="logo">Nicolas<span>.arch</span></div>
+        <a href="../index.html" class="logo">Nicolas<span>.arch</span></a>
         <nav>
             <ul>
-                <li><a href="#" style="color: var(--accent)">Accueil</a></li>
-                <li><a href="pages/parcours.html">Parcours</a></li>
-                <li><a href="pages/projets.html">Projets</a></li>
-                <li><a href="pages/contact.html">Contact</a></li>
+                <li><a href="../index.html">Accueil</a></li>
+                <li><a href="parcours.html">Parcours</a></li>
+                <li><a href="projets.html" style="color: var(--accent)">Projets</a></li>
+                <li><a href="contact.html">Contact</a></li>
             </ul>
         </nav>
     </header>
@@ -198,17 +110,17 @@
         <div class="breadcrumb">
             <a href="../index.html">Accueil</a> <i class="fas fa-chevron-right" style="font-size: 0.6rem;"></i>
             <a href="projets.html">Projets</a> <i class="fas fa-chevron-right" style="font-size: 0.6rem;"></i>
-            <span>Monitoring Stack</span>
+            <span>Monitoring & Automation</span>
         </div>
 
         <section class="hero-doc">
             <span class="tag-cli">nicolas@promfana:~$</span>
-            <h1>Automatisation & <br><span style="color: var(--accent)">Monitoring Observabilité</span></h1>
-            <p style="color: var(--text-muted);">Transcription technique du déploiement IaC pour nicolas sur la machine <code>promfana</code>.</p>
+            <h1>Orchestration & <br><span style="color: var(--accent)">Observabilité Cloud</span></h1>
+            <p style="color: var(--text-muted);">Transcription complète du déploiement IaC (Ansible/Docker) pour la surveillance des services critiques.</p>
         </section>
 
         <div class="section-box">
-            <h2 class="section-title"><i class="fas fa-terminal"></i> 1. Provisioning de base (Ansible)</h2>
+            <h2 class="section-title"><i class="fas fa-terminal"></i> 1. Provisioning Automatisé (Ansible)</h2>
             <div class="terminal-window">
                 <div class="terminal-header">
                     <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
@@ -230,12 +142,12 @@ drwxr-x--- 7 nicolas nicolas 4096 nov.  21 08:40 ../
   <span style="color: #7ee787;">tasks:</span>
     - <span style="color: #7ee787;">name:</span> Mettre à jour l'APT
       <span style="color: #7ee787;">apt:</span>
-         <span style="color: #a5d6ff;">update_cache:</span> yes 
+        <span style="color: #a5d6ff;">update_cache:</span> yes
 
     - <span style="color: #7ee787;">name:</span> Installer open-vm-tools
-      <span style="color: #7ee787;">apt:</span> 
+      <span style="color: #7ee787;">apt:</span>
         <span style="color: #a5d6ff;">name:</span> open-vm-tools
-        <span style="color: #a5d6ff;">state:</span> present 
+        <span style="color: #a5d6ff;">state:</span> present
 
     - <span style="color: #7ee787;">name:</span> Installer dépendances pour Docker
       <span style="color: #7ee787;">apt:</span>
@@ -246,92 +158,82 @@ drwxr-x--- 7 nicolas nicolas 4096 nov.  21 08:40 ../
         <span style="color: #a5d6ff;">state:</span> present
 
     - <span style="color: #7ee787;">name:</span> Ajouter la clé GPG Docker
-      <span style="color: #7ee787;">apt_key:</span> 
-          <span style="color: #a5d6ff;">url:</span> https://download.docker.com/linux/ubuntu/gpg 
-          <span style="color: #a5d6ff;">state:</span> present 
+      <span style="color: #7ee787;">apt_key:</span>
+        <span style="color: #a5d6ff;">url:</span> https://download.docker.com/linux/ubuntu/gpg
+        <span style="color: #a5d6ff;">state:</span> present
 
     - <span style="color: #7ee787;">name:</span> Ajouter le dépôt Docker
       <span style="color: #7ee787;">apt_repository:</span>
         <span style="color: #a5d6ff;">repo:</span> "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
         <span style="color: #a5d6ff;">state:</span> present
 
-    - <span style="color: #7ee787;">name:</span> Mise à jour APT après ajout dépôt Docker
-      <span style="color: #7ee787;">apt:</span> 
-        <span style="color: #a5d6ff;">update_cache:</span> yes 
-
     - <span style="color: #7ee787;">name:</span> Installer docker-ce
-      <span style="color: #7ee787;">apt:</span> 
-         <span style="color: #a5d6ff;">name:</span> docker-ce 
-         <span style="color: #a5d6ff;">state:</span> present 
+      <span style="color: #7ee787;">apt:</span>
+        <span style="color: #a5d6ff;">name:</span> docker-ce
+        <span style="color: #a5d6ff;">state:</span> present
 
     - <span style="color: #7ee787;">name:</span> S’assurer que Docker démarre
-      <span style="color: #7ee787;">service:</span> 
-         <span style="color: #a5d6ff;">name:</span> docker 
-         <span style="color: #a5d6ff;">enabled:</span> yes 
-         <span style="color: #a5d6ff;">state:</span> started </pre>
+      <span style="color: #7ee787;">service:</span>
+        <span style="color: #a5d6ff;">name:</span> docker
+        <span style="color: #a5d6ff;">enabled:</span> yes
+        <span style="color: #a5d6ff;">state:</span> started</pre>
             </div>
         </div>
 
         <div class="section-box">
-            <h2 class="section-title"><i class="fab fa-docker"></i> 2. Stack de Monitoring (Docker)</h2>
+            <h2 class="section-title"><i class="fab fa-docker"></i> 2. Stack Monitoring (Docker Compose)</h2>
             <div class="terminal-window">
                 <div class="terminal-header">
                     <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
                     <span class="terminal-title">nicolas@promfana:~/monitoring</span>
                 </div>
-                <pre><span class="prompt">nicolas@promfana:~/monitoring$</span> <span class="cmd">ll</span>
-total 16
-drwxrwxr-x 2 nicolas nicolas 4096 nov.  21 09:53 ./
-drwxr-x--- 7 nicolas nicolas 4096 nov.  21 08:40 ../
--rw-r--r-- 1 root    root     944 nov.  21 08:50 <span style="color: var(--accent)">docker-compose.yml</span>
--rw-r--r-- 1 root    root     438 nov.  21 09:53 <span style="color: var(--accent)">prometheus.yml</span>
-
-<span class="prompt">nicolas@promfana:~/monitoring$</span> <span class="cmd">cat docker-compose.yml</span>
+                <pre><span class="prompt">nicolas@promfana:~/monitoring$</span> <span class="cmd">cat docker-compose.yml</span>
 <span style="color: #7ee787;">version:</span> <span style="color: #a5d6ff;">"3.8"</span>
+
 <span style="color: #7ee787;">services:</span>
   <span style="color: #7ee787;">prometheus:</span>
     <span style="color: #7ee787;">image:</span> prom/prometheus
     <span style="color: #7ee787;">container_name:</span> prometheus
     <span style="color: #7ee787;">volumes:</span>
       - <span style="color: #a5d6ff;">./prometheus.yml:/etc/prometheus/prometheus.yml</span>
-    <span style="color: #7ee787;">ports:</span> 
-      - <span style="color: #a5d6ff;">"9090:9090"</span> 
-    <span style="color: #7ee787;">networks:</span> 
-      - <span style="color: #a5d6ff;">monitor</span> 
-                    
+    <span style="color: #7ee787;">ports:</span>
+      - <span style="color: #a5d6ff;">"9090:9090"</span>
+    <span style="color: #7ee787;">networks:</span>
+      - <span style="color: #a5d6ff;">monitor</span>
+
   <span style="color: #7ee787;">grafana:</span>
     <span style="color: #7ee787;">image:</span> grafana/grafana
     <span style="color: #7ee787;">container_name:</span> grafana
-    <span style="color: #7ee787;">ports:</span> 
-      - <span style="color: #a5d6ff;">"3000:3000"</span> 
+    <span style="color: #7ee787;">ports:</span>
+      - <span style="color: #a5d6ff;">"3000:3000"</span>
     <span style="color: #7ee787;">environment:</span>
       - <span style="color: #a5d6ff;">GF_SECURITY_ADMIN_PASSWORD=admin</span>
-    <span style="color: #7ee787;">networks:</span> 
-      - <span style="color: #a5d6ff;">monitor</span> 
+    <span style="color: #7ee787;">networks:</span>
+      - <span style="color: #a5d6ff;">monitor</span>
 
   <span style="color: #7ee787;">cadvisor:</span>
     <span style="color: #7ee787;">image:</span> gcr.io/cadvisor/cadvisor:latest
     <span style="color: #7ee787;">container_name:</span> cadvisor
-    <span style="color: #7ee787;">ports:</span> 
-      - <span style="color: #a5d6ff;">"8080:8080"</span> 
+    <span style="color: #7ee787;">ports:</span>
+      - <span style="color: #a5d6ff;">"8080:8080"</span>
     <span style="color: #7ee787;">volumes:</span>
       - <span style="color: #a5d6ff;">/:/rootfs:ro</span>
       - <span style="color: #a5d6ff;">/var/run:/var/run:ro</span>
       - <span style="color: #a5d6ff;">/sys:/sys:ro</span>
       - <span style="color: #a5d6ff;">/var/lib/docker/:/var/lib/docker:ro</span>
-    <span style="color: #7ee787;">networks:</span> 
-      - <span style="color: #a5d6ff;">monitor</span> 
+    <span style="color: #7ee787;">networks:</span>
+      - <span style="color: #a5d6ff;">monitor</span>
 
   <span style="color: #7ee787;">nodeexporter:</span>
     <span style="color: #7ee787;">image:</span> prom/node-exporter
     <span style="color: #7ee787;">container_name:</span> nodeexporter
-    <span style="color: #7ee787;">ports</span>
-      - <span style="color: #a5d6ff;">-9100:9100</span>
+    <span style="color: #7ee787;">ports:</span>
+      - <span style="color: #a5d6ff;">"9100:9100"</span>
     <span style="color: #7ee787;">restart:</span> unless-stopped
     <span style="color: #7ee787;">pid:</span> "host"
     <span style="color: #7ee787;">network_mode:</span> host
-    <span style="color: #7ee787;">command:</span> 
-      - <span style="color: #a5d6ff;">'--path.rootfs=/'</span> 
+    <span style="color: #7ee787;">command:</span>
+      - <span style="color: #a5d6ff;">'--path.rootfs=/'</span>
 
 <span style="color: #7ee787;">networks:</span>
   <span style="color: #7ee787;">monitor:</span>
@@ -340,11 +242,11 @@ drwxr-x--- 7 nicolas nicolas 4096 nov.  21 08:40 ../
         </div>
 
         <div class="section-box">
-            <h2 class="section-title"><i class="fas fa-search"></i> 3. Configuration Scrape (Prometheus)</h2>
+            <h2 class="section-title"><i class="fas fa-search"></i> 3. Configuration des Cibles (Prometheus)</h2>
             <div class="terminal-window">
                 <div class="terminal-header">
                     <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
-                    <span class="terminal-title">cat ~/monitoring/prometheus.yml</span>
+                    <span class="terminal-title">nicolas@promfana:~/monitoring/prometheus.yml</span>
                 </div>
                 <pre><span style="color: #7ee787;">global:</span>
   <span style="color: #7ee787;">scrape_interval:</span> <span style="color: #a5d6ff;">5s</span>
@@ -352,49 +254,49 @@ drwxr-x--- 7 nicolas nicolas 4096 nov.  21 08:40 ../
 <span style="color: #7ee787;">scrape_configs:</span>
   - <span style="color: #7ee787;">job_name:</span> <span style="color: #a5d6ff;">"prometheus"</span>
     <span style="color: #7ee787;">static_configs:</span>
-      - <span style="color: #7ee787;">targets:</span> [<span style="color: #a5d6ff;">"prometheus:9090"</span>]
+      - <span style="color: #a5d6ff;">targets:</span> ["prometheus:9090"]
 
   - <span style="color: #7ee787;">job_name:</span> <span style="color: #a5d6ff;">"cadvisor"</span>
     <span style="color: #7ee787;">static_configs:</span>
-      - <span style="color: #7ee787;">targets:</span> [<span style="color: #a5d6ff;">"cadvisor:8080"</span>]
+      - <span style="color: #a5d6ff;">targets:</span> ["cadvisor:8080"]
 
   - <span style="color: #7ee787;">job_name:</span> <span style="color: #a5d6ff;">"nodeexporter"</span>
     <span style="color: #7ee787;">static_configs:</span>
-      - <span style="color: #7ee787;">targets:</span> [<span style="color: #a5d6ff;">"192.168.80.152:9100"</span>]
-      - <span style="color: #7ee787;">targets:</span> [<span style="color: #a5d6ff;">"192.168.80.151:9100"</span>]
+      - <span style="color: #a5d6ff;">targets:</span>
+          - <span style="color: #a5d6ff;">"192.168.80.152:9100"</span>
+          - <span style="color: #a5d6ff;">"192.168.80.151:9100"</span>
 
   - <span style="color: #7ee787;">job_name:</span> <span style="color: #a5d6ff;">"apache-client"</span>
     <span style="color: #7ee787;">static_configs:</span>
-      - <span style="color: #7ee787;">targets:</span> [<span style="color: #a5d6ff;">"192.168.80.151:9117"</span>]</pre>
+      - <span style="color: #a5d6ff;">targets:</span> ["192.168.80.151:9117"]</pre>
             </div>
         </div>
     </main>
+
+    
 
     <footer>
         <div class="footer-top">
             <div class="footer-col">
                 <div class="logo">Nicolas<span>.arch</span></div>
-                <p style="font-size: 0.9rem; color: var(--text-muted); max-width: 300px;">Architecte SI spécialisé dans
-                    la résilience et l'automatisation.</p>
+                <p style="font-size: 0.9rem; color: var(--text-muted);">Expert en Architecture SI spécialisé dans l'automatisation et l'observabilité.</p>
             </div>
             <div class="footer-col">
                 <h4>Navigation</h4>
                 <ul>
-                    <li><a href="#">Accueil</a></li>
-                    <li><a href="pages/parcours.html">Parcours</a></li>
-                    <li><a href="pages/projets.html">Projets</a></li>
+                    <li><a href="../index.html">Accueil</a></li>
+                    <li><a href="projets.html">Projets</a></li>
                 </ul>
             </div>
             <div class="footer-col">
                 <h4>Contact</h4>
-                <a href="#" class="social-btn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://linkedin.com/in/nicolas-blin-pro" class="social-btn"><i class="fab fa-linkedin-in"></i></a>
                 <a href="mailto:nicolas.blin.pro1@gmail.com" class="social-btn"><i class="far fa-envelope"></i></a>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>© 2026 Nicolas Blin | Expert Architecture SI</p>
+            <p>© 2026 Nicolas Blin | root@nblin:~$ exit</p>
         </div>
     </footer>
-
 </body>
 </html>
