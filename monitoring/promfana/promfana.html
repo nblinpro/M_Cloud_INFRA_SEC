@@ -56,7 +56,11 @@
         .hero-doc h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; letter-spacing: -2px; margin-bottom: 15px; line-height: 1.1; }
         .hero-doc p { color: var(--text-muted); font-size: 1.1rem; max-width: 800px; margin: 0 auto; }
         .tag-cli { font-family: 'JetBrains Mono'; font-size: 0.75rem; color: var(--accent); background: rgba(34, 211, 238, 0.1); padding: 4px 12px; border-radius: 100px; border: 1px solid rgba(34, 211, 238, 0.3); margin-bottom: 1.5rem; display: inline-block; }
-
+         .gradient-text {
+            background: linear-gradient(90deg, #22d3ee, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
         .content-padding { padding: 0 8%; }
         .section-box { margin-bottom: 60px; }
         .section-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
@@ -129,8 +133,8 @@
 
     <main>
         <section class="hero-doc">
-            <span class="tag-cli">innosys@promfana:~$ whoami</span>
-            <h1>Déploiement Prometheus & Grafana avec <br><span class="gradient-text">Ansible & Docker</span></h1>
+            <span class="tag-cli">Prometheus & Grafana</span>
+            <h1>Déploiement avec <br><span class="gradient-text">Ansible & Docker</span></h1>
             <p>Documentation technique exhaustive du déploiement IaC pour la surveillance des services critiques.</p>
         </section>
 
