@@ -141,72 +141,48 @@
 
        <section class="hero">
             <span class="hero-tag">OpenStack • Compute</span>
-            <h1>Moteur de calcul <br><span style="color:var(--accent)">Nova (Compute)</span></h1>
-            <p>Maîtrisez la gestion des ressources de calcul. Création d'instances, déploiement réseau, flavors personnalisés et snapshots d'infrastructure.</p>
+            <h1>Découverte complète de <br><span style="color:var(--accent)">Nova (Compute)</span></h1>
+            <p>Maîtrisez le moteur de calcul d'OpenStack. Création d'instances, gestion des réseaux, flavors personnalisés et monitoring des ressources.</p>
             <a href="../documents/TP2 _ Découverte complète de Nova (Compute) – OpenStack.pdf" class="btn-pdf" target="_blank">
-                <i class="fas fa-file-pdf"></i> Sujet du TP (PDF)
+                <i class="fas fa-file-pdf"></i> Voir le sujet (PDF)
             </a>
         </section>
 
         <section>
             <h2><i class="fas fa-bullseye"></i> Objectifs Pédagogiques</h2>
             <div class="grid">
-                <article class="card">
-                    <i class="fas fa-server fa-2x"></i>
-                    <h3>Architecture Nova</h3>
-                    <p style="font-size: 0.9rem; color: var(--text-muted);">Comprendre le fonctionnement du service Compute.</p>
-                </article>
-                <article class="card">
-                    <i class="fas fa-microchip fa-2x"></i>
-                    <h3>Gestion d'Instances</h3>
-                    <p style="font-size: 0.9rem; color: var(--text-muted);">Cycle de vie complet des machines virtuelles.</p>
-                </article>
-                <article class="card">
-                    <i class="fas fa-network-wired fa-2x"></i>
-                    <h3>Réseau Isolé</h3>
-                    <p style="font-size: 0.9rem; color: var(--text-muted);">Implémentation de réseaux privés et publics.</p>
-                </article>
-                <article class="card">
-                    <i class="fas fa-sliders-h fa-2x"></i>
-                    <h3>Flavors</h3>
-                    <p style="font-size: 0.9rem; color: var(--text-muted);">Configuration de gabarits de ressources.</p>
-                </article>
+                <div class="card"><h3>Service Nova</h3><p>Comprendre l'architecture Compute.</p></div>
+                <div class="card"><h3>Instances</h3><p>Création & Gestion des VMs.</p></div>
+                <div class="card"><h3>Réseau</h3><p>Réseaux privés & Publics.</p></div>
+                <div class="card"><h3>Flavors</h3><p>Profils de ressources sur mesure.</p></div>
+                <div class="card"><h3>Snapshots</h3><p>Sauvegarde d'images disques.</p></div>
+                <div class="card"><h3>Monitoring</h3><p>Surveillance des hyperviseurs.</p></div>
             </div>
         </section>
 
         <section>
             <h2>1. Découverte et vérification</h2>
-            <p>Vérification de l'état opérationnel des services de calcul et de l'hyperviseur.</p>
+            <p>Nova est le cœur du calcul. Vérifions d'abord que les services sont opérationnels (état <strong>up</strong>).</p>
             <div class="code-container">
-                <div class="code-header"><span>CLI - Compute Check</span></div>
-                <pre>
-<span class="comment"># Lister les services Nova opérationnels</span>
-openstack compute service list
-
-<span class="comment"># Vérifier l'hyperviseur actif</span>
-openstack hypervisor list</pre>
+                <div class="code-header"><span>CLI - Lister les services Nova</span></div>
+                <pre>openstack compute service list</pre>
+            </div>
+            <div class="code-container">
+                <div class="code-header"><span>CLI - Vérifier l'hyperviseur</span></div>
+                <pre>openstack hypervisor list</pre>
             </div>
         </section>
 
         <section>
             <h2>2. Création des Flavors</h2>
-            <p>Définition des profils de ressources (CPU/RAM/Disk) pour les instances.</p>
-            <div class="grid">
-                <div class="card" style="border-top: 4px solid #4ade80;">
-                    <h3>Flavor Léger</h3>
-                    <p style="font-family: 'JetBrains Mono'; font-size: 0.85rem;">1 vCPU | 512 MB RAM | 5 GB Disk</p>
-                </div>
-                <div class="card" style="border-top: 4px solid #38bdf8;">
-                    <h3>Flavor Standard</h3>
-                    <p style="font-family: 'JetBrains Mono'; font-size: 0.85rem;">2 vCPU | 4 GB RAM | 20 GB Disk</p>
-                </div>
-                <div class="card" style="border-top: 4px solid #f472b6;">
-                    <h3>Flavor IA</h3>
-                    <p style="font-family: 'JetBrains Mono'; font-size: 0.85rem;">8 vCPU | 16 GB RAM | 50 GB Disk</p>
-                </div>
+            <p>Les flavors définissent le gabarit matériel (CPU/RAM/Disque) des instances.</p>
+            <div class="grid" style="margin-bottom: 2rem;">
+                <div class="card" style="border-top: 4px solid #4ade80;"><h3>💡 Flavor Léger</h3><p>vCPU : 1 | RAM : 512 MB | Disk : 5 GB</p></div>
+                <div class="card" style="border-top: 4px solid #38bdf8;"><h3>⚙️ Flavor Standard</h3><p>vCPU : 2 | RAM : 4096 MB | Disk : 20 GB</p></div>
+                <div class="card" style="border-top: 4px solid #f472b6;"><h3>🚀 Flavor IA</h3><p>vCPU : 8 | RAM : 16 GB | Disk : 50 GB</p></div>
             </div>
             <div class="code-container">
-                <div class="code-header"><span>CLI - Flavors</span></div>
+                <div class="code-header"><span>CLI - Commandes de création</span></div>
                 <pre>
 openstack flavor create --vcpus 1 --ram 512 --disk 5 flavor_leger
 openstack flavor create --vcpus 2 --ram 4096 --disk 20 flavor_standard
@@ -216,17 +192,25 @@ openstack flavor create --vcpus 8 --ram 16384 --disk 50 flavor_ia</pre>
 
         <section>
             <h2>3. Configuration Réseau</h2>
-            <p>Mise en place de l'isolation réseau et du routage vers l'extérieur.</p>
+            <p>Création d'un réseau privé, de son sous-réseau et connexion au routeur vers l'extérieur.</p>
             <div class="code-container">
-                <div class="code-header"><span>CLI - Networking</span></div>
+                <div class="code-header"><span>Bash - Setup Réseau</span></div>
                 <pre>
-<span class="comment"># 1. Réseau privé</span>
+<span class="comment"># 1. Création du réseau</span>
 openstack network create private_tp2
-openstack subnet create --network private_tp2 --subnet-range 192.168.100.0/24 my-private-subnet
 
-<span class="comment"># 2. Routeur et Passerelle</span>
+<span class="comment"># 2. Configuration du sous-réseau (192.168.100.0/24)</span>
+openstack subnet create --network private_tp2 \
+  --subnet-range 192.168.100.0/24 \
+  --gateway 192.168.100.1 \
+  --dns-nameserver 8.8.8.8 \
+  my-private-subnet
+
+<span class="comment"># 3. Création et configuration du routeur</span>
 openstack router create router_tp2
 openstack router set router_tp2 --external-gateway public
+
+<span class="comment"># 4. Connexion du sous-réseau au routeur</span>
 openstack router add subnet router_tp2 my-private-subnet</pre>
             </div>
         </section>
@@ -235,18 +219,23 @@ openstack router add subnet router_tp2 my-private-subnet</pre>
             <h2>4. Accès & Sécurité</h2>
             <div class="grid">
                 <div class="card">
-                    <h3>Paires de clés SSH</h3>
+                    <h3>Clés SSH</h3>
                     <div class="code-container">
-                        <pre>ssh-keygen -f my-key
+                        <pre>
+<span class="comment"># Génération et Import</span>
+ssh-keygen -f my-key
 openstack keypair create --public-key my-key.pub my-key</pre>
                     </div>
                 </div>
                 <div class="card">
-                    <h3>Groupes de Sécurité</h3>
+                    <h3>Groupe de Sécurité</h3>
                     <div class="code-container">
-                        <pre>openstack security group create my-secgroup
+                        <pre>
+<span class="comment"># Création et Règles (Ping, SSH, HTTP)</span>
+openstack security group create my-secgroup
 openstack security group rule create --proto icmp my-secgroup
-openstack security group rule create --proto tcp --dst-port 22 my-secgroup</pre>
+openstack security group rule create --proto tcp --dst-port 22 my-secgroup
+openstack security group rule create --proto tcp --dst-port 80 my-secgroup</pre>
                     </div>
                 </div>
             </div>
@@ -254,47 +243,55 @@ openstack security group rule create --proto tcp --dst-port 22 my-secgroup</pre>
 
         <section>
             <h2>5. Déploiement Instance Cirros</h2>
-            <p>Lancement de l'instance et attribution d'une IP flottante.</p>
             <div class="code-container">
-                <div class="code-header"><span>CLI - Launch</span></div>
+                <div class="code-header"><span>A. Créer l'instance</span></div>
                 <pre>
 openstack server create --flavor flavor_standard \
   --image cirros-0.6.3-x86_64-disk \
   --nic net-id=$(openstack network show private_tp2 -f value -c id) \
   --security-group my-secgroup \
   --key-name my-key \
-  vm-test1
-
-<span class="comment"># IP Flottante</span>
-openstack server add floating ip vm-test1 [IP_FLOATING]</pre>
+  vm-test1</pre>
             </div>
-            <div class="card" style="border-left: 4px solid #4ade80; background: rgba(74, 222, 128, 0.05); margin-top: 1.5rem;">
-                <p><i class="fas fa-check-circle" style="color: #4ade80;"></i> <strong>Succès :</strong> Ping 8.8.8.8 opérationnel depuis l'instance.</p>
+            <div class="code-container">
+                <div class="code-header"><span>B. Allocation IP Flottante & Connexion</span></div>
+                <pre>
+<span class="comment"># Création et Association</span>
+openstack floating ip create public
+openstack server add floating ip vm-test1 172.24.4.193
+
+<span class="comment"># Connexion SSH</span>
+sudo chmod 600 my-key
+ssh -i my-key cirros@172.24.4.193</pre>
+            </div>
+            <div class="card" style="border-left: 4px solid #4ade80; background: rgba(74, 222, 128, 0.05);">
+                <p><i class="fas fa-check-circle" style="color: #4ade80;"></i> <strong>Succès :</strong> Si le ping répond, votre instance est correctement connectée à Internet !</p>
             </div>
         </section>
 
         <section>
             <h2>6. Snapshot & Monitoring</h2>
-            <div class="code-container">
-                <div class="code-header"><span>CLI - Operations</span></div>
-                <pre>
-<span class="comment"># Création d'image (Snapshot)</span>
-openstack server image create --name snapshot_vmtest1 vm-test1
-
-<span class="comment"># Stats Hyperviseur</span>
-openstack hypervisor stats show</pre>
+            <div class="grid">
+                <div class="card">
+                    <h3>📸 Snapshot</h3>
+                    <pre>openstack server image create --name snapshot_vmtest1 vm-test1</pre>
+                </div>
+                <div class="card">
+                    <h3>📊 Monitoring</h3>
+                    <pre>openstack hypervisor stats show</pre>
+                </div>
             </div>
         </section>
 
-        <section style="background-color: var(--bg-card); padding: 2.5rem; border-radius: var(--radius); border: 1px solid var(--accent); margin: 4rem 8% 0;">
-            <h3><i class="fas fa-graduation-cap" style="color: var(--accent)"></i> Compétences Validées</h3>
-            <ul style="list-style: none; color: var(--text-muted); display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-                <li><i class="fas fa-check" style="color: var(--accent); margin-right: 10px;"></i> Orchestration Nova</li>
-                <li><i class="fas fa-check" style="color: var(--accent); margin-right: 10px;"></i> Gestion des gabarits</li>
-                <li><i class="fas fa-check" style="color: var(--accent); margin-right: 10px;"></i> Topologie Réseau L3</li>
-                <li><i class="fas fa-check" style="color: var(--accent); margin-right: 10px;"></i> Sécurité des instances</li>
-                <li><i class="fas fa-check" style="color: var(--accent); margin-right: 10px;"></i> Snapshots Cloud</li>
-                <li><i class="fas fa-check" style="color: var(--accent); margin-right: 10px;"></i> Monitoring IaaS</li>
+        <section style="background-color: var(--bg-card); padding: 2.5rem; border-radius: var(--radius); border: 1px solid var(--accent); margin-top: 4rem;">
+            <h3><i class="fas fa-graduation-cap" style="color: var(--accent)"></i> Félicitations !</h3>
+            <p>Vous avez complété ce travail pratique sur Nova. Vous maîtrisez maintenant :</p>
+            <ul style="list-style: none; color: var(--text-muted); display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 1rem;">
+                <li><i class="fas fa-check" style="color: var(--accent)"></i> Création d'instances</li>
+                <li><i class="fas fa-check" style="color: var(--accent)"></i> Configuration réseau</li>
+                <li><i class="fas fa-check" style="color: var(--accent)"></i> Gestion de la sécurité</li>
+                <li><i class="fas fa-check" style="color: var(--accent)"></i> Snapshots</li>
+                <li><i class="fas fa-check" style="color: var(--accent)"></i> Monitoring</li>
             </ul>
         </section>
     </main>
