@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projet SHIELD-GATE | Nicolas Blin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true, theme:'dark'});</script>
+    <style>
+        :root {
+            --bg-body: #020617;
+            --bg-card: #0b1120;
+            --accent: #22d3ee;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #1e293b;
+            --code-bg: #1e293b;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-body); color: var(--text-main); line-height: 1.6; }
+        
+        header { padding: 1.5rem 8%; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: rgba(2, 6, 23, 0.8); backdrop-filter: blur(10px); z-index: 100; }
+        .logo { font-weight: 800; font-size: 1.4rem; }
+        .logo span { color: var(--accent); }
+        nav ul { display: flex; list-style: none; gap: 2rem; }
+        nav a { text-decoration: none; color: var(--text-muted); font-size: 0.9rem; transition: 0.3s; }
+        nav a:hover { color: var(--accent); }
+
+        main { padding: 4rem 8%; max-width: 1100px; margin: 0 auto; }
+        .project-header { margin-bottom: 4rem; text-align: center; }
+        .project-tag { color: var(--accent); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; font-size: 0.8rem; }
+        h1 { font-size: 3rem; margin: 1rem 0; }
+        
+        .section-box { background: var(--bg-card); border: 1px solid var(--border); padding: 2.5rem; border-radius: 12px; margin-bottom: 2rem; }
+        h2 { color: var(--accent); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px; }
+        h3 { margin: 1.5rem 0 1rem; color: #e2e8f0; }
+        
+        .mermaid { background: transparent; padding: 1rem; border-radius: 8px; margin: 2rem 0; }
+        
+        ul { margin-left: 1.5rem; color: var(--text-muted); }
+        li { margin-bottom: 0.5rem; }
+        
+        code { font-family: 'JetBrains Mono', monospace; background: var(--code-bg); padding: 2px 6px; border-radius: 4px; color: var(--accent); }
+        pre { background: var(--code-bg); padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1rem 0; border: 1px solid var(--border); }
+
+        .status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 2rem; }
+        .status-item { background: rgba(34, 211, 238, 0.05); border: 1px solid var(--border); padding: 1rem; border-radius: 8px; text-align: center; }
+        .status-item span { display: block; font-size: 0.7rem; color: var(--text-muted); }
+        .status-item strong { color: var(--accent); }
+
+        footer { padding: 4rem 8%; background: var(--bg-card); border-top: 1px solid var(--border); text-align: center; margin-top: 4rem; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">Nicolas<span>.SI</span></div>
+    <nav>
+        <ul>
+            <li><a href="../index.html">Accueil</a></li>
+            <li><a href="projets.html">Projets</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+    <div class="project-header">
+        <span class="project-tag">CyberSécurité & Infrastructure</span>
+        <h1>Étude de Cas : Projet <span style="color: var(--accent);">SHIELD-GATE</span></h1>
+        <p style="color: var(--text-muted);">Sécurisation d'une infrastructure d'entreprise contre les attaques DoS et déploiement d'un accès distant sécurisé.</p>
+        
+        <div class="status-grid">
+            <div class="status-item"><span>Technologie</span><strong>OPNsense</strong></div>
+            <div class="status-item"><span>Réseau</span><strong>Segmentation DMZ</strong></div>
+            <div class="status-item"><span>Accès</span><strong>Wireguard + MFA</strong></div>
+            <div class="status-item"><span>Proxy</span><strong>HAProxy</strong></div>
+        </div>
+    </div>
+
+    <section class="section-box">
+        <h2><i class="fa-solid fa-sitemap"></i> Architecture du Réseau</h2>
+        <p>Le projet repose sur la mise en place d'un pare-feu de nouvelle génération (NGFW) OPNsense isolant les flux critiques via trois zones distinctes.</p>
+        <div class="mermaid">
+            graph TD
+                subgraph WAN [Internet]
+                    ExtUser["👤 Utilisateur (VPN)"]
+                end
+                
+                subgraph OPN [Pare-feu OPNsense]
+                    direction TB
+                    FW[Filtrage ACL]
+                    HA[HAProxy / SSL Offloading]
+                    WG[Wireguard + MFA]
+                end
+
+                subgraph DMZ [Zone Isolé - 172.16.1.0/24]
+                    WebSrv["🌍 Serveur Web Port 443"]
+                end
+
+                subgraph LAN [Réseau Interne - 10.10.1.0/24]
+                    Admin["💻 Admin SSH"]
+                    Internal["🖥️ Postes Clients"]
+                end
+
+                WAN -- HTTPS --> HA
+                HA -- Proxy --> WebSrv
+                ExtUser -- Tunnel --> WG
+                WG -- Accès --> LAN
+                Admin -- SSH --> WebSrv
+        </div>
+    </section>
+
+    <section class="section-box">
+        <h2><i class="fa-solid fa-server"></i> Déploiement & Reverse Proxy</h2>
+        <h3>Installation d'OPNsense</h3>
+        <ul>
+            <li>Configuration des interfaces : <code>WAN</code> (DHCP), <code>LAN</code> (10.10.1.1/24), <code>DMZ</code> (172.16.1.1/24).</li>
+            <li>Durcissement : Désactivation du port 80, changement des credentials, restriction de l'accès GUI au LAN uniquement.</li>
+        </ul>
+
+        <h3>Configuration de HAProxy</h3>
+        <p>Pour protéger le serveur Web en DMZ, HAProxy a été configuré comme suit :</p>
+        <pre>
+# Exemple de configuration Frontend
+Frontend: HTTPS_Frontend
+Listen: WAN_IP:443
+SSL: Certificate_Wildcard
+Action: Use Backend WEB_SRV_DMZ if { domain_logicloud.fr }</pre>
+    </section>
+
+    <section class="section-box">
+        <h2><i class="fa-solid fa-key"></i> VPN Wireguard & Authentification Forte</h2>
+        <p>L'accès distant est sécurisé par le protocole Wireguard, couplé à une authentification Double Facteur (TOTP).</p>
+        <ul>
+            <li><strong>Wireguard :</strong> Création des paires de clés (Pub/Priv) et configuration des <code>AllowedIPs</code> pour restreindre l'accès au réseau LAN.</li>
+            <li><strong>MFA :</strong> Intégration de Google Authenticator via le module <code>os-otp</code> d'OPNsense.</li>
+            <li><strong>Validation :</strong> Connexion impossible sans le jeton temporaire, même avec le certificat client.</li>
+        </ul>
+    </section>
+
+    <section class="section-box">
+        <h2><i class="fa-solid fa-shield-virus"></i> Matrice de Filtrage (ACL)</h2>
+        <p>Application de la politique <strong>Default Deny</strong>. Seuls les flux explicitement nécessaires sont autorisés :</p>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 1rem; color: var(--text-muted); font-size: 0.85rem;">
+            <thead>
+                <tr style="border-bottom: 2px solid var(--border); color: var(--accent);">
+                    <th style="padding: 10px; text-align: left;">Source</th>
+                    <th style="padding: 10px; text-align: left;">Dest.</th>
+                    <th style="padding: 10px; text-align: left;">Port</th>
+                    <th style="padding: 10px; text-align: left;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="border-bottom: 1px solid var(--border);">
+                    <td style="padding: 10px;">LAN</td>
+                    <td style="padding: 10px;">WAN</td>
+                    <td style="padding: 10px;">80, 443, 53, 123</td>
+                    <td style="padding: 10px; color: #4ade80;">ALLOW</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border);">
+                    <td style="padding: 10px;">WAN</td>
+                    <td style="padding: 10px;">DMZ</td>
+                    <td style="padding: 10px;">443 (via Proxy)</td>
+                    <td style="padding: 10px; color: #4ade80;">ALLOW</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border);">
+                    <td style="padding: 10px;">LAN</td>
+                    <td style="padding: 10px;">DMZ</td>
+                    <td style="padding: 10px;">22 (SSH)</td>
+                    <td style="padding: 10px; color: #4ade80;">ALLOW</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px;">DMZ</td>
+                    <td style="padding: 10px;">LAN</td>
+                    <td style="padding: 10px;">ANY</td>
+                    <td style="padding: 10px; color: #f87171;">REJECT</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+
+<footer>
+    <p>© 2026 Nicolas Blin | Dossier de Compétences Mastère</p>
+</footer>
+
+</body>
+</html>
