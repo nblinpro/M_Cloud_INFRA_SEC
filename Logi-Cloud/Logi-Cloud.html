@@ -85,31 +85,35 @@
         <p>Le projet repose sur la mise en place d'un pare-feu de nouvelle génération (NGFW) OPNsense isolant les flux critiques via trois zones distinctes.</p>
         <div class="mermaid">
             graph TD
-                subgraph WAN [Internet]
-                    ExtUser["👤 Utilisateur (VPN)"]
+                subgraph WAN ["Cloud Internet"]
+                    ExtUser(["👤 Utilisateur distant (VPN)"])
                 end
                 
-                subgraph OPN [Pare-feu OPNsense]
+                subgraph OPN [🛡️ Firewall OPNsense]
                     direction TB
-                    FW[Filtrage ACL]
                     HA[HAProxy / SSL Offloading]
-                    WG[Wireguard + MFA]
+                    FW[Filtrage ACL]
+                    WG[Wireguard + MFA Google Authenticator]
                 end
 
-                subgraph DMZ [Zone Isolé - 172.16.1.0/24]
+                subgraph DMZ [🌐 Zone DMZ - 172.16.1.0/24]
                     WebSrv["🌍 Serveur Web Port 443"]
                 end
 
-                subgraph LAN [Réseau Interne - 10.10.1.0/24]
+                subgraph LAN [🏠 Zone LAN - 10.10.1.0/24]
                     Admin["💻 Admin SSH"]
                     Internal["🖥️ Postes Clients"]
                 end
 
-                WAN -- HTTPS --> HA
-                HA -- Proxy --> WebSrv
-                ExtUser -- Tunnel --> WG
-                WG -- Accès --> LAN
+                WAN -- HTTPS --> FW
+                FW -- HTTPS (443) --> HA
+                HA -- HTTP (80) --> WebSrv
+                ExtUser -- Tunnel --> FW
+                FW -- VPN (51820) -->WG
+                WG -- SSH (22) --> Admin
                 Admin -- SSH --> WebSrv
+                LAN -- DNS(53), HTTP(80), HTTPS(443), NTP(123) --> FW
+                WebSrv -- ANY --> FW
         </div>
     </section>
 
