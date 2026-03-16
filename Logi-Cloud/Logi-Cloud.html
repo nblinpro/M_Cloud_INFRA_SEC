@@ -160,16 +160,18 @@
                 WebSrv -- ANY --> FW
         </div>
     </section>
-
     <section class="section-box">
-        <h2><i class="fa-solid fa-server"></i> Déploiement & Reverse Proxy</h2>
+        <h2><i class="fa-solid fa-server"></i> Installation OPNsense</h2>
         <h3>Installation d'OPNsense</h3>
         <ul>
             <li>Configuration des interfaces : <code>WAN</code> (DHCP), <code>LAN</code> (10.10.1.1/24), <code>DMZ</code> (172.16.1.1/24).</li>
             <li>Durcissement : Désactivation du port 80, changement des credentials, restriction de l'accès GUI au LAN uniquement.</li>
         </ul>
-
-        <h3>Configuration de HAProxy</h3>
+    </section>
+    
+    <section class="section-box">
+        <h2><i class="fa-solid fa-server"></i> Déploiement HAProxy</h2>
+                <h3>Configuration de HAProxy</h3>
         <p>Pour protéger le serveur Web en DMZ, HAProxy a été configuré comme suit :</p>
         <pre>
 # Exemple de configuration Frontend
