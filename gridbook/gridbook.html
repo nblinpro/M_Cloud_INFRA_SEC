@@ -43,6 +43,16 @@
         nav a { text-decoration: none; color: var(--text-muted); font-size: 0.85rem; transition: 0.3s; }
         nav a:hover { color: var(--accent); }
 
+        /* --- BREADCRUMB --- */
+        .breadcrumb {
+            display: flex; align-items: center; gap: 10px;
+            margin: 2rem 8% 1rem; font-size: 0.85rem; color: var(--text-muted);
+        }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: 0.3s; }
+        .breadcrumb a:hover { color: var(--accent); }
+        .breadcrumb i { font-size: 0.7rem; opacity: 0.5; }
+        .breadcrumb span { color: var(--accent); font-weight: 600; }
+        
         /* --- CONTENT --- */
         .container { max-width: 1200px; margin: 0 auto; padding: 60px 10%; }
 
@@ -91,26 +101,19 @@
         .btn-outline { border: 1px solid var(--border); color: var(--text-main); }
         .btn:hover { transform: translateY(-2px); }
 
-        /* --- FOOTER (Identique index) --- */
-        footer {
-            padding: 4rem 10% 2rem; background: rgba(11, 17, 32, 0.95);
-            border-top: 1px solid var(--border); margin-top: 5rem;
-        }
-        .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 4rem; }
+        /* --- FOOTER --- */
+        footer { padding: 4rem 8% 2rem; background: var(--bg-card); border-top: 1px solid var(--border); margin-top: 5rem; }
+        .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 4rem; margin-bottom: 3rem; }
+        .footer-logo { font-weight: 800; margin-bottom: 1rem; font-size: 1.2rem; }
         .footer-col h4 { margin-bottom: 1.5rem; font-size: 1rem; color: var(--text-main); }
         .footer-col ul { list-style: none; }
         .footer-col a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; transition: 0.3s; }
         .footer-col a:hover { color: var(--accent); }
         .social-links { display: flex; gap: 1rem; }
-        .social-btn {
-            width: 40px; height: 40px; border-radius: 8px; border: 1px solid var(--border);
-            display: flex; align-items: center; justify-content: center; color: var(--text-muted); transition: 0.3s;
-        }
-        .social-btn:hover { border-color: var(--accent); color: var(--accent); }
-        .footer-bottom {
-            padding-top: 2rem; border-top: 1px solid var(--border);
-            display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); margin-top: 2rem;
-        }
+        .social-btn { width: 40px; height: 40px; border-radius: 8px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--text-muted); text-decoration: none; transition: 0.3s; }
+        .social-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(34, 211, 238, 0.05); }
+        .footer-bottom { padding-top: 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); }
+
 
         @media (max-width: 900px) {
             .content-grid, .footer-top { grid-template-columns: 1fr; }
@@ -136,6 +139,11 @@
     </header>
 
     <main class="container">
+        <nav class="breadcrumb">
+            <a href="https://nblinpro.github.io/portfolio/pages/projets.html">Projets</a>
+            <i class="fas fa-chevron-right"></i>
+            <span style="color: var(--accent);">Projets Mastère</span>
+        </nav>
         <section class="project-hero">
             <span class="hero-tag">Lab de Haute Performance</span>
             <h1>GridBook <span style="color: var(--accent)">Intelligence</span></h1>
@@ -194,29 +202,27 @@
     <footer>
         <div class="footer-top">
             <div class="footer-col">
-                <div class="logo" style="margin-bottom: 1.5rem;">Nicolas<span>.SI</span></div>
+                <div class="footer-logo">Nicolas<span>.SI</span></div>
                 <p style="font-size: 0.9rem; color: var(--text-muted);">Architecte des SI spécialisé dans la conception d'infrastructures hautement disponibles.</p>
             </div>
             <div class="footer-col">
                 <h4>Navigation</h4>
                 <ul>
-                    <li><a href="../index.html">Accueil</a></li>
-                    <li><a href="parcours.html">Parcours</a></li>
-                    <li><a href="projets.html">Projets</a></li>
-                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="#">Accueil</a></li>
+                    <li><a href="pages/parcours.html">Parcours</a></li>
+                    <li><a href="pages/projets.html">Projets</a></li>
+                    <li><a href="pages/contact.html">Contact</a></li>
                 </ul>
             </div>
             <div class="footer-col">
                 <h4>Contact</h4>
                 <div class="social-links">
-                    <a href="https://www.linkedin.com/in/nicolas-blin-6a5135218/" class="social-btn" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://www.linkedin.com/in/nicolas-blin-6a5135218/" class="social-btn"><i class="fab fa-linkedin-in"></i></a>
                     <a href="mailto:nicolas.blin.pro1@gmail.com" class="social-btn"><i class="far fa-envelope"></i></a>
                 </div>
             </div>
         </div>
-        <div class="footer-bottom">
-            <p>© 2026 Nicolas Blin | Expert Architecture SI</p>
-        </div>
+        <div class="footer-bottom"><p>© 2026 Nicolas Blin | Expert Architecture SI</p></div>
     </footer>
 </body>
 
