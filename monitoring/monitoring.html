@@ -101,6 +101,56 @@
 
         .footer-bottom { padding-top: 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); }
 
+        /* Style du Pop-up */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(2, 6, 23, 0.85);
+    backdrop-filter: blur(8px);
+    display: none; /* Caché par défaut */
+    align-items: center; justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    background: var(--bg-card);
+    border: 1px solid var(--accent);
+    padding: 3rem;
+    border-radius: 24px;
+    max-width: 450px;
+    text-align: center;
+    box-shadow: 0 0 30px var(--accent-glow);
+}
+
+.modal-icon {
+    font-size: 3rem;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+    animation: bounce 2s infinite;
+}
+
+.modal-content h2 { margin-bottom: 1rem; color: var(--text-main); }
+.modal-content p { color: var(--text-muted); margin-bottom: 2rem; }
+
+.btn-close {
+    background: var(--accent);
+    color: var(--bg-body);
+    border: none;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-close:hover { transform: scale(1.05); filter: brightness(1.1); }
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+        
         @media (max-width: 768px) {
             header { padding: 1rem 5%; }
             nav { display: none; }
@@ -150,7 +200,7 @@
                 <i class="fab fa-laravel"></i>
                 <h3>Centreon</h3>
                 <p>Procédures complètes de mise en production : configuration Nginx, optimisation PHP-FPM et gestion des permissions.</p>
-                <a href="https://nblinpro.github.io/portfolio/pages/maintenance.html" class="btn-doc">Voir la doc <i class="fas fa-arrow-right"></i></a>
+                <a href="#" onclick="openModal(event)" class="btn-doc">Voir la doc <i class="fas fa-arrow-right"></i></a>
             </article>
         </section>
     </main>
@@ -180,6 +230,31 @@
         </div>
         <div class="footer-bottom"><p>© 2026 Nicolas Blin | Expert Architecture SI</p></div>
     </footer>
+<div id="maintenanceModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-icon"><i class="fas fa-tools"></i></div>
+        <h2>Documentation en cours</h2>
+        <p>Le guide pour <strong>Centreon</strong> est actuellement en cours de rédaction (optimisation PHP-FPM et permissions). Revenez très bientôt !</p>
+        <button class="btn-close" onclick="closeModal()">Compris !</button>
+    </div>
+</div>
+    <script>
+    function openModal(event) {
+        event.preventDefault(); // Empêche de suivre le lien
+        document.getElementById('maintenanceModal').style.display = 'flex';
+    }
 
+    function closeModal() {
+        document.getElementById('maintenanceModal').style.display = 'none';
+    }
+
+    // Fermer si on clique en dehors de la boîte
+    window.onclick = function(event) {
+        let modal = document.getElementById('maintenanceModal');
+        if (event.target == modal) {
+            closeModal();
+        }
+    }
+</script>
 </body>
 </html>
