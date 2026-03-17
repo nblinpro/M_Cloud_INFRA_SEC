@@ -221,7 +221,7 @@
         <a href="https://gridbook.visioninfo.fr/login" target="_blank" class="btn-card" style="background: var(--accent); color: #020617;">
             Accéder à la plateforme <i class="fa-solid fa-external-link"></i>
         </a>
-        <a href="#" onclick="openGridBookModal(event)" class="btn-card">
+        <a href="gridbook" onclick="openGridBookModal(event)" class="btn-card">
             Détails Techniques <i class="fa-solid fa-circle-info"></i>
         </a>
     </div>
@@ -293,35 +293,6 @@
         <button class="btn-close" onclick="closeShieldModal()">Fermer</button>
     </div>
 </div>
-    <div id="gridBookModal" class="modal-overlay">
-    <div class="modal-content" style="max-width: 600px; text-align: left;">
-        <div class="modal-icon" style="text-align: center;"><i class="fa-solid fa-microchip"></i></div>
-        <h2 style="text-align: center; margin-bottom: 1rem;">GridBook - Lab Technique</h2>
-        
-        <div style="max-height: 400px; overflow-y: auto; padding-right: 10px;">
-            <p><strong>Chef de Projet :</strong> Deruelle Nolan</p>
-            <p style="margin-top: 10px;"><strong>Finalité :</strong> Plateforme de pari full-stack (React/FastAPI) auto-hébergée sur Proxmox avec accès sécurisé via Cloudflare Tunnel.</p>
-            
-            <h4 style="color: var(--accent); margin-top: 20px;">Objectif Principal</h4>
-            <p style="font-size: 0.85rem;">Valider un socle technique souverain capable de traiter des flux de télémétrie en temps réel pour les sports motorisés.</p>
-
-            <h4 style="color: var(--accent); margin-top: 20px;">Infrastructure & Sécurité</h4>
-            <ul style="font-size: 0.85rem; padding-left: 20px; color: var(--text-muted);">
-                <li>Virtualisation via <strong>Proxmox</strong></li>
-                <li>Exposition sécurisée via <strong>Cloudflare Tunnel</strong> (pas d'IP publique directe)</li>
-                <li>Stack <strong>FastAPI</strong> (Backend) et <strong>React</strong> (Frontend)</li>
-                <li>Gestion de base de données intégrée</li>
-            </ul>
-
-            <h4 style="color: var(--accent); margin-top: 20px;">Livrables de fin d'année</h4>
-            <p style="font-size: 0.85rem;">Cahier des charges, documentation technique complète, infrastructure viable et scalable pour le Master 2.</p>
-        </div>
-
-        <div style="margin-top: 25px; text-align: center;">
-            <button class="btn-close" onclick="closeGridBookModal()">Fermer</button>
-        </div>
-    </div>
-</div>
 <script>
     function filterProjects(category, button) {
         const cards = document.querySelectorAll('.card');
@@ -360,21 +331,11 @@ window.addEventListener('click', function(event) {
         closeShieldModal();
     }
 });
-    function openGridBookModal(event) {
-    event.preventDefault();
-    document.getElementById('gridBookModal').style.display = 'flex';
-}
-
-function closeGridBookModal() {
-    document.getElementById('gridBookModal').style.display = 'none';
-}
 
 // Modifier l'écouteur de clic existant pour inclure la fermeture du nouveau modal
 window.addEventListener('click', function(event) {
     const shieldModal = document.getElementById('shieldGateModal');
-    const gridModal = document.getElementById('gridBookModal');
     if (event.target == shieldModal) closeShieldModal();
-    if (event.target == gridModal) closeGridBookModal();
 });
 </script>
 
