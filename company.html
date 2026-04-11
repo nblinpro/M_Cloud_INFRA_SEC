@@ -119,9 +119,24 @@
         .social-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(34, 211, 238, 0.05); }
         .footer-bottom { padding-top: 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); }
 
+        /* HAMBURGER MENU */
+        .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; z-index: 1001; }
+        .hamburger span { display: block; width: 22px; height: 2px; background: var(--text-main); border-radius: 2px; transition: transform 0.3s, opacity 0.3s; }
+        .hamburger.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .hamburger.active span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+        .hamburger.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
         @media (max-width: 768px) {
             header { padding: 1rem 5%; }
             nav { display: none; }
+            .hamburger { display: flex; }
+            nav.open {
+                display: flex; position: fixed; inset: 0;
+                background: rgba(2, 6, 23, 0.98); backdrop-filter: blur(20px);
+                z-index: 1000; flex-direction: column; align-items: center; justify-content: center;
+            }
+            nav.open ul { flex-direction: column; align-items: center; gap: 2.5rem; }
+            nav.open a { font-size: 1.3rem; }
             .footer-top { grid-template-columns: 1fr; gap: 2rem; }
             .grid { grid-template-columns: 1fr; }
         }
@@ -130,7 +145,10 @@
 <body>
 
 <header>
-    <div class="logo">Nicolas<span>.SI</span></div>
+    <a href="https://nblinpro.github.io/portfolio/index.html" class="logo">Nicolas<span>.SI</span></a>
+    <button class="hamburger" aria-label="Menu navigation" onclick="this.classList.toggle('active'); document.querySelector('header nav').classList.toggle('open')">
+        <span></span><span></span><span></span>
+    </button>
     <nav>
         <ul>
             <li><a href="https://nblinpro.github.io/portfolio/index.html">Accueil</a></li>
@@ -198,10 +216,10 @@
             <div class="footer-col">
                 <h4>Navigation</h4>
                 <ul>
-                    <li><a href="#">Accueil</a></li>
-                    <li><a href="pages/parcours.html">Parcours</a></li>
-                    <li><a href="pages/projets.html">Projets</a></li>
-                    <li><a href="pages/contact.html">Contact</a></li>
+                    <li><a href="https://nblinpro.github.io/portfolio/index.html">Accueil</a></li>
+                    <li><a href="https://nblinpro.github.io/portfolio/pages/parcours.html">Parcours</a></li>
+                    <li><a href="https://nblinpro.github.io/portfolio/pages/projets.html">Projets</a></li>
+                    <li><a href="https://nblinpro.github.io/portfolio/pages/contact.html">Contact</a></li>
                 </ul>
             </div>
             <div class="footer-col">

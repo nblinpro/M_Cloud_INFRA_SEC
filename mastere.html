@@ -150,9 +150,24 @@
 
 .btn-close:hover { transform: scale(1.05); }
         
+        /* HAMBURGER MENU */
+        .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; z-index: 1001; }
+        .hamburger span { display: block; width: 22px; height: 2px; background: var(--text-main); border-radius: 2px; transition: transform 0.3s, opacity 0.3s; }
+        .hamburger.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .hamburger.active span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+        .hamburger.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
         @media (max-width: 768px) {
             header { padding: 1rem 5%; }
             nav { display: none; }
+            .hamburger { display: flex; }
+            nav.open {
+                display: flex; position: fixed; inset: 0;
+                background: rgba(2, 6, 23, 0.98); backdrop-filter: blur(20px);
+                z-index: 1000; flex-direction: column; align-items: center; justify-content: center;
+            }
+            nav.open ul { flex-direction: column; align-items: center; gap: 2.5rem; }
+            nav.open a { font-size: 1.3rem; }
             .grid { grid-template-columns: 1fr; padding: 0 5%; }
             .footer-top { grid-template-columns: 1fr; gap: 2rem; }
         }
@@ -161,7 +176,10 @@
 <body>
 
 <header>
-    <div class="logo">Nicolas<span>.SI</span></div>
+    <a href="https://nblinpro.github.io/portfolio/index.html" class="logo">Nicolas<span>.SI</span></a>
+    <button class="hamburger" aria-label="Menu navigation" onclick="this.classList.toggle('active'); document.querySelector('header nav').classList.toggle('open')">
+        <span></span><span></span><span></span>
+    </button>
     <nav>
         <ul>
             <li><a href="https://nblinpro.github.io/portfolio/index.html">Accueil</a></li>
