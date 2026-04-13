@@ -12,18 +12,22 @@
         :root {
             --bg-body: #020617;
             --bg-card: #0b1120;
+            --bg-card-hover: #1e293b;
             --accent: #22d3ee;
             --accent-rgb: 34, 211, 238;
+            --accent-glow: rgba(34, 211, 238, 0.15);
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --border: rgba(255, 255, 255, 0.08);
+            --radius: 12px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             --code-bg: #1e293b;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
         body { background-color: var(--bg-body); color: var(--text-main); line-height: 1.6; }
         
         header { padding: 1.5rem 8%; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: rgba(2, 6, 23, 0.88); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); z-index: 100; }
-        .logo { font-weight: 800; font-size: 1.4rem; }
+        .logo { font-weight: 800; font-size: 1.4rem; letter-spacing: -1px; text-decoration: none; color: var(--text-main); }
         .logo span { color: var(--accent); }
         nav ul { display: flex; list-style: none; gap: 2rem; }
         nav a { text-decoration: none; color: var(--text-muted); font-size: 0.9rem; transition: 0.3s; }

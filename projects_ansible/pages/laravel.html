@@ -1,445 +1,588 @@
-<!DOCTYPE html> 
- <html lang="fr"> 
- <head> 
-     <meta charset="UTF-8"> 
-     <title>Déploiement Laravel - Ansible</title> 
-     <link rel="stylesheet" href="../../style.css"> 
- </head> 
- <body> 
-
-     <header> 
-         <div class="logo">SysAdmin_Portal</div> 
-         <nav> 
-             <ul> 
-                 <li><a href="https://nblinpro.github.io/portfolio/index.html">Accueil</a></li> 
-                 <li><a href="https://nblinpro.github.io/portfolio/pages/parcours.html">Parcours</a></li>
-                 <li><a href="../projets_ansible.html">Projets Ansible</a></li> 
-                 <li><a href="mailto:nicolas.blin.pro1@gmail.com" class="btn btn-primary" style="padding: 0.5rem 1rem;">Me Contacter</a></li> 
-             </ul> 
-         </nav> 
-     </header> 
-
-     <main> 
-         <h1>Déploiement Automatisé Laravel via Ansible</h1> 
-
-         <p>Documentation technique du projet d'automatisation incluant la gestion de configuration, le déploiement sécurisé (Vault) et l'optimisation serveur.</p> 
-
-         <section> 
-             <h2>1. Arborescence du projet</h2> 
-             <pre> 
- mon_projet_ansible/ 
- │ 
- ├── hosts.ini                    # Inventaire 
- ├── site.yml                     # Playbook principal 
- │ 
- ├── group_vars/                  # Variables partagées 
- │   ├── db/ 
- │   │   └── vault.yml 
- │   └── web/ 
- │       ├── vault.yml 
- │       └── vars.yml 
- │ 
- └── roles/ 
-     ├── database/ 
-     │   ├── defaults/main.yml 
-     │   └── tasks/main.yml 
-     ├── php/tasks/main.yml 
-     ├── apache/ 
-     │   ├── tasks/main.yml 
-     │   ├── handlers/main.yml 
-     │   └── templates/laravel.conf.j2 
-     ├── composer/tasks/main.yml 
-     ├── laravel/tasks/main.yml 
-     ├── selinux/tasks/main.yml 
-     └── firewall/tasks/main.yml 
- </pre> 
-         </section> 
-
-         <hr style="border-color: var(--secondary); margin: 3rem 0;"> 
-
-         <section> 
-             <h2>2. Configuration Racine</h2> 
-
-             <h3>Fichier d'inventaire (hosts.ini)</h3> 
-             <pre> 
- [web] 
- weblaravel ansible_host=192.168.80.167 ansible_user=innosys 
-
- [db] 
- bddlaravel ansible_host=192.168.80.168 ansible_user=innosys 
- </pre> 
-
-             <h3>Playbook Principal (site.yml)</h3> 
-             <pre> 
- --- 
- - name: Déploiement Base de Données 
-   hosts: db 
-   become: yes 
-   roles: 
-     - database 
-
- - name: Déploiement Serveur Web 
-   hosts: web 
-   become: yes 
-   roles: 
-     - php 
-     - apache 
-     - composer 
-     - laravel 
-     - selinux 
-     - firewall 
- </pre> 
-         </section> 
-
-         <hr style="border-color: var(--secondary); margin: 3rem 0;"> 
-
-         <section> 
-             <h2>3. Variables & Sécurité (Vault)</h2> 
-
-             <h3>Configuration DB (group_vars/db/)</h3> 
-
-             <p>Création du coffre-fort : <code>sudo ansible-vault create group_vars/db/vault.yml</code></p> 
-             <pre> 
- # vault.yml 
- mysql_root_password: "RootPass123!" 
- laravel_db: "laravel_db" 
- laravel_user: "laravel_user" 
- laravel_password: "LaravelPass123!" 
- </pre> 
-
-             <h3>Configuration Web (group_vars/web/)</h3> 
-
-             <p>Création du coffre-fort : <code>sudo ansible-vault create group_vars/web/vault.yml</code></p> 
-             <pre> 
- # vault.yml 
- db_password: "LaravelPass123!" 
- db_name: "laravel_db" 
- db_user: "laravel_user" 
-
- # vars.yml 
- app_path: /var/www/laravel 
- db_host: 192.168.80.168 
- db_port: 3306 
- </pre> 
-
-             <h3>Sécurisation des permissions</h3> 
-             <pre> 
- sudo chown -R nicolas:nicolas group_vars 
-
- # Sécurisation dossier DB 
- sudo chmod 700 group_vars/db 
- sudo chmod 600 group_vars/db/vault.yml 
-
- # Sécurisation dossier Web 
- sudo chmod 700 group_vars/web 
- sudo chmod 600 group_vars/web/vault.yml 
- </pre> 
-         </section> 
-
-         <hr style="border-color: var(--secondary); margin: 3rem 0;"> 
-
-         <section> 
-             <h2>Role : Database</h2> 
-             
-
-             <p><strong>Fichier :</strong> <code>roles/database/defaults/main.yml</code></p> 
-             <pre> 
- --- 
- web_server_ip: "192.168.80.167" 
- </pre> 
-
-             <p><strong>Fichier :</strong> <code>roles/database/tasks/main.yml</code></p> 
-             <pre> 
- --- 
- - name: Installer MySQL server, client et PyMySQL 
-   dnf: 
-     name: 
-       - mysql-server 
-       - mysql 
-       - python3-PyMySQL 
-     state: present 
-
- - name: Activer et démarrer MySQL 
-   systemd: 
-     name: mysqld 
-     state: started 
-     enabled: yes 
-
- - name: Définir le mot de passe root MySQL 
-   mysql_user: 
-     login_user: root 
-     login_password: "" 
-     user: root 
-     password: "{{ mysql_root_password }}" 
-     host_all: yes 
-     check_implicit_admin: yes 
-   ignore_errors: yes 
-
- - name: Supprimer les utilisateurs anonymes 
-   mysql_user: 
-     login_user: root 
-     login_password: "{{ mysql_root_password }}" 
-     name: '' 
-     host_all: yes 
-     state: absent 
-
- - name: Supprimer la base de test 
-   mysql_db: 
-     login_user: root 
-     login_password: "{{ mysql_root_password }}" 
-     name: test 
-     state: absent 
-
- - name: Créer la base Laravel 
-   mysql_db: 
-     login_user: root 
-     login_password: "{{ mysql_root_password }}" 
-     name: "{{ laravel_db }}" 
-     state: present 
-     encoding: utf8mb4 
-     collation: utf8mb4_unicode_ci 
-
- - name: Créer l'utilisateur Laravel (Autorisé depuis le serveur Web) 
-   mysql_user: 
-     login_user: root 
-     login_password: "{{ mysql_root_password }}" 
-     name: "{{ laravel_user }}" 
-     password: "{{ laravel_password }}" 
-     host: "{{ web_server_ip }}" 
-     priv: "{{ laravel_db }}.*:ALL" 
-     state: present 
-
- - name: Ouvrir le port MySQL (Firewall) 
-   firewalld: 
-     port: 3306/tcp 
-     permanent: yes 
-     state: enabled 
-
- - name: Recharger firewalld 
-   systemd: 
-     name: firewalld 
-     state: restarted 
- </pre> 
-         </section> 
-
-         <hr style="border-color: var(--border); margin: 3rem 0;"> 
-
-         <section> 
-             <h2>Role : PHP</h2> 
-             <p><strong>Fichier :</strong> <code>roles/php/tasks/main.yml</code></p> 
-             <pre> 
- --- 
- - name: Installer dnf-plugins-core 
-   dnf: 
-     name: dnf-plugins-core 
-     state: present 
-
- - name: Installer EPEL Release 
-   dnf: 
-     name: 
-       https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm 
-     state: present 
-     disable_gpg_check: yes 
-
- - name: Activer repo REMI et module PHP 8.3 
-   shell: | 
-     dnf install -y https://rpms.remirepo.net/enterprise/remi-release-9.rpm 
-     dnf module reset php -y 
-     dnf module enable php:remi-8.3 -y 
-   args: 
-     creates: /etc/yum.repos.d/remi.repo 
-
- - name: Installer PHP et extensions 
-   dnf: 
-     name: 
-       - php 
-       - php-cli 
-       - php-common 
-       - php-fpm 
-       - php-mysqlnd 
-       - php-xml 
-       - php-json 
-       - php-zip 
-       - php-gd 
-       - php-mbstring 
-       - php-curl 
-       - php-opcache 
-       - git 
-       - unzip 
-       - curl 
-     state: present 
- </pre> 
-         </section> 
-
-         <hr style="border-color: var(--border); margin: 3rem 0;"> 
-
-         <section> 
-             <h2>Role : Apache</h2> 
-             
-             <p><strong>Fichier :</strong> <code>roles/apache/tasks/main.yml</code></p> 
-             <pre> 
- --- 
- - name: Installer Apache 
-   dnf: 
-     name: httpd 
-     state: present 
-
- - name: Démarrer Apache 
-   systemd: 
-     name: httpd 
-     enabled: yes 
-     state: started 
-
- - name: Déployer VirtualHost Laravel 
-   template: 
-     src: laravel.conf.j2 
-     dest: /etc/httpd/conf.d/laravel.conf 
-   notify: Restart Apache 
- </pre> 
-
-             <p><strong>Fichier :</strong> <code>roles/apache/handlers/main.yml</code></p> 
-             <pre> 
- --- 
- - name: Restart Apache 
-   systemd: 
-     name: httpd 
-     state: restarted 
- </pre> 
-
-
-             <p><strong>Fichier :</strong> <code>roles/apache/templates/laravel.conf.j2</code></p>
- 
-             <pre> 
- &lt;VirtualHost *:80&gt; 
-     DocumentRoot {{ app_path }}/public 
-
-     &lt;Directory {{ app_path }}/public&gt; 
-         AllowOverride All 
-         Require all granted 
-     &lt;/Directory&gt; 
-
-     ErrorLog /var/log/httpd/laravel_error.log 
-     CustomLog /var/log/httpd/laravel_access.log combined 
- &lt;/VirtualHost&gt; 
- </pre> 
-         </section> 
-
-         <hr style="border-color: var(--border); margin: 3rem 0;"> 
-
-         <section> 
-             <h2>Role : Composer</h2> 
-             <p><strong>Fichier :</strong> <code>roles/composer/tasks/main.yml</code></p> 
-             <pre> 
- --- 
- - name: Télécharger Composer 
-   get_url: 
-     url: https://getcomposer.org/download/latest-stable/composer.phar 
-     dest: /usr/local/bin/composer 
-     mode: "0755" 
- </pre> 
-         </section> 
-
-         <hr style="border-color: var(--border); margin: 3rem 0;"> 
-
-         <section> 
-             <h2>Role : Laravel</h2> 
-             <p><strong>Fichier :</strong> <code>roles/laravel/tasks/main.yml</code></p> 
-             <pre> 
- --- 
- - name: Créer dossier application 
-   file: 
-     path: "{{ app_path }}" 
-     state: directory 
-     mode: "0755" 
-
- - name: Installer Laravel 
-   command: /usr/local/bin/composer create-project laravel/laravel . 
-   args: 
-     chdir: "{{ app_path }}" 
-     creates: "{{ app_path }}/artisan" 
-
- - name: Permissions Apache 
-   file: 
-     path: "{{ app_path }}" 
-     recurse: yes 
-     owner: apache 
-     group: apache 
-
- - name: Droits écriture storage/cache 
-   file: 
-     path: "{{ item }}" 
-     recurse: yes 
-     mode: "0775" 
-   loop: 
-     - "{{ app_path }}/storage" 
-     - "{{ app_path }}/bootstrap/cache" 
-
- - name: Générer clé Laravel 
-   command: sudo -u apache php artisan key:generate 
-   args: 
-     chdir: "{{ app_path }}" 
-
- - name: Configurer .env 
-   lineinfile: 
-     path: "{{ app_path }}/.env" 
-     regexp: "{{ item.regexp }}" 
-     line: "{{ item.line }}" 
-   loop: 
-     - { regexp: '^DB_CONNECTION=', line: 'DB_CONNECTION=mysql' } 
-     - { regexp: '^DB_HOST=',       line: 'DB_HOST={{ db_host }}' } 
-     - { regexp: '^DB_PORT=',       line: 'DB_PORT={{ db_port }}' } 
-     - { regexp: '^DB_DATABASE=',   line: 'DB_DATABASE={{ db_name }}' } 
-     - { regexp: '^DB_USERNAME=',   line: 'DB_USERNAME={{ db_user }}' } 
-     - { regexp: '^DB_PASSWORD=',   line: 'DB_PASSWORD={{ db_password }}' } 
-
- - name: Exécuter migrations 
-   command: sudo -u apache php artisan migrate --force 
-   args: 
-     chdir: "{{ app_path }}" 
- </pre> 
-         </section> 
-
-         <hr style="border-color: var(--border); margin: 3rem 0;"> 
-
-         <section> 
-             <h2>Rôles : Sécurité (SELinux & Firewall)</h2> 
-
-             <p><strong>Fichier :</strong> <code>roles/selinux/tasks/main.yml</code></p> 
-             <pre> 
- --- 
- - name: Autoriser connexion réseau Apache 
-   command: setsebool -P httpd_can_network_connect on 
-
- - name: Appliquer contexte SELinux 
-   command: chcon -R -t httpd_sys_rw_content_t {{ item }} 
-   loop: 
-     - "{{ app_path }}/storage" 
-     - "{{ app_path }}/bootstrap/cache" 
-     - "{{ app_path }}/.env" 
- </pre> 
-
-             <p><strong>Fichier :</strong> <code>roles/firewall/tasks/main.yml</code></p> 
-             <pre> 
- --- 
- - name: Ouvrir ports HTTP/HTTPS 
-   firewalld: 
-     port: "{{ item }}/tcp" 
-     permanent: yes 
-     state: enabled 
-   loop: [80, 443] 
- </pre> 
-         </section> 
-
- <section style="background-color: var(--secondary); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--accent); margin-top: 3rem;"> 
-     <h3>Conclusion</h3> 
-
-     <p>Ce projet démontre la mise en place complète d’un déploiement Laravel automatisé via Ansible, incluant la base de données, le serveur web, la sécurité SELinux et le firewall.</p> 
- </section> 
-     </main> 
-
-     <footer> 
-         <p>© 2025 Nicolas. Tous droits réservés.</p> 
-         <p><a href="../projets_ansible.html">← Retour à l'accueil</a></p> 
-     </footer> 
- </body> 
- </html>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Déploiement Laravel - Ansible | Nicolas Blin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #020617;
+            --bg-card: #0b1120;
+            --bg-card-hover: #1e293b;
+            --accent: #22d3ee;
+            --accent-rgb: 34, 211, 238;
+            --accent-glow: rgba(34, 211, 238, 0.15);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.08);
+            --radius: 12px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --code-bg: #0f172a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-body); color: var(--text-main); line-height: 1.6; overflow-x: hidden; }
+
+        /* --- HEADER --- */
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1.5rem 8%; border-bottom: 1px solid var(--border);
+            position: sticky; top: 0; background: rgba(2, 6, 23, 0.88); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); z-index: 100;
+        }
+        .logo { font-weight: 800; font-size: 1.4rem; letter-spacing: -1px; text-decoration: none; color: var(--text-main); }
+        .logo span { color: var(--accent); }
+        nav ul { display: flex; list-style: none; gap: 2rem; align-items: center; }
+        nav a { text-decoration: none; color: var(--text-muted); font-size: 0.9rem; transition: 0.3s; }
+        nav a:hover { color: var(--accent); }
+
+        /* --- BREADCRUMB --- */
+        .breadcrumb {
+            display: flex; align-items: center; gap: 10px;
+            margin: 2rem 0; font-size: 0.85rem; color: var(--text-muted);
+        }
+        .breadcrumb a { color: var(--text-muted); text-decoration: none; transition: 0.3s; }
+        .breadcrumb a:hover { color: var(--accent); }
+        .breadcrumb i { font-size: 0.7rem; opacity: 0.5; }
+        .breadcrumb span { color: var(--accent); font-weight: 600; }
+
+        /* --- CONTENU DOC --- */
+        main { max-width: 1000px; margin: auto; padding: 0 8% 5rem; }
+        .doc-header { margin-bottom: 3rem; }
+        .doc-header h1 { font-size: 2.5rem; margin-bottom: 1rem; }
+
+        h2 { color: var(--accent); font-size: 1.5rem; margin: 3rem 0 1.5rem; display: flex; align-items: center; gap: 12px; }
+        h2::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+        h3 { font-size: 1.1rem; margin: 2rem 0 1rem; color: var(--text-main); }
+        p { color: var(--text-muted); margin-bottom: 1rem; }
+        code { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px; color: var(--accent); }
+
+        /* --- CODE BLOCKS --- */
+        .code-container {
+            margin: 1rem 0 2rem; background: var(--code-bg);
+            border-radius: 8px; border: 1px solid var(--border); overflow: hidden;
+        }
+        .code-header {
+            background: rgba(30, 41, 59, 0.5); padding: 8px 16px;
+            font-size: 0.75rem; color: var(--accent); font-family: 'JetBrains Mono', monospace;
+            border-bottom: 1px solid var(--border); display: flex; justify-content: space-between;
+        }
+        pre {
+            margin: 0; padding: 1.5rem; overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: #e2e8f0; line-height: 1.7;
+        }
+        .comment { color: #64748b; font-style: italic; }
+
+        .conclusion {
+            background-color: var(--bg-card); padding: 1.5rem;
+            border-radius: 8px; border-left: 4px solid var(--accent);
+            margin-top: 3rem;
+        }
+
+        /* --- FOOTER --- */
+        footer { padding: 4rem 8% 2rem; background: var(--bg-card); border-top: 1px solid var(--border); margin-top: 5rem; }
+        .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 4rem; margin-bottom: 3rem; text-align: left; }
+        .footer-logo { font-weight: 800; margin-bottom: 1rem; font-size: 1.2rem; }
+        .footer-logo span { color: var(--accent); }
+        .footer-col h4 { margin-bottom: 1.5rem; font-size: 1rem; color: var(--text-main); }
+        .footer-col ul { list-style: none; }
+        .footer-col ul li { margin-bottom: 10px; }
+        .footer-col a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; transition: 0.3s; }
+        .footer-col a:hover { color: var(--accent); }
+        .social-links { display: flex; gap: 1rem; }
+        .social-btn { width: 40px; height: 40px; border-radius: 8px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--text-muted); text-decoration: none; transition: 0.3s; }
+        .social-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(34, 211, 238, 0.05); }
+        .footer-bottom { padding-top: 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); }
+
+        /* HAMBURGER MENU */
+        .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; z-index: 1001; }
+        .hamburger span { display: block; width: 22px; height: 2px; background: var(--text-main); border-radius: 2px; transition: transform 0.3s, opacity 0.3s; }
+        .hamburger.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .hamburger.active span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+        .hamburger.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+        @media (max-width: 768px) {
+            header { padding: 1rem 5%; }
+            nav { display: none; }
+            .hamburger { display: flex; }
+            nav.open {
+                display: flex; position: fixed; inset: 0;
+                background: rgba(2, 6, 23, 0.98); backdrop-filter: blur(20px);
+                z-index: 1000; flex-direction: column; align-items: center; justify-content: center;
+            }
+            nav.open ul { flex-direction: column; align-items: center; gap: 2.5rem; }
+            nav.open a { font-size: 1.3rem; }
+            .footer-top { grid-template-columns: 1fr; gap: 2rem; }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <a href="https://nblinpro.github.io/portfolio/index.html" class="logo">Nicolas<span>.SI</span></a>
+    <button class="hamburger" aria-label="Menu navigation" onclick="this.classList.toggle('active'); document.querySelector('header nav').classList.toggle('open')">
+        <span></span><span></span><span></span>
+    </button>
+    <nav>
+        <ul>
+            <li><a href="https://nblinpro.github.io/portfolio/index.html">Accueil</a></li>
+            <li><a href="https://nblinpro.github.io/portfolio/pages/parcours.html">Parcours</a></li>
+            <li><a href="https://nblinpro.github.io/portfolio/pages/projets.html">Projets</a></li>
+            <li><a href="https://nblinpro.github.io/portfolio/pages/contact.html">Contact</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+    <nav class="breadcrumb">
+        <a href="https://nblinpro.github.io/portfolio/pages/projets.html">Projets</a>
+        <i class="fas fa-chevron-right"></i>
+        <a href="../../company.html">Missions Entreprise</a>
+        <i class="fas fa-chevron-right"></i>
+        <a href="../projets_ansible.html">Automatisation Ansible</a>
+        <i class="fas fa-chevron-right"></i>
+        <span>Déploiement Laravel</span>
+    </nav>
+
+    <section class="doc-header">
+        <h1>Déploiement Automatisé Laravel via Ansible</h1>
+        <p>Documentation technique du projet d'automatisation incluant la gestion de configuration, le déploiement sécurisé (Vault) et l'optimisation serveur.</p>
+    </section>
+
+    <section>
+        <h2>1. Arborescence du projet</h2>
+        <div class="code-container">
+            <div class="code-header"><span>Structure</span></div>
+            <pre>mon_projet_ansible/
+│
+├── hosts.ini                    <span class="comment"># Inventaire</span>
+├── site.yml                     <span class="comment"># Playbook principal</span>
+│
+├── group_vars/                  <span class="comment"># Variables partagées</span>
+│   ├── db/
+│   │   └── vault.yml
+│   └── web/
+│       ├── vault.yml
+│       └── vars.yml
+│
+└── roles/
+    ├── database/
+    │   ├── defaults/main.yml
+    │   └── tasks/main.yml
+    ├── php/tasks/main.yml
+    ├── apache/
+    │   ├── tasks/main.yml
+    │   ├── handlers/main.yml
+    │   └── templates/laravel.conf.j2
+    ├── composer/tasks/main.yml
+    ├── laravel/tasks/main.yml
+    ├── selinux/tasks/main.yml
+    └── firewall/tasks/main.yml</pre>
+        </div>
+    </section>
+
+    <section>
+        <h2>2. Configuration Racine</h2>
+
+        <h3>Fichier d'inventaire (hosts.ini)</h3>
+        <div class="code-container">
+            <div class="code-header"><span>INI</span></div>
+            <pre>[web]
+weblaravel ansible_host=192.168.80.167 ansible_user=innosys
+
+[db]
+bddlaravel ansible_host=192.168.80.168 ansible_user=innosys</pre>
+        </div>
+
+        <h3>Playbook Principal (site.yml)</h3>
+        <div class="code-container">
+            <div class="code-header"><span>YAML</span></div>
+            <pre>---
+- name: Déploiement Base de Données
+  hosts: db
+  become: yes
+  roles:
+    - database
+
+- name: Déploiement Serveur Web
+  hosts: web
+  become: yes
+  roles:
+    - php
+    - apache
+    - composer
+    - laravel
+    - selinux
+    - firewall</pre>
+        </div>
+    </section>
+
+    <section>
+        <h2>3. Variables &amp; Sécurité (Vault)</h2>
+
+        <h3>Configuration DB (group_vars/db/)</h3>
+        <p>Création du coffre-fort : <code>sudo ansible-vault create group_vars/db/vault.yml</code></p>
+        <div class="code-container">
+            <div class="code-header"><span>vault.yml — DB</span></div>
+            <pre><span class="comment"># vault.yml</span>
+mysql_root_password: "RootPass123!"
+laravel_db: "laravel_db"
+laravel_user: "laravel_user"
+laravel_password: "LaravelPass123!"</pre>
+        </div>
+
+        <h3>Configuration Web (group_vars/web/)</h3>
+        <p>Création du coffre-fort : <code>sudo ansible-vault create group_vars/web/vault.yml</code></p>
+        <div class="code-container">
+            <div class="code-header"><span>vault.yml — Web</span></div>
+            <pre><span class="comment"># vault.yml</span>
+db_password: "LaravelPass123!"
+db_name: "laravel_db"
+db_user: "laravel_user"
+
+<span class="comment"># vars.yml</span>
+app_path: /var/www/laravel
+db_host: 192.168.80.168
+db_port: 3306</pre>
+        </div>
+
+        <h3>Sécurisation des permissions</h3>
+        <div class="code-container">
+            <div class="code-header"><span>Bash</span></div>
+            <pre>sudo chown -R nicolas:nicolas group_vars
+
+<span class="comment"># Sécurisation dossier DB</span>
+sudo chmod 700 group_vars/db
+sudo chmod 600 group_vars/db/vault.yml
+
+<span class="comment"># Sécurisation dossier Web</span>
+sudo chmod 700 group_vars/web
+sudo chmod 600 group_vars/web/vault.yml</pre>
+        </div>
+    </section>
+
+    <section>
+        <h2>4. Role : Database</h2>
+
+        <p><strong>Fichier :</strong> <code>roles/database/defaults/main.yml</code></p>
+        <div class="code-container">
+            <div class="code-header"><span>Ansible Defaults</span></div>
+            <pre>---
+web_server_ip: "192.168.80.167"</pre>
+        </div>
+
+        <p><strong>Fichier :</strong> <code>roles/database/tasks/main.yml</code></p>
+        <div class="code-container">
+            <div class="code-header"><span>Ansible Tasks</span></div>
+            <pre>---
+- name: Installer MySQL server, client et PyMySQL
+  dnf:
+    name:
+      - mysql-server
+      - mysql
+      - python3-PyMySQL
+    state: present
+
+- name: Activer et démarrer MySQL
+  systemd:
+    name: mysqld
+    state: started
+    enabled: yes
+
+- name: Définir le mot de passe root MySQL
+  mysql_user:
+    login_user: root
+    login_password: ""
+    user: root
+    password: "{{ mysql_root_password }}"
+    host_all: yes
+    check_implicit_admin: yes
+  ignore_errors: yes
+
+- name: Supprimer les utilisateurs anonymes
+  mysql_user:
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    name: ''
+    host_all: yes
+    state: absent
+
+- name: Supprimer la base de test
+  mysql_db:
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    name: test
+    state: absent
+
+- name: Créer la base Laravel
+  mysql_db:
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    name: "{{ laravel_db }}"
+    state: present
+    encoding: utf8mb4
+    collation: utf8mb4_unicode_ci
+
+- name: Créer l'utilisateur Laravel (Autorisé depuis le serveur Web)
+  mysql_user:
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    name: "{{ laravel_user }}"
+    password: "{{ laravel_password }}"
+    host: "{{ web_server_ip }}"
+    priv: "{{ laravel_db }}.*:ALL"
+    state: present
+
+- name: Ouvrir le port MySQL (Firewall)
+  firewalld:
+    port: 3306/tcp
+    permanent: yes
+    state: enabled
+
+- name: Recharger firewalld
+  systemd:
+    name: firewalld
+    state: restarted</pre>
+        </div>
+    </section>
+
+    <section>
+        <h2>5. Role : PHP</h2>
+        <p><strong>Fichier :</strong> <code>roles/php/tasks/main.yml</code></p>
+        <div class="code-container">
+            <div class="code-header"><span>Ansible Tasks</span></div>
+            <pre>---
+- name: Installer dnf-plugins-core
+  dnf:
+    name: dnf-plugins-core
+    state: present
+
+- name: Installer EPEL Release
+  dnf:
+    name: https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+    state: present
+    disable_gpg_check: yes
+
+- name: Activer repo REMI et module PHP 8.3
+  shell: |
+    dnf install -y https://rpms.remirepo.net/enterprise/remi-release-9.rpm
+    dnf module reset php -y
+    dnf module enable php:remi-8.3 -y
+  args:
+    creates: /etc/yum.repos.d/remi.repo
+
+- name: Installer PHP et extensions
+  dnf:
+    name:
+      - php
+      - php-cli
+      - php-common
+      - php-fpm
+      - php-mysqlnd
+      - php-xml
+      - php-json
+      - php-zip
+      - php-gd
+      - php-mbstring
+      - php-curl
+      - php-opcache
+      - git
+      - unzip
+      - curl
+    state: present</pre>
+        </div>
+    </section>
+
+    <section>
+        <h2>6. Role : Apache</h2>
+
+        <p><strong>Fichier :</strong> <code>roles/apache/tasks/main.yml</code></p>
+        <div class="code-container">
+            <div class="code-header"><span>Ansible Tasks</span></div>
+            <pre>---
+- name: Installer Apache
+  dnf:
+    name: httpd
+    state: present
+
+- name: Démarrer Apache
+  systemd:
+    name: httpd
+    enabled: yes
+    state: started
+
+- name: Déployer VirtualHost Laravel
+  template:
+    src: laravel.conf.j2
+    dest: /etc/httpd/conf.d/laravel.conf
+  notify: Restart Apache</pre>
+        </div>
+
+        <p><strong>Fichier :</strong> <code>roles/apache/handlers/main.yml</code></p>
+        <div class="code-container">
+            <div class="code-header"><span>Ansible Handlers</span></div>
+            <pre>---
+- name: Restart Apache
+  systemd:
+    name: httpd
+    state: restarted</pre>
+        </div>
+
+        <p><strong>Fichier :</strong> <code>roles/apache/templates/laravel.conf.j2</code></p>
+        <div class="code-container">
+            <div class="code-header"><span>Jinja2</span></div>
+            <pre>&lt;VirtualHost *:80&gt;
+    DocumentRoot {{ app_path }}/public
+
+    &lt;Directory {{ app_path }}/public&gt;
+        AllowOverride All
+        Require all granted
+    &lt;/Directory&gt;
+
+    ErrorLog /var/log/httpd/laravel_error.log
+    CustomLog /var/log/httpd/laravel_access.log combined
+&lt;/VirtualHost&gt;</pre>
+        </div>
+    </section>
+
+    <section>
+        <h2>7. Role : Composer</h2>
+        <p><strong>Fichier :</strong> <code>roles/composer/tasks/main.yml</code></p>
+        <div class="code-container">
+            <div class="code-header"><span>Ansible Tasks</span></div>
+            <pre>---
+- name: Télécharger Composer
+  get_url:
+    url: https://getcomposer.org/download/latest-stable/composer.phar
+    dest: /usr/local/bin/composer
+    mode: "0755"</pre>
+        </div>
+    </section>
+
+    <section>
+        <h2>8. Role : Laravel</h2>
+        <p><strong>Fichier :</strong> <code>roles/laravel/tasks/main.yml</code></p>
+        <div class="code-container">
+            <div class="code-header"><span>Ansible Tasks</span></div>
+            <pre>---
+- name: Créer dossier application
+  file:
+    path: "{{ app_path }}"
+    state: directory
+    mode: "0755"
+
+- name: Installer Laravel
+  command: /usr/local/bin/composer create-project laravel/laravel .
+  args:
+    chdir: "{{ app_path }}"
+    creates: "{{ app_path }}/artisan"
+
+- name: Permissions Apache
+  file:
+    path: "{{ app_path }}"
+    recurse: yes
+    owner: apache
+    group: apache
+
+- name: Droits écriture storage/cache
+  file:
+    path: "{{ item }}"
+    recurse: yes
+    mode: "0775"
+  loop:
+    - "{{ app_path }}/storage"
+    - "{{ app_path }}/bootstrap/cache"
+
+- name: Générer clé Laravel
+  command: sudo -u apache php artisan key:generate
+  args:
+    chdir: "{{ app_path }}"
+
+- name: Configurer .env
+  lineinfile:
+    path: "{{ app_path }}/.env"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  loop:
+    - { regexp: '^DB_CONNECTION=', line: 'DB_CONNECTION=mysql' }
+    - { regexp: '^DB_HOST=',       line: 'DB_HOST={{ db_host }}' }
+    - { regexp: '^DB_PORT=',       line: 'DB_PORT={{ db_port }}' }
+    - { regexp: '^DB_DATABASE=',   line: 'DB_DATABASE={{ db_name }}' }
+    - { regexp: '^DB_USERNAME=',   line: 'DB_USERNAME={{ db_user }}' }
+    - { regexp: '^DB_PASSWORD=',   line: 'DB_PASSWORD={{ db_password }}' }
+
+- name: Exécuter migrations
+  command: sudo -u apache php artisan migrate --force
+  args:
+    chdir: "{{ app_path }}"</pre>
+        </div>
+    </section>
+
+    <section>
+        <h2>9. Rôles : Sécurité (SELinux &amp; Firewall)</h2>
+
+        <p><strong>Fichier :</strong> <code>roles/selinux/tasks/main.yml</code></p>
+        <div class="code-container">
+            <div class="code-header"><span>Ansible Tasks — SELinux</span></div>
+            <pre>---
+- name: Autoriser connexion réseau Apache
+  command: setsebool -P httpd_can_network_connect on
+
+- name: Appliquer contexte SELinux
+  command: chcon -R -t httpd_sys_rw_content_t {{ item }}
+  loop:
+    - "{{ app_path }}/storage"
+    - "{{ app_path }}/bootstrap/cache"
+    - "{{ app_path }}/.env"</pre>
+        </div>
+
+        <p><strong>Fichier :</strong> <code>roles/firewall/tasks/main.yml</code></p>
+        <div class="code-container">
+            <div class="code-header"><span>Ansible Tasks — Firewall</span></div>
+            <pre>---
+- name: Ouvrir ports HTTP/HTTPS
+  firewalld:
+    port: "{{ item }}/tcp"
+    permanent: yes
+    state: enabled
+  loop: [80, 443]</pre>
+        </div>
+    </section>
+
+    <section class="conclusion">
+        <h3>Conclusion</h3>
+        <p>Ce projet démontre la mise en place complète d'un déploiement Laravel automatisé via Ansible, incluant la base de données MySQL, le serveur web Apache, la sécurité SELinux et le pare-feu. La gestion des secrets via Ansible Vault garantit la confidentialité des credentials en production.</p>
+    </section>
+</main>
+
+<footer>
+    <div class="footer-top">
+        <div class="footer-col">
+            <div class="footer-logo">Nicolas<span>.SI</span></div>
+            <p style="font-size: 0.9rem; color: var(--text-muted);">Architecte des SI spécialisé dans la conception d'infrastructures hautement disponibles.</p>
+        </div>
+        <div class="footer-col">
+            <h4>Navigation</h4>
+            <ul>
+                <li><a href="https://nblinpro.github.io/portfolio/index.html">Accueil</a></li>
+                <li><a href="https://nblinpro.github.io/portfolio/pages/parcours.html">Parcours</a></li>
+                <li><a href="https://nblinpro.github.io/portfolio/pages/projets.html">Projets</a></li>
+                <li><a href="https://nblinpro.github.io/portfolio/pages/contact.html">Contact</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Contact</h4>
+            <div class="social-links">
+                <a href="https://github.com/nblinpro" class="social-btn" target="_blank"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/nicolas-blin-6a5135218/" class="social-btn" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                <a href="mailto:nicolas.blin.pro1@gmail.com" class="social-btn"><i class="far fa-envelope"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom"><p>© 2026 Nicolas Blin — Expert Architecture SI</p></div>
+</footer>
+
+</body>
+</html>

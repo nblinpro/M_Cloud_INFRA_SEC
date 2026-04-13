@@ -16,9 +16,12 @@
             --bg-card-hover: #111827;
             --border: rgba(255, 255, 255, 0.08);
             --accent: #22d3ee;
+            --accent-rgb: 34, 211, 238;
+            --accent-glow: rgba(34, 211, 238, 0.15);
             --text-main: #f3f4f6;
             --text-muted: #9ca3af;
             --radius: 16px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
@@ -35,7 +38,7 @@
         header {
             display: flex; justify-content: space-between; align-items: center;
             padding: 1.2rem 10%; position: sticky; top: 0;
-            background: rgba(3, 7, 18, 0.6); backdrop-filter: blur(12px);
+            background: rgba(2, 6, 23, 0.88); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
             border-bottom: 1px solid var(--border); z-index: 1000;
         }
         .logo { font-weight: 800; font-size: 1.2rem; text-decoration: none; color: var(--text-main); }
